@@ -132,7 +132,7 @@ test('morningCheck pairs the 09:00 IST open with the prior weekday 23:30 bar', (
   const bars = [mk('2026-11-18T18:00:00Z', 100, 100), mk('2026-11-19T03:30:00Z', 101, 101)]; // Wed 23:30 IST → Thu 09:00 IST
   const daily = [{ date: '2026-11-18' }], rows = [{ t: 0, sigma: 0.01 }];
   const m = GE.morningCheck(bars, daily, rows, U('2026-11-20T00:00:00Z'));
-  assert.equal(m.n, 1); close(m.rows[0].r, Math.log(1.01)); assert.ok(m.rows[0].s > 0 && m.rows[0].s < 0.01);
+  assert.equal(m.n, 1); close(m.rows[0].r, Math.log(1.01)); assert.equal(m.rows[0].anchorUsd, 100); assert.equal(m.rows[0].openUsd, 101); assert.ok(m.rows[0].s > 0 && m.rows[0].s < 0.01);
 });
 
 test('scorecard returns bounded factors and score', () => {
@@ -140,4 +140,23 @@ test('scorecard returns bounded factors and score', () => {
   const c = GE.scorecard(daily, { r: 0.001, sigma: 0.01 }, 0);
   assert.ok(c.score >= -1 && c.score <= 1); for (const f of c.factors) assert.ok(f.v >= -1 && f.v <= 1);
   close(c.factors.reduce((s, f) => s + f.w, 0), 1, 1e-12);
+});
+
+test('successStats: band, accuracy and direction shares', () => {
+  const rows = [
+    { prev: 100, pred: 101, act: 100.8, lo: 99, hi: 102 },  // in band, within 0.5%, direction right
+    { prev: 100, pred: 101, act: 98, lo: 99, hi: 102 },     // out of band, error 3.06%, direction wrong
+    { prev: 100, pred: 99.5, act: 99, lo: 98, hi: 101 },    // in band, within 0.51% (>0.5%), within 1%, direction right
+    { prev: 100, pred: NaN, act: 99, lo: 98, hi: 101 },     // ignored
+  ];
+  const s = GE.successStats(rows);
+  assert.equal(s.n, 3); close(s.band68, 2 / 3); close(s.within05, 1 / 3); close(s.within1, 2 / 3); close(s.direction, 2 / 3);
+  close(s.maeAbs, (0.2 + 3 + 0.5) / 3, 1e-12);
+  assert.equal(GE.successStats([]), null);
+});
+
+test('dutyAt follows the schedule and the current setting', () => {
+  assert.equal(GE.dutyAt('2020-12-31', 15), null); assert.equal(GE.dutyAt('2021-02-02', 15), 10.75);
+  assert.equal(GE.dutyAt('2023-01-01', 15), 15); assert.equal(GE.dutyAt('2025-01-01', 15), 6);
+  assert.equal(GE.dutyAt('2026-05-12', 15), 6); assert.equal(GE.dutyAt('2026-05-13', 12), 12);
 });

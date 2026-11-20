@@ -63,7 +63,7 @@ const PUR = { k24_9999: GE.PURITY.k24_9999, k24_999: GE.PURITY.k24_999, mcx995: 
 async function main() {
   // ---------- 1. load ----------
   const [h, d, m30, fx, spot, er] = await Promise.allSettled([
-    klinesBack('1h', 1000), klinesBack('1d', 3000, '&timeZone=5:30'), klinesBack('30m', 1500),
+    klinesBack('1h', 1000), klinesBack('1d', 3000, '&timeZone=5:30'), klinesBack('30m', 4000),
     getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er),
   ]);
   const checks = [];
@@ -91,6 +91,20 @@ async function main() {
     grades: Object.fromEntries(GRADES.map(([k]) => { const q = f.factor(R[k]); return [k, { mid: r2(q.mid), lo68: r2(q.lo68), hi68: r2(q.hi68), lo95: r2(q.lo95), hi95: r2(q.hi95) }]; })) });
   const predictions = { open: pred(fOpen, openMs, 'Next MCX open (09:00 IST)'), close: pred(fClose, closeMs, 'Next MCX session close'), followingOpen: pred(fNext, nextOpenMs, 'Following MCX open') };
   const mc = m30.status === 'fulfilled' ? GE.morningCheck(GE.parseKlines(m30.value), daily, wf.rows, NOW) : null;
+  // 22K · 1 gram prediction success (same rows as the dashboard): session closes (walk-forward) and MCX morning opens
+  const K22 = GE.PURITY.k22_916, fxAt = GE.fxLookup(FX);
+  const k22Close = wf.rows.filter(r => r.actual !== null).map(r => {
+    const dd = daily[r.t + 1].date, du = GE.dutyAt(dd, duty); if (du == null) return null;
+    const f = basis * (1 + du / 100) * (1 + prem) * K22 / 10, pv = px[r.t] * f;
+    return { date: dd, prev: pv, pred: pv * Math.exp(r.pred.ens), act: px[r.t + 1] * f, lo: pv * Math.exp(r.pred.ens - r.sigma), hi: pv * Math.exp(r.pred.ens + r.sigma) };
+  }).filter(Boolean);
+  const wByDate = new Map(wf.rows.map(r => [daily[r.t].date, r]));
+  const k22Open = mc ? mc.rows.map(x => {
+    const w = wByDate.get(GE.istDate(x.anchorT)), du = GE.dutyAt(x.date, duty), fxd = fxAt(x.date); if (!w || du == null || !fxd) return null;
+    const f = basis * fxd / 31.1034768 * (1 + du / 100) * (1 + prem) * K22, pv = x.anchorUsd * f, m = w.pred.ens * (x.s / w.sigma) ** 2;
+    return { date: x.date, prev: pv, pred: pv * Math.exp(m), act: x.openUsd * f, lo: pv * Math.exp(m - x.s), hi: pv * Math.exp(m + x.s) };
+  }).filter(Boolean) : [];
+  const k22 = { closeAll: GE.successStats(k22Close), close90: GE.successStats(k22Close.slice(-90)), openAll: GE.successStats(k22Open), last: k22Close.slice(-10) };
   const prevRow = daily[lastC], prevFine = (prevRow.inr / 10) * basis * (1 + duty / 100) * (1 + prem);
   const erInr = er.status === 'fulfilled' ? +er.value.rates.INR : null;
 
@@ -120,6 +134,9 @@ async function main() {
   check('Backtest sample ≥ 500 sessions', sc.n >= 500, `${sc.n}`);
   check('Backtest 68% band coverage 55–85%', sc.cov68 >= 0.55 && sc.cov68 <= 0.85, `${(sc.cov68 * 100).toFixed(1)}%`);
   check('Backtest 95% band coverage 85–99%', sc.cov95 >= 0.85 && sc.cov95 <= 0.99, `${(sc.cov95 * 100).toFixed(1)}%`);
+  check('22K success stats: ≥ 500 scored session closes', k22.closeAll && k22.closeAll.n >= 500, k22.closeAll ? `${k22.closeAll.n}` : 'none');
+  check('22K 68% range hit rate 55–85%', k22.closeAll && k22.closeAll.band68 >= 0.55 && k22.closeAll.band68 <= 0.85, k22.closeAll ? `${(k22.closeAll.band68 * 100).toFixed(1)}%` : 'none');
+  check('22K rate = 24K 99.99% × 0.916 / 0.9999', Math.abs(R.k22_916 - R.k24_9999 * 0.916 / 0.9999) < 1e-6, `${r2(R.k22_916)}`);
   check('Naive model Theil U = 1 (scoring sanity)', Math.abs(sc.res.naive.theilU - 1) < 1e-12, `${sc.res.naive.theilU}`);
   const prevLatest = existsSync(P('docs/latest.json')) ? JSON.parse(readFileSync(P('docs/latest.json'), 'utf8')) : null;
   if (prevLatest && prevLatest.rates) {
@@ -129,7 +146,7 @@ async function main() {
   let finite = true; JSON.stringify(R, (k, v) => { if (typeof v === 'number' && !Number.isFinite(v)) finite = false; return v; });
   check('All rates finite and positive', finite && Object.values(R).every(v => v > 0), 'ok');
 
-  const out = { NOW, R, predictions, sc, mc, fc, daily, lastC, prevFine, basis, paxg, spotUsd, spotT, usdInr, fxDate, erInr, duty, prem, hDone, m30: m30.status === 'fulfilled' ? GE.parseKlines(m30.value) : [], FX };
+  const out = { k22, NOW, R, predictions, sc, mc, fc, daily, lastC, prevFine, basis, paxg, spotUsd, spotT, usdInr, fxDate, erInr, duty, prem, hDone, m30: m30.status === 'fulfilled' ? GE.parseKlines(m30.value) : [], FX };
   return finish(checks, out);
 }
 
@@ -160,7 +177,7 @@ function finish(checks, o) {
 }
 
 function publish(o, checks) {
-  const { NOW, R, predictions: PR, sc, mc } = o, day = GE.istDate(NOW), e = sc.res.ens;
+  const { NOW, R, predictions: PR, sc, mc, k22 } = o, day = GE.istDate(NOW), e = sc.res.ens;
   const latest = {
     generatedAt: new Date(NOW).toISOString(), generatedIST: IST(NOW),
     inputs: { spotUsdOz: o.spotUsd, spotUpdated: new Date(o.spotT).toISOString(), paxgUsd: o.paxg, paxgToSpotBasisPct: r2((o.basis - 1) * 100), usdInr: o.usdInr, usdInrDate: o.fxDate, usdInrLiveCrossCheck: o.erInr, importDutyPct: o.duty, mcxCalibrationPct: o.prem * 100 },
@@ -168,6 +185,11 @@ function publish(o, checks) {
     changeVsPrevCloseFine: r2(R.fineLanded / o.prevFine - 1),
     predictions: PR,
     model: { backtestSessions: sc.n, ensembleTheilU: e.theilU, dieboldMariano: e.dm, directionHit: e.hit, alwaysUpBaseline: sc.upShare, band68Coverage: sc.cov68, band95Coverage: sc.cov95, morningOpen68Coverage: mc ? mc.cov : null, morningOpenSamples: mc ? mc.n : 0 },
+    k22_1g: {
+      mcxLinked: r2(R.k22_916), mcxLinkedWithGst: r2(R.k22_916 * 1.03), comexNoDuty: r2(R.fineIntl * GE.PURITY.k22_916),
+      predictions: Object.fromEntries(Object.entries(PR).map(([k, p]) => [k, { targetIST: p.targetIST, ...p.grades.k22_916 }])),
+      success: { sessionCloseAll: k22.closeAll, sessionCloseLast90: k22.close90, morningOpenAll: k22.openAll },
+    },
     validation: checks,
     sources: { gold: 'Binance PAXG/USDT (data-api.binance.vision)', spot: 'gold-api.com XAU', fx: 'ECB via frankfurter.dev', fxCrossCheck: 'open.er-api.com' },
   };
@@ -195,6 +217,23 @@ ${rateTable}
 
 Following MCX open ${PR.followingOpen.targetIST} IST — 24K 99.99%: ${inr(PR.followingOpen.grades.k24_9999.mid, 0)} (${inr(PR.followingOpen.grades.k24_9999.lo68, 0)}–${inr(PR.followingOpen.grades.k24_9999.hi68, 0)})
 
+### 22K gold · 1 gram
+
+| | ₹ per gram |
+|---|---:|
+| **22K 1 g, MCX-linked (incl. ${o.duty}% duty)** | **${inr(R.k22_916)}** |
+| 22K 1 g + 3% GST | ${inr(R.k22_916 * 1.03)} |
+| 22K 1 g, COMEX (international, no Indian duty) | ${inr(R.fineIntl * GE.PURITY.k22_916)} |
+${[['open', 'Next MCX open'], ['close', 'Session close'], ['followingOpen', 'Following MCX open']].sort((a, b) => PR[a[0]].targetMs - PR[b[0]].targetMs).map(([k, n]) => { const g = PR[k].grades.k22_916; return `| Prediction · ${n} ${PR[k].targetIST} IST | ${inr(g.mid, 0)} (68% ${inr(g.lo68, 0)}–${inr(g.hi68, 0)}) |`; }).join('\n')}
+
+**22K 1 g prediction success** (each prediction made before its target with only the data available then):
+
+| Scored on | Predictions | Inside 68% range | Within ±0.5% | Within ±1% | Direction right | Avg error |
+|---|---:|---:|---:|---:|---:|---:|
+${[['Session closes, all', k22.closeAll], ['Session closes, last 90', k22.close90], ['MCX morning opens', k22.openAll]].filter(x => x[1]).map(([n, x]) => `| ${n} | ${x.n} | ${(x.band68 * 100).toFixed(1)}% | ${(x.within05 * 100).toFixed(1)}% | ${(x.within1 * 100).toFixed(1)}% | ${x.direction == null ? '—' : (x.direction * 100).toFixed(1) + '%'} | ${inr(x.mape * R.k22_916, 0)}/g |`).join('\n')}
+
+Last 10 session closes (22K ₹/g, predicted→actual): ${k22.last.map(x => `${x.date.slice(5)} ${inr(x.pred, 0)}→${inr(x.act, 0)} ${x.act >= x.lo && x.act <= x.hi ? '✅' : '❌'}`).join(' · ')}
+
 **How much to trust the forecast.** Walk-forward backtest over ${sc.n} sessions: ensemble Theil U ${e.theilU.toFixed(4)} (DM ${e.dm.toFixed(2)}, ${Math.abs(e.dm) > 1.96 ? 'significant' : 'not significantly better than "no change"'}); direction right ${(e.hit * 100).toFixed(1)}% vs ${(sc.upShare * 100).toFixed(1)}% for "always up". The 68% band held ${(sc.cov68 * 100).toFixed(1)}% of closes${mc ? ` and ${(mc.cov * 100).toFixed(0)}% of ${mc.n} MCX morning opens` : ''}. Rely on the ranges, not the point.
 
 ${scored.length ? `### Live track record (24K 99.99%, last 10 scored)\n\n| Target | Kind | Predicted | Actual | Error | In 68%? |\n|---|---|---:|---:|---:|:-:|\n${track}\n\nAll-time: ${ledgerStats.n} scored, ${(ledgerStats.inBand68 * 100).toFixed(0)}% inside the 68% band, mean abs error ${ledgerStats.meanAbsErrorPct.toFixed(2)}%.\n` : '_Live track record starts once the first predictions mature._\n'}
@@ -221,7 +260,7 @@ Method: Indian grades = spot × USD/INR ÷ 31.1035 g × (1 + duty) × purity (0.
   // README block
   const rp = P('README.md');
   if (existsSync(rp)) {
-    const readme = readFileSync(rp, 'utf8'), block = `<!-- RATES:START -->\n**Latest: ${IST(NOW)} IST** · spot $${o.spotUsd.toFixed(2)}/oz · USD/INR ${o.usdInr} · duty ${o.duty}% · [full report](reports/${day}.md)\n\n${rateTable}\n<!-- RATES:END -->`;
+    const readme = readFileSync(rp, 'utf8'), block = `<!-- RATES:START -->\n**Latest: ${IST(NOW)} IST** · spot $${o.spotUsd.toFixed(2)}/oz · USD/INR ${o.usdInr} · duty ${o.duty}% · [full report](reports/${day}.md)\n\n${rateTable}\n\n**22K 1 gram:** ${inr(R.k22_916)} MCX-linked · ${inr(R.k22_916 * 1.03)} with GST · ${inr(R.fineIntl * GE.PURITY.k22_916)} COMEX (no duty). Prediction success over ${k22.closeAll.n} session closes: **${(k22.closeAll.band68 * 100).toFixed(1)}% inside the 68% range**, ${(k22.closeAll.within1 * 100).toFixed(1)}% within ±1%${k22.openAll ? `; ${k22.openAll.n} MCX morning opens: ${(k22.openAll.band68 * 100).toFixed(1)}% inside range` : ''}.\n<!-- RATES:END -->`;
     writeFileSync(rp, readme.replace(/<!-- RATES:START -->[\s\S]*<!-- RATES:END -->/, block));
   }
   console.log(`Published reports/${day}.md, docs/latest.json, docs/history.csv, docs/predictions.json, README.md`);

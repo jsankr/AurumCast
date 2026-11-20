@@ -9,15 +9,17 @@ AurumCast tracks the international (COMEX) gold price hour by hour and converts 
 ![AurumCast dashboard overview](docs/img/overview.jpg)
 
 <!-- RATES:START -->
-**Latest: 2026-11-20 08:11 IST** · spot $3549.70/oz · USD/INR 93.27 · duty 15% · [full report](reports/2026-11-20.md)
+**Latest: 2026-11-20 11:31 IST** · spot $3522.17/oz · USD/INR 93.24 · duty 15% · [full report](reports/2026-11-20.md)
 
-| Grade | Today ₹/g | ₹/10 g | + 3% GST ₹/g | MCX open 11-20 09:00 IST · ₹/g (68%) | Session close 11-20 23:55 IST · ₹/g (68%) |
+| Grade | Today ₹/g | ₹/10 g | + 3% GST ₹/g | MCX open 11-23 09:00 IST · ₹/g (68%) | Session close 11-20 23:55 IST · ₹/g (68%) |
 |---|---:|---:|---:|---:|---:|
-| 24K · 99.99% (999.9) | **₹12,239.93** | ₹1,22,399 | ₹12,607.13 | ₹12,240 (₹12,194–₹12,285) | ₹12,235 (₹12,056–₹12,416) |
-| 24K · 99.9% (999) | **₹12,228.92** | ₹1,22,289 | ₹12,595.78 | ₹12,229 (₹12,183–₹12,274) | ₹12,224 (₹12,045–₹12,405) |
-| MCX Gold · 99.5% (995) | **₹12,179.95** | ₹1,21,800 | — | ₹12,180 (₹12,135–₹12,225) | ₹12,175 (₹11,997–₹12,355) |
-| 22K · 91.6% (916) | **₹11,212.90** | ₹1,12,129 | ₹11,549.29 | ₹11,213 (₹11,171–₹11,254) | ₹11,208 (₹11,045–₹11,374) |
-| International fine (COMEX, no Indian duty) | **₹10,644.49** | ₹1,06,445 | — | ₹10,644 (₹10,605–₹10,684) | ₹10,640 (₹10,485–₹10,798) |
+| 24K · 99.99% (999.9) | **₹12,141.10** | ₹1,21,411 | ₹12,505.33 | ₹12,134 (₹11,931–₹12,341) | ₹12,137 (₹11,978–₹12,298) |
+| 24K · 99.9% (999) | **₹12,130.17** | ₹1,21,302 | ₹12,494.08 | ₹12,123 (₹11,920–₹12,330) | ₹12,126 (₹11,967–₹12,287) |
+| MCX Gold · 99.5% (995) | **₹12,081.60** | ₹1,20,816 | — | ₹12,075 (₹11,873–₹12,280) | ₹12,077 (₹11,919–₹12,238) |
+| 22K · 91.6% (916) | **₹11,122.36** | ₹1,11,224 | ₹11,456.03 | ₹11,116 (₹10,930–₹11,305) | ₹11,118 (₹10,973–₹11,266) |
+| International fine (COMEX, no Indian duty) | **₹10,558.53** | ₹1,05,585 | — | ₹10,552 (₹10,376–₹10,732) | ₹10,555 (₹10,417–₹10,695) |
+
+**22K 1 gram:** ₹11,122.36 MCX-linked · ₹11,456.03 with GST · ₹9,671.62 COMEX (no duty). Prediction success over 989 session closes: **71.4% inside the 68% range**, 71.4% within ±1%; 59 MCX morning opens: 79.7% inside range.
 <!-- RATES:END -->
 
 > **Read this first.** The forecast's *ranges* are reliable: about 68% of real outcomes land inside the 68% band. The *point* forecast (the single number) is **not** reliably better than "tomorrow = today". Use AurumCast to size the likely move and to time staggered buying, not to bet on direction. Not investment advice.
@@ -26,7 +28,7 @@ AurumCast tracks the international (COMEX) gold price hour by hour and converts 
 
 ## Contents
 
-1. [Rates by purity (top of page)](#1-rates-by-purity)
+1. [Rates by purity, and 22K 1 g with prediction success % (top of page)](#1-rates-by-purity)
 2. [Hour-by-hour monitor](#2-hour-by-hour-monitor)
 3. [Next-session forecast & projection cone](#3-next-session-forecast--projection-cone)
 4. [Proof: walk-forward backtest](#4-proof-walk-forward-backtest)
@@ -64,6 +66,19 @@ All screenshots and animations below are real captures of the dashboard on 20 No
 | **Why** | Jewellers quote 22K and 24K; MCX quotes 995; coins and bars are 999.9. One table puts them all on the same basis. |
 | **Source** | Same inputs as the tiles; purity factors 0.9999 / 0.999 / 0.995 / 0.916. |
 | **How to read** | "Today" is the import-parity price, not any particular jeweller's board rate. Shops add making charges and their own margin on top of the GST column. If you enter your broker's live MCX price in **Settings**, every grade is shifted by the same calibrated premium or discount. |
+
+### 22K gold · 1 gram, with prediction success %
+
+![22K 1 gram card: toggles and hover](docs/img/k22-1gram.gif)
+
+| | |
+|---|---|
+| **What** | **22K (91.6%) 1 g** rate two ways: **MCX-linked** (includes 15% import duty, with and without 3% GST) and **COMEX** (international price, no Indian duty). The gap between them is the duty. Below: 22K ₹/g predictions for the next session close and the next two MCX opens, with 68% ranges. On the right: **predicted vs actual 22K ₹/g** for every past prediction, and the **success %**. |
+| **Why** | 22K is what jewellery is priced in. The success panel shows how reliable each forecast has been, in rupees per gram, so you can judge it before acting on it. |
+| **Source** | Same live inputs as above. Past predictions come from the walk-forward backtest (session closes, about 990) and real 30-min bars (MCX 09:00 opens, about 60). Every prediction used only the data available before its target. |
+| **How to read** | **Inside 68% range** is the main success measure; about 68% is ideal. A higher figure means the range is conservative, a lower one means it's too tight. **Within ±0.5% / ±1%** tells you how close the single-number forecast was, shown as ₹/g at today's price. **Direction right** is compared with "always up"; similar numbers mean the up/down call has no edge. On the graph, **green dots** landed inside the range and **red dots** missed. Switch between **Session close / Morning open / Live log** and **30 / 90 / 250 / All** to see recent vs long-run reliability. Hover for each day's predicted, actual and error. |
+
+![22K 1 gram card](docs/img/k22-1gram.png)
 
 ### Headline numbers
 
@@ -230,12 +245,13 @@ MCX prices include import duty and exclude GST. MCX trades 09:00 to 23:30 IST (U
 
 `.github/workflows/daily.yml` runs every day at **02:17 UTC (07:47 IST)**. You can also start it with **Actions → Daily gold rates → Run workflow**.
 
-1. **Unit tests** (`node --test`, 19 tests): indicators, ridge solver, purity maths, US daylight-saving, COMEX/MCX clocks, horizon scaling, morning-open pairing, and **no-look-ahead**.
+1. **Unit tests** (`node --test`, 21 tests): indicators, ridge solver, purity maths, US daylight-saving, COMEX/MCX clocks, horizon scaling, morning-open pairing, and **no-look-ahead**.
 2. **Fetch** all sources, with retries.
-3. **Validation gate**: about 32 checks, including:
+3. **Validation gate**: about 35 checks, including:
    - every source answered and is fresh;
    - spot agrees with PAXG within 2%, and the ECB rate agrees with a live USD/INR rate within 1%;
-   - every grade, recomputed independently, matches;
+   - every grade, recomputed independently, matches (including 22K = 24K 99.99% × 0.916 / 0.9999);
+   - the 22K success statistics cover at least 500 scored closes, with a 68% range hit rate between 55% and 85%;
    - grade ordering is correct;
    - forecast bands are ordered and every number is finite;
    - volatility is within sane limits;

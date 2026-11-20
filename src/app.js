@@ -5,13 +5,13 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('aurum.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('aurum.' + k, JSON.stringify(v)); } catch {} },
 };
-const S = { gMode: 'mcx', theme: store.get('theme', 'aurum'), duty: store.get('duty', 15), prem: store.get('prem', 0), hours: store.get('hours', 2000), auto: store.get('auto', true), hrN: 168, hrOv: 'bb', dN: 260, coneH: 20, hm: 'abs' };
+const S = { k22Kind: 'close', k22N: 90, gMode: 'mcx', theme: store.get('theme', 'aurum'), duty: store.get('duty', 15), prem: store.get('prem', 0), hours: store.get('hours', 2000), auto: store.get('auto', true), hrN: 168, hrOv: 'bb', dN: 260, coneH: 20, hm: 'abs' };
 const D = { ticks: [], err: {} };
 const C = {};
 const OZ = GE.OZ_G;
 // India gold import duty (BCD + AIDC [+SWS]) by effective date. From 13 May 2026 the user-editable setting applies.
-const DUTY = [['2021-02-02', 10.75], ['2022-06-30', 15], ['2024-07-24', 6], ['2026-05-13', null]];
-const dutyAt = d => { let v = null; for (const [k, x] of DUTY) if (d >= k) v = x === null ? S.duty : x; return v; };
+const DUTY = GE.DUTY_SCHEDULE;
+const dutyAt = d => GE.dutyAt(d, S.duty);
 const BIN = 'https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT';
 const SRC = {
   bin: 'https://data-api.binance.vision', spot: 'https://api.gold-api.com/price/XAU',
@@ -79,7 +79,7 @@ async function loadAll() {
   setLive('load', 'Fetching…');
   const [h, d, fx, spot, er, m30] = await Promise.allSettled([
     klinesBack('1h', S.hours), klinesBack('1d', 3000, '&timeZone=5:30'),
-    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 1500),
+    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 4000),
   ]);
   D.err = {};
   if (m30.status === 'fulfilled') D.mRaw = m30.value; else { D.mRaw = null; D.err['30-min'] = m30.reason.message; }
@@ -204,10 +204,80 @@ function renderPurity() {
     GRADES.map(([n, k, gst]) => `<tr${k === 'k24_9999' ? ` style="background:${T.acc}14"` : ''}><td><b>${n}</b></td><td class="n" style="font-size:14px;font-weight:600">${inr(R[k], 2)}</td><td class="n">${inr(R[k] * 10, 0)}</td><td class="n">${gst ? inr(R[k] * (1 + GE.GST), 2) : '—'}</td>${cell(o, R[k])}${cell(c, R[k])}</tr>`).join('');
 }
 
+
+// ---------- 22K · 1 gram: rates, predictions, and prediction success ----------
+function k22Rows(kind) {
+  const P = GE.PURITY.k22_916, prem = 1 + S.prem / 100, fxAt = GE.fxLookup(D.fx);
+  if (kind === 'close') return D.wf.rows.filter(r => r.actual !== null).map(r => {
+    const d = D.daily[r.t + 1].date, du = dutyAt(d); if (du == null) return null;
+    const f = D.basis * (1 + du / 100) * prem * P / 10, prev = D.px[r.t] * f;
+    return { date: d, prev, pred: prev * Math.exp(r.pred.ens), act: D.px[r.t + 1] * f, lo: prev * Math.exp(r.pred.ens - r.sigma), hi: prev * Math.exp(r.pred.ens + r.sigma) };
+  }).filter(Boolean);
+  if (kind === 'open') {
+    if (!D.mc) return [];
+    const byDate = new Map(D.wf.rows.map(r => [D.daily[r.t].date, r]));
+    return D.mc.rows.map(x => {
+      const ad = GE.istDate(x.anchorT), w = byDate.get(ad), du = dutyAt(x.date), fx = fxAt(x.date); if (!w || du == null || !fx) return null;
+      const f = D.basis * fx / OZ * (1 + du / 100) * prem * P, prev = x.anchorUsd * f, k = (x.s / w.sigma) ** 2, m = w.pred.ens * k;
+      return { date: x.date, prev, pred: prev * Math.exp(m), act: x.openUsd * f, lo: prev * Math.exp(m - x.s), hi: prev * Math.exp(m + x.s) };
+    }).filter(Boolean);
+  }
+  return (D.ledger || []).filter(e => e.actual != null).map(e => {
+    const du = dutyAt(e.target) ?? S.duty, f = (e.basis || D.basis) * (1 + du / 100) * prem * P / 10;
+    return { date: e.target, prev: (e.anchor ?? e.ex) * f, pred: e.ex * f, act: e.actual * f, lo: e.lo * f, hi: e.hi * f };
+  });
+}
+function renderK22() {
+  if (!D.ready) return;
+  const now = Date.now(), sp = spotNow(), R = GE.rates(sp, D.fxNow, S.duty, S.prem / 100), Ri = GE.rates(sp, D.fxNow, 0, 0);
+  const comex22 = Ri.fineIntl * GE.PURITY.k22_916, mcx22 = R.k22_916, prev = D.daily[D.lastC];
+  const prev22 = (prev.inr / 10) * D.basis * (1 + S.duty / 100) * (1 + S.prem / 100) * GE.PURITY.k22_916, ch = mcx22 / prev22 - 1;
+  const tgts = [['Next MCX open', nextMcxOpen(now)], ['Session close', D.fc.closeMs], ['Following MCX open', nextMcxOpen(nextMcxOpen(now))]].sort((p, q) => p[1] - q[1]);
+  $('k22Sub').innerHTML = `Live ${istStr(now)} IST · spot ${usd(sp)} · USD/INR ${D.fxNow.toFixed(2)} · purity 91.6%`;
+  $('k22Rates').innerHTML =
+    `<div class="k22big hero"><div class="l">22K 1 g · MCX-linked (incl. ${S.duty}% duty)</div><div class="v">${inr(mcx22, 2)}</div><div class="s" style="font-size:12.5px;color:${T.tx2}"><span class="${cls(ch)}">${pct(ch)}</span> vs ${dLabel(prev.date)} close · with 3% GST <b>${inr(mcx22 * 1.03, 2)}</b></div></div>` +
+    `<div class="k22big"><div class="l">22K 1 g · COMEX (international, no Indian duty)</div><div class="v">${inr(comex22, 2)}</div><div class="s" style="font-size:12.5px;color:${T.tx2}">${usd(sp)}/oz × ₹${D.fxNow.toFixed(2)} ÷ 31.1035 × 0.916 · duty gap ${inr(mcx22 - comex22, 0)}</div></div>` +
+    `<table><tr><th>Prediction · 22K 1 g</th><th class="n">₹/g</th><th class="n">68% range</th></tr>` +
+    tgts.map(([n, t]) => { const g = GE.forecastTo(now, t, D.fc), q = g.factor(mcx22); return `<tr><td>${n}<div style="color:${T.tx3};font-size:11px">${istStr(t)} IST</div></td><td class="n"><b>${inr(q.mid, 0)}</b><div class="${cls(g.m)}" style="font-size:11px">${pct(g.m)}</div></td><td class="n">${inr(q.lo68, 0)} – ${inr(q.hi68, 0)}</td></tr>`; }).join('') + `</table>`;
+
+  const all = k22Rows(S.k22Kind), rows = S.k22N ? all.slice(-S.k22N) : all, st = GE.successStats(rows), stAll = GE.successStats(all);
+  const tile = (lbl, v, sub) => `<div class="st"><span>${lbl}</span><b>${v}</b><span>${sub}</span></div>`, P = v => (v == null ? '—' : (v * 100).toFixed(1) + '%');
+  const kindName = { close: 'session closes', open: 'MCX morning opens', live: 'live forecasts' }[S.k22Kind];
+  if (!st) {
+    $('k22Stats').innerHTML = tile('Predictions scored', '0', S.k22Kind === 'live' ? 'first ones mature after their target time' : 'no data');
+    $('k22Note').innerHTML = S.k22Kind === 'live' ? 'The live log scores each forecast this browser saved once its target time has passed. Use <b>Session close</b> or <b>Morning open</b> for the long backtest.' : '';
+    chart('cK22', { title: { text: 'No scored predictions yet', left: 'center', top: 'middle', textStyle: { color: T.tx3, fontSize: 13, fontWeight: 400 } } }); chart('cK22Roll', {});
+    return;
+  }
+  $('k22Stats').innerHTML = tile('Inside 68% range', P(st.band68), `target ≈ 68% · all-time ${P(stAll.band68)}`) + tile('Within ±0.5%', P(st.within05), `≈ ±${inr(mcx22 * 0.005, 0)}/g`) + tile('Within ±1%', P(st.within1), `≈ ±${inr(mcx22 * 0.01, 0)}/g`) +
+    tile('Direction right', P(st.direction), `always-up baseline ${P(rows.filter(x => x.act > x.prev).length / rows.length)}`) + tile('Avg error', inr(st.mape * mcx22, 0) + '/g', `${(st.mape * 100).toFixed(2)}% · ${st.n} ${kindName}`);
+  $('k22Note').innerHTML = `${conf('Certain')}Each prediction was made before its target (evening before for closes, prior MCX close for opens) using only data available then, and is shown at today's purity, duty and calibration settings. "Success" = actual landed inside the predicted 68% range. ${st.band68 >= 0.6 && st.band68 <= 0.8 ? 'The range is well calibrated.' : st.band68 > 0.8 ? 'The range is a little wide (conservative).' : 'The range has been too narrow lately: treat it with extra caution.'}`;
+  const x = rows.map(r => r.date), lo = rows.map(r => r.lo), hh = rows.map(r => r.hi - r.lo);
+  chart('cK22', {
+    legend: leg({ data: ['Actual 22K ₹/g', 'Predicted 22K ₹/g', '68% range'] }), grid: { left: 62, right: 12, top: 32, bottom: 26 },
+    tooltip: tip({ formatter: ps => { const i = ps[0].dataIndex, r = rows[i], ok = r.act >= r.lo && r.act <= r.hi; return `<b>${dLabel(r.date)}</b><br>Predicted ${inr(r.pred, 0)} (${inr(r.lo, 0)}–${inr(r.hi, 0)})<br>Actual <b>${inr(r.act, 0)}</b> · error ${pct(r.pred / r.act - 1)}<br>Previous ${inr(r.prev, 0)}<br><span style="color:${ok ? T.good : T.bad}">${ok ? '✓ inside range' : '✗ outside range'}</span>`; } }),
+    xAxis: ax({ type: 'category', data: x, axisLabel: { color: T.tx3, formatter: dLabel } }), yAxis: ax({ scale: true, axisLabel: { color: T.tx3, formatter: v => '₹' + v.toLocaleString('en-IN') } }),
+    dataZoom: [{ type: 'inside' }],
+    series: [{ name: 'lo', type: 'line', stack: 'b', data: lo, symbol: 'none', lineStyle: { opacity: 0 }, tooltip: { show: false } },
+      { name: '68% range', type: 'line', stack: 'b', data: hh, symbol: 'none', lineStyle: { opacity: 0 }, areaStyle: { color: T.s[0], opacity: 0.18 }, itemStyle: { color: T.s[0] } },
+      { name: 'Predicted 22K ₹/g', type: 'line', data: rows.map(r => r.pred), symbol: 'none', lineStyle: { width: 1.5, color: T.s[0], type: 'dashed' }, itemStyle: { color: T.s[0] } },
+      { name: 'Actual 22K ₹/g', type: 'line', data: rows.map(r => ({ value: r.act, itemStyle: { color: r.act >= r.lo && r.act <= r.hi ? T.good : T.bad } })), symbol: 'circle', showAllSymbol: true, symbolSize: rows.length > 120 ? 4 : 7, lineStyle: { width: 2, color: T.acc }, itemStyle: { borderColor: T.glass, borderWidth: 1 } }],
+  });
+  const W = Math.min(30, Math.max(5, Math.floor(rows.length / 4))), rx = [], rb = [], r1 = [];
+  for (let i = W; i <= rows.length; i++) { const s2 = GE.successStats(rows.slice(i - W, i)); rx.push(rows[i - 1].date); rb.push(+(s2.band68 * 100).toFixed(1)); r1.push(+(s2.within1 * 100).toFixed(1)); }
+  chart('cK22Roll', {
+    title: { text: `Rolling ${W}-prediction success`, left: 0, top: 0, textStyle: { color: T.tx2, fontSize: 12, fontWeight: 500 } },
+    legend: leg({ top: 18, data: ['Inside 68% range', 'Within ±1%'] }), grid: { left: 40, right: 10, top: 50, bottom: 26 }, tooltip: tip({ valueFormatter: v => v + '%' }),
+    xAxis: ax({ type: 'category', data: rx, axisLabel: { color: T.tx3, formatter: dLabel } }), yAxis: ax({ min: 0, max: 100, axisLabel: { color: T.tx3, formatter: '{value}%' } }),
+    series: [{ name: 'Inside 68% range', type: 'line', data: rb, symbol: 'none', lineStyle: { width: 2, color: T.s[2] }, itemStyle: { color: T.s[2] }, markLine: { symbol: 'none', silent: true, data: [{ yAxis: 68 }], lineStyle: { color: T.tx3, type: 'dashed' }, label: { formatter: '68% target', color: T.tx3, position: 'insideStartTop', fontSize: 10 } } },
+      { name: 'Within ±1%', type: 'line', data: r1, symbol: 'none', lineStyle: { width: 2, color: T.s[1] }, itemStyle: { color: T.s[1] } }],
+  });
+}
+
 // ---------- render ----------
 function setLive(s, txt) { $('liveDot').className = 'dot ' + (s === 'ok' ? 'live' : s === 'err' ? 'err' : ''); $('liveTxt').textContent = txt; }
 function renderAll() {
-  renderStrip(); renderPurity(); renderBanner(); renderKpis(); renderHourly(); renderHourTable(); renderTicks(); renderForecast(); renderModels();
+  renderStrip(); renderPurity(); renderK22(); renderBanner(); renderKpis(); renderHourly(); renderHourTable(); renderTicks(); renderForecast(); renderModels();
   renderProof(); renderDaily(); renderOsc(); renderRisk(); renderHeat(); renderDecomp(); renderInvest(); renderLedger(); renderSources();
 }
 function renderBanner() {
@@ -464,7 +534,7 @@ function renderSources() {
 let nextFull = 0;
 function scheduleNext() { const now = Date.now(), h = 3600e3; nextFull = Math.ceil(now / h) * h + 90e3; if (nextFull - now < 120e3) nextFull += h; }
 async function pollSpot() {
-  try { const s = await getJSON(SRC.spot, 10000); if (s && s.price) { D.spot = s; const t = Date.parse(s.updatedAt) || Date.now(); if (!D.ticks.length || D.ticks.at(-1).t !== t) D.ticks.push({ t, p: s.price }); if (D.ticks.length > 1440) D.ticks.shift(); if (D.ready) { renderStrip(); renderPurity(); renderKpis(); renderTicks(); } setLive('ok', 'Live'); } }
+  try { const s = await getJSON(SRC.spot, 10000); if (s && s.price) { D.spot = s; const t = Date.parse(s.updatedAt) || Date.now(); if (!D.ticks.length || D.ticks.at(-1).t !== t) D.ticks.push({ t, p: s.price }); if (D.ticks.length > 1440) D.ticks.shift(); if (D.ready) { renderStrip(); renderPurity(); renderK22(); renderKpis(); renderTicks(); } setLive('ok', 'Live'); } }
   catch { setLive('err', 'Spot feed retrying'); }
 }
 async function fullRefresh() {
@@ -486,7 +556,7 @@ setInterval(() => { if (S.auto && D.ready) pollSpot(); }, 60e3);
 
 // ---------- controls ----------
 const segBind = (id, key, attr, fn) => $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); S[key] = isNaN(+b.dataset[attr]) ? b.dataset[attr] : +b.dataset[attr]; if (D.ready) fn(); });
-segBind('hrRange', 'hrN', 'n', renderHourly); segBind('hrOv', 'hrOv', 'o', renderHourly); segBind('dRange', 'dN', 'n', renderDaily); segBind('coneH', 'coneH', 'h', renderForecast); segBind('hmMode', 'hm', 'm', renderHeat); segBind('gMode', 'gMode', 'g', renderStrip);
+segBind('hrRange', 'hrN', 'n', renderHourly); segBind('hrOv', 'hrOv', 'o', renderHourly); segBind('dRange', 'dN', 'n', renderDaily); segBind('coneH', 'coneH', 'h', renderForecast); segBind('hmMode', 'hm', 'm', renderHeat); segBind('gMode', 'gMode', 'g', renderStrip); segBind('k22Kind', 'k22Kind', 'k', renderK22); segBind('k22N', 'k22N', 'n', renderK22);
 $('themes').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTheme(b.dataset.t); });
 $('refreshBtn').onclick = () => fullRefresh();
 $('pTarget').oninput = calcProb; $('pDays').oninput = calcProb;

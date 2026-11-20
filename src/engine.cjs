@@ -234,12 +234,32 @@ const GE = (() => {
       let a = b.t - 9.5 * 3600e3; while (!isWeekdayIST(a)) a -= 86400e3;
       const A = byT.get(a); if (!A) continue; const sig = sigByDate.get(istDate(a)); if (!sig) continue;
       const h = openHours(A.closeT + 1, b.t), s = sig * Math.sqrt(h / 23), r = Math.log(b.o / A.c);
-      out.push({ date: istDate(b.t), r, s, err: Math.abs(Math.exp(r) - 1) });
+      out.push({ date: istDate(b.t), t: b.t, anchorT: a, anchorUsd: A.c, openUsd: b.o, r, s, err: Math.abs(Math.exp(r) - 1) });
     }
     if (!out.length) return null;
     return { n: out.length, cov: out.filter(x => Math.abs(x.r) <= x.s).length / out.length, cov95: out.filter(x => Math.abs(x.r) <= 1.96 * x.s).length / out.length, mae: mean(out.map(x => x.err)), from: out[0].date, rows: out };
   }
 
-  return { morningCheck, PURITY, GST, rates, usDST, comexOpen, openHours, istMidnight, isWeekdayIST, mcxCloseOf, nextMcxOpen, nextMcxClose, forecastTo, solve, ridgeFit, OZ_G, IST_MS, mean, std, quantile, sma, ema, rsi, macd, bollinger, atr, ewmaVol, drawdown, rollStd, parseKlines, parseFx, fxLookup, buildDaily, walkForward, scoreModels, sessionMatrix, scorecard, MODELS, istDate, istDow, istHour, clamp };
+  // Prediction success on any price series. rows: [{ prev, pred, act, lo, hi }] (same units, e.g. 22K ₹/g)
+  function successStats(rows) {
+    const R = rows.filter(x => [x.prev, x.pred, x.act, x.lo, x.hi].every(Number.isFinite));
+    if (!R.length) return null;
+    const share = f => R.filter(f).length / R.length, dirRows = R.filter(x => x.pred !== x.prev && x.act !== x.prev);
+    return {
+      n: R.length,
+      band68: share(x => x.act >= x.lo && x.act <= x.hi),
+      within05: share(x => Math.abs(x.pred / x.act - 1) <= 0.005),
+      within1: share(x => Math.abs(x.pred / x.act - 1) <= 0.01),
+      direction: dirRows.length ? dirRows.filter(x => Math.sign(x.pred - x.prev) === Math.sign(x.act - x.prev)).length / dirRows.length : null,
+      mape: mean(R.map(x => Math.abs(x.pred / x.act - 1))),
+      maeAbs: mean(R.map(x => Math.abs(x.pred - x.act))),
+    };
+  }
+
+  // India gold import duty (BCD + AIDC [+SWS]) by effective date; from the last entry on, `current` (config/setting) applies.
+  const DUTY_SCHEDULE = [['2021-02-02', 10.75], ['2022-06-30', 15], ['2024-07-24', 6], ['2026-05-13', null]];
+  const dutyAt = (d, current = 15) => { let v = null; for (const [k, x] of DUTY_SCHEDULE) if (d >= k) v = x === null ? current : x; return v; };
+
+  return { DUTY_SCHEDULE, dutyAt, successStats, morningCheck, PURITY, GST, rates, usDST, comexOpen, openHours, istMidnight, isWeekdayIST, mcxCloseOf, nextMcxOpen, nextMcxClose, forecastTo, solve, ridgeFit, OZ_G, IST_MS, mean, std, quantile, sma, ema, rsi, macd, bollinger, atr, ewmaVol, drawdown, rollStd, parseKlines, parseFx, fxLookup, buildDaily, walkForward, scoreModels, sessionMatrix, scorecard, MODELS, istDate, istDow, istHour, clamp };
 })();
 if (typeof module !== 'undefined') module.exports = GE;
