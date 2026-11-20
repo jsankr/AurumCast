@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="aurum">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AurumCast — COMEX → MCX Gold Monitor &amp; Forecast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root{--r:18px;--gap:16px;--font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+/* ---------- THEMES (glass surfaces over a living background) ---------- */
+[data-theme="aurum"]{--bg0:#0b0f1e;--bg1:#151a2c;--blob1:#c98500;--blob2:#3b2a8f;--blob3:#0e5a7a;--glass:rgba(22,27,46,.55);--glass2:rgba(255,255,255,.06);--line:rgba(255,255,255,.11);--tx:#f0efec;--tx2:#c3c2b7;--tx3:#8d8c86;--acc:#f2c14e;--acc2:#ffdf8a;--mode:dark}
+[data-theme="obsidian"]{--bg0:#07090a;--bg1:#121514;--blob1:#0ca30c;--blob2:#1c5cab;--blob3:#3a3a36;--glass:rgba(20,23,22,.58);--glass2:rgba(255,255,255,.05);--line:rgba(255,255,255,.10);--tx:#eef0ec;--tx2:#bfc4bb;--tx3:#868b83;--acc:#d8b45a;--acc2:#f1d48d;--mode:dark}
+[data-theme="rose"]{--bg0:#160b14;--bg1:#22121f;--blob1:#d55181;--blob2:#c98500;--blob3:#6250d6;--glass:rgba(38,18,34,.55);--glass2:rgba(255,255,255,.06);--line:rgba(255,220,235,.13);--tx:#f6eef2;--tx2:#d6c2cc;--tx3:#9b8791;--acc:#f3c0a0;--acc2:#ffd9c2;--mode:dark}
+[data-theme="ivory"]{--bg0:#efe9dc;--bg1:#fcfcfb;--blob1:#eda100;--blob2:#86b6ef;--blob3:#e87ba4;--glass:rgba(255,255,255,.55);--glass2:rgba(255,255,255,.55);--line:rgba(40,30,10,.12);--tx:#0b0b0b;--tx2:#52514e;--tx3:#7c7a74;--acc:#9a6a00;--acc2:#c98500;--mode:light}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:var(--font);color:var(--tx);background:var(--bg0);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:radial-gradient(1200px 800px at 80% -10%,var(--bg1),var(--bg0))}
+.bg i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.38;animation:float 26s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:46vw;height:46vw;left:-8vw;top:-10vw;background:var(--blob1)}
+.bg i:nth-child(2){width:40vw;height:40vw;right:-10vw;top:25vh;background:var(--blob2);animation-duration:32s}
+.bg i:nth-child(3){width:36vw;height:36vw;left:30vw;bottom:-18vw;background:var(--blob3);animation-duration:38s}
+[data-theme="ivory"] .bg i{opacity:.28}
+@keyframes float{to{transform:translate(6vw,4vh) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.bg i{animation:none}}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 20px 50px -24px rgba(0,0,0,.55)}
+.wrap{max-width:1480px;margin:0 auto;padding:18px 22px 60px}
+header.top{position:sticky;top:10px;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 200deg,var(--acc),var(--acc2),#8a5a00,var(--acc));box-shadow:0 0 22px -4px var(--acc)}
+.brand small{display:block;font-weight:500;color:var(--tx3);font-size:11.5px}
+nav.links{display:flex;gap:4px;margin-left:8px;flex-wrap:wrap}
+nav.links a{color:var(--tx2);text-decoration:none;font-size:13px;padding:6px 8px;border-radius:10px}
+nav.links a:hover,nav.links a.on{background:var(--glass2);color:var(--tx)}
+.sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2);padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--glass2);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#7c7a74}.dot.live{background:#0ca30c;box-shadow:0 0 0 0 rgba(12,163,12,.6);animation:pulse 2s infinite}.dot.err{background:#e66767}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(12,163,12,0)}}
+.themes{display:flex;gap:6px}.themes button{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);cursor:pointer}
+.themes button.on{outline:2px solid var(--acc);outline-offset:2px}
+.btn{font:inherit;font-size:13px;color:var(--tx);background:var(--glass2);border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--acc)}.btn.pri{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1b1300;border:0;font-weight:600}
+.banner{padding:12px 16px;margin-bottom:14px;font-size:13.5px;color:var(--tx2);line-height:1.5}
+.banner b{color:var(--tx)}
+.gstrip{display:grid;grid-template-columns:1fr 1fr 1fr 1.9fr;gap:var(--gap);margin-bottom:var(--gap)}
+.gv{font-size:30px!important}.gchart{padding:12px 14px 4px}.gtile .s{line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{padding:14px 16px;position:relative;overflow:hidden}
+.kpi .l{font-size:12px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px}
+.kpi .v{font-family:var(--mono);font-size:24px;font-weight:600;margin-top:6px;letter-spacing:-.5px}
+.kpi .s{font-size:12.5px;color:var(--tx2);margin-top:4px}
+.kpi.hero{background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 22%,transparent),var(--glass))}
+.up{color:#3fbf5a}.dn{color:#e66767}[data-theme="ivory"] .up{color:#007a00}[data-theme="ivory"] .dn{color:#c03030}
+section{margin-top:26px;scroll-margin-top:90px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin:0 0 4px;letter-spacing:.2px}
+.sub{color:var(--tx2);font-size:13.5px;margin:0 0 14px;max-width:980px;line-height:1.5}
+.grid{display:grid;gap:var(--gap)}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g21{grid-template-columns:2fr 1fr}.g12{grid-template-columns:1fr 2fr}
+.card{padding:14px 16px}
+.card h3{margin:0 0 2px;font-size:14.5px;font-weight:600}.card .h3s{font-size:12px;color:var(--tx3);margin-bottom:8px}
+.ch{width:100%;height:340px}.ch.t{height:420px}.ch.s{height:240px}.ch.xs{height:180px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--glass2)}
+.seg button{font:inherit;font-size:12px;color:var(--tx2);background:none;border:0;padding:5px 10px;cursor:pointer}
+.seg button.on{background:color-mix(in srgb,var(--acc) 26%,transparent);color:var(--tx)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th{text-align:left;color:var(--tx3);font-weight:500;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);font-variant-numeric:tabular-nums}
+td.n,th.n{text-align:right;font-family:var(--mono);font-size:12.3px}
+.scroll{max-height:420px;overflow:auto}
+.tag{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--tx2);white-space:nowrap}
+.tag.good{border-color:#0ca30c;color:#3fbf5a}.tag.bad{border-color:#e66767;color:#e66767}.tag.warn{border-color:#c98500;color:#e0a63a}
+.big{font-family:var(--mono);font-size:40px;font-weight:600;letter-spacing:-1px}
+.verdict{font-size:14px;line-height:1.6;color:var(--tx2)}.verdict b{color:var(--tx)}
+.fact{display:grid;grid-template-columns:200px 1fr 54px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);font-size:13px}
+.fact .bar{height:8px;border-radius:4px;background:var(--glass2);position:relative}
+.fact .bar i{position:absolute;top:0;bottom:0;border-radius:4px}
+.fact .why{grid-column:1/-1;color:var(--tx3);font-size:12px;margin-top:-4px}
+input[type=number],input[type=text]{font:inherit;font-family:var(--mono);color:var(--tx);background:var(--glass2);border:1px solid var(--line);border-radius:10px;padding:7px 10px;width:150px}
+label.f{font-size:12.5px;color:var(--tx2);display:flex;flex-direction:column;gap:5px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:92vw;z-index:50;padding:20px;transform:translateX(105%);transition:transform .3s;overflow:auto;border-radius:var(--r) 0 0 var(--r)}
+.drawer.open{transform:none}.drawer h3{margin-top:0}
+.drawer p{font-size:12.5px;color:var(--tx2);line-height:1.5}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(140%);z-index:60;padding:12px 18px;font-size:13.5px;transition:transform .35s;max-width:90vw}
+.toast.show{transform:translateX(-50%)}
+.conf{font-size:11px;font-weight:600;padding:1px 6px;border-radius:6px;margin-right:4px;font-family:var(--mono)}
+.conf.c{background:rgba(12,163,12,.18);color:#3fbf5a}.conf.l{background:rgba(57,135,229,.2);color:#6da7ec}.conf.g{background:rgba(201,133,0,.2);color:#e0a63a}
+.src a{color:var(--acc2)}.src li{margin:6px 0;font-size:13px;color:var(--tx2)}
+.loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--tx3);font-size:13px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--tx2)}.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:3px;border-radius:2px;display:inline-block}
+footer{margin-top:36px;color:var(--tx3);font-size:12px;line-height:1.6}
+@media (max-width:1320px){nav.links{display:none}}
+@media (max-width:1200px){.gstrip{grid-template-columns:1fr 1fr 1fr}.gchart{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){.gstrip{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.g2,.g3,.g21,.g12{grid-template-columns:1fr}nav.links{display:none}.big{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="wrap">
+<header class="top glass">
+  <div class="brand"><div class="logo"></div><div>AurumCast<small>COMEX → MCX gold</small></div></div>
+  <nav class="links">
+    <a href="#monitor">Monitor</a><a href="#forecast">Forecast</a><a href="#proof">Proof</a><a href="#analytics">Analytics</a><a href="#invest">Invest</a><a href="#data">Data</a>
+  </nav>
+  <div class="sp"></div>
+  <span class="pill"><span class="dot" id="liveDot"></span><span id="liveTxt">Connecting…</span></span>
+  <span class="pill" id="refreshPill">Next refresh —</span>
+  <div class="themes" id="themes">
+    <button data-t="aurum" title="Aurum Night" style="background:linear-gradient(135deg,#151a2c,#c98500)"></button>
+    <button data-t="obsidian" title="Obsidian" style="background:linear-gradient(135deg,#121514,#0ca30c)"></button>
+    <button data-t="rose" title="Rose Quartz" style="background:linear-gradient(135deg,#22121f,#d55181)"></button>
+    <button data-t="ivory" title="Ivory Glass" style="background:linear-gradient(135deg,#fcfcfb,#eda100)"></button>
+  </div>
+  <button class="btn" id="refreshBtn">Refresh now</button>
+  <button class="btn" id="setBtn">Settings</button>
+</header>
+
+<div class="gstrip" id="gstrip">
+  <div class="kpi glass gtile"><div class="l">COMEX (international spot) · ₹ per gram</div><div class="v gv" id="gComex">—</div><div class="s" id="gComexS">Loading…</div></div>
+  <div class="kpi glass gtile hero"><div class="l">MCX today · 995 · ₹ per gram</div><div class="v gv" id="gMcx">—</div><div class="s" id="gMcxS"></div></div>
+  <div class="kpi glass gtile"><div class="l" id="gNextL">Next MCX morning · ₹ per gram</div><div class="v gv" id="gNext">—</div><div class="s" id="gNextS"></div></div>
+  <div class="kpi glass gchart"><div class="row" style="margin:0"><div class="l">₹ per gram · last 3 days → next two MCX opens</div><span class="sp"></span><div class="seg" id="gMode"><button data-g="mcx" class="on">MCX</button><button data-g="comex">COMEX</button></div></div><div id="cGram" style="height:150px"></div></div>
+</div>
+<div class="card glass" id="purityCard" style="margin-bottom:var(--gap)">
+  <div class="row" style="margin:0 0 4px"><h3 style="margin:0">Gold rate by purity · ₹</h3><span class="sp"></span><span class="h3s" id="purSub" style="margin:0"></span></div>
+  <div class="scroll"><table id="tPurity"></table></div>
+  <div class="h3s" style="margin:8px 0 0">Indian grades include the 15% import duty (and your MCX calibration, if set). GST 3% is shown separately; jewellers add making charges on top. Ranges are 68% likely bands.</div>
+</div>
+<div class="banner glass" id="banner">Loading live market data…</div>
+
+<div class="kpis" id="kpis"></div>
+
+<section id="monitor">
+  <h2>Hour-by-hour monitor</h2>
+  <p class="sub">Hourly gold candles (IST), refreshed at the top of every hour, plus a live spot tick every minute. Flags mark any hour that moved more than 2× its expected hourly volatility.</p>
+  <div class="grid g21">
+    <div class="card glass">
+      <div class="row"><h3 style="margin:0">Hourly gold, USD/oz</h3><span class="sp"></span>
+        <div class="seg" id="hrRange"><button data-n="24">24h</button><button data-n="72">3d</button><button data-n="168" class="on">7d</button><button data-n="720">30d</button><button data-n="0">All</button></div>
+        <div class="seg" id="hrOv"><button data-o="bb" class="on">Bollinger</button><button data-o="ma">MAs</button><button data-o="none">Clean</button></div>
+      </div>
+      <div class="ch" id="cHourly" style="height:560px"></div>
+    </div>
+    <div class="card glass">
+      <h3>Hourly log</h3><div class="h3s">Last 24 completed hours · ₹/10g at today's duty and calibration</div>
+      <div class="scroll" style="max-height:400px"><table id="tHourly"></table></div>
+      <h3 style="margin-top:12px">Live spot ticks</h3><div class="h3s">XAU spot polled every 60 s this session</div>
+      <div class="ch xs" id="cTicks" style="height:120px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="forecast">
+  <h2>Next MCX session forecast</h2>
+  <p class="sub" id="fcSub"></p>
+  <div class="grid g12">
+    <div class="card glass">
+      <div class="h3s" id="fcTarget"></div>
+      <div class="big" id="fcBig">—</div>
+      <div class="verdict" id="fcBands"></div>
+      <div style="margin-top:12px" class="verdict" id="fcUsd"></div>
+      <div class="row" style="margin-top:14px"><h3 style="margin:0">Probability calculator</h3></div>
+      <div class="row"><label class="f">Target ₹/10g<input type="number" id="pTarget" step="100"></label>
+        <label class="f">Within (trading days)<input type="number" id="pDays" value="20" min="1" max="250" style="width:90px"></label></div>
+      <div class="verdict" id="pOut"></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><h3 style="margin:0">Recent sessions → next session and projection cone</h3><span class="sp"></span>
+        <div class="seg" id="coneH"><button data-h="5">1w</button><button data-h="20" class="on">1m</button><button data-h="60">3m</button></div></div>
+      <div class="ch t" id="cForecast"></div>
+    </div>
+  </div>
+  <div class="card glass" style="margin-top:var(--gap)">
+    <h3>Model breakdown</h3><div class="h3s">Each model's call for the next session, its weight in the ensemble (from its last 60 out-of-sample errors), and its walk-forward record</div>
+    <div class="scroll"><table id="tModels"></table></div>
+  </div>
+</section>
+
+<section id="proof">
+  <h2>Proof: walk-forward backtest</h2>
+  <p class="sub" id="proofSub"></p>
+  <div class="grid g2">
+    <div class="card glass"><h3>Predicted vs actual (ensemble, ₹/10g ex-duty-change)</h3><div class="h3s">Each point predicted using only data available the evening before</div><div class="ch" id="cPvA"></div></div>
+    <div class="card glass"><h3>Model accuracy vs random walk</h3><div class="h3s">Theil U − 1. Below 0 means the model beat "tomorrow = today". Bars cross 0 only by noise unless the DM test is significant (|DM| &gt; 1.96)</div><div class="ch" id="cTheil"></div></div>
+    <div class="card glass"><h3>Direction hit rate, rolling 60 sessions</h3><div class="h3s">Ensemble direction calls vs the "always predict up" baseline</div><div class="ch" id="cHit"></div></div>
+    <div class="card glass"><h3>Forecast error distribution and band coverage</h3><div class="h3s">Next-day errors in %; the bands should contain 68% / 95% of outcomes</div><div class="ch" id="cErr"></div></div>
+  </div>
+  <div class="card glass verdict" style="margin-top:var(--gap)" id="proofVerdict"></div>
+</section>
+
+<section id="analytics">
+  <h2>Analytics</h2>
+  <p class="sub">Daily MCX parity history with India's duty regime applied by date, technical indicators, risk, intraday seasonality, and what drives the rupee price.</p>
+  <div class="card glass">
+    <div class="row"><h3 style="margin:0">MCX parity, ₹/10g (duty by date)</h3><span class="sp"></span>
+      <div class="seg" id="dRange"><button data-n="66">3m</button><button data-n="130">6m</button><button data-n="260" class="on">1y</button><button data-n="780">3y</button><button data-n="0">All</button></div></div>
+    <div class="ch t" id="cDaily"></div>
+  </div>
+  <div class="grid g2" style="margin-top:var(--gap)">
+    <div class="card glass"><h3>RSI (14) and MACD</h3><div class="h3s">Momentum on the rupee price</div><div class="ch" id="cOsc"></div></div>
+    <div class="card glass"><h3>Drawdown from peak and volatility regime</h3><div class="h3s">How far below the high, and how turbulent (annualised EWMA vol)</div><div class="ch" id="cRisk"></div></div>
+    <div class="card glass"><div class="row"><h3 style="margin:0">When gold moves: IST hour × weekday</h3><span class="sp"></span><div class="seg" id="hmMode"><button data-m="abs" class="on">Volatility</button><button data-m="mean">Avg return</button></div></div><div class="h3s" id="hmSub"></div><div class="ch" id="cHeat"></div></div>
+    <div class="card glass"><h3>Where the rupee return came from (last 12 months)</h3><div class="h3s">Cumulative log-return split: dollar gold price vs USD/INR</div><div class="ch" id="cDecomp"></div></div>
+  </div>
+</section>
+
+<section id="invest">
+  <h2>Investor view</h2>
+  <p class="sub">A rules-based scorecard combining trend, momentum, stretch, discount from the peak, volatility and the model view. Each factor's weight is shown. This is decision support, not financial advice.</p>
+  <div class="grid g12">
+    <div class="card glass"><h3>Composite score</h3><div class="ch s" id="cGauge"></div><div class="verdict" id="invVerdict"></div></div>
+    <div class="card glass"><h3>Factor breakdown</h3><div class="h3s">Bars right of centre favour buying now; left favour waiting</div><div id="factors"></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:var(--gap)">
+    <div class="card glass"><h3>Reference levels (₹/10g)</h3><div class="h3s">Levels derived from the real price series, at today's duty and calibration</div><table id="tLevels"></table></div>
+    <div class="card glass"><h3>Live prediction ledger</h3><div class="h3s">Every forecast this page makes is saved in your browser and scored when the real close arrives</div><div class="scroll" style="max-height:300px"><table id="tLedger"></table></div></div>
+  </div>
+</section>
+
+<section id="data">
+  <h2>Data, method and limits</h2>
+  <div class="grid g2">
+    <div class="card glass src"><h3>Live sources (fetched by your browser)</h3><ul id="srcList"></ul></div>
+    <div class="card glass verdict" id="method"></div>
+  </div>
+</section>
+<footer>AurumCast runs entirely in your browser. No data is stored on any server; settings and the prediction ledger live in this browser's local storage. Not investment advice. Futures trading on MCX carries leverage risk.</footer>
+</div>
+
+<div class="drawer glass" id="drawer">
+  <div class="row"><h3 style="margin:0">Settings</h3><span class="sp"></span><button class="btn" id="setClose">Close</button></div>
+  <label class="f" style="margin-top:12px">Import duty on gold, % (BCD + AIDC)<input type="number" id="sDuty" step="0.25"></label>
+  <p>Default is 15% (10% BCD + 5% AIDC), effective 13 May 2026. Change it here if the duty changes again.</p>
+  <label class="f">Actual MCX Gold price now, ₹/10g (optional)<input type="number" id="sMcx" step="1" placeholder="e.g. from your broker"></label>
+  <p>MCX futures trade at a premium or discount to import parity (carry, local demand, contract month). Enter the live MCX price from your broker and AurumCast stores the gap and applies it to every ₹ figure. Leave blank for pure parity.</p>
+  <div class="row"><button class="btn pri" id="sCal">Calibrate</button><button class="btn" id="sReset">Clear calibration</button></div>
+  <p id="sCalTxt"></p>
+  <label class="f">Hourly history to load<select id="sHours" class="btn"><option value="1000">~6 weeks (1,000 h)</option><option value="2000" selected>~12 weeks (2,000 h)</option><option value="3000">~18 weeks (3,000 h)</option></select></label>
+  <p style="margin-top:14px"><label><input type="checkbox" id="sAuto" checked> Auto-refresh hourly and poll spot every minute</label></p>
+  <p><button class="btn" id="sClearLedger">Clear prediction ledger</button></p>
+</div>
+<div class="toast glass" id="toast"></div>
+<script>/*ENGINE*/</script>
+<script>/*APP*/</script>
+</body>
+</html>

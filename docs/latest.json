@@ -1,0 +1,374 @@
+{
+  "generatedAt": "2026-11-20T01:56:06.984Z",
+  "generatedIST": "2026-11-20 07:26",
+  "inputs": {
+    "spotUsdOz": 3576.899902,
+    "spotUpdated": "2026-11-20T01:56:04.000Z",
+    "paxgUsd": 3555.99,
+    "paxgToSpotBasisPct": 0.59,
+    "usdInr": 93.27,
+    "usdInrDate": "2026-11-19",
+    "usdInrLiveCrossCheck": 93.372746,
+    "importDutyPct": 15,
+    "mcxCalibrationPct": 0
+  },
+  "rates": {
+    "fineIntl": 10726.05,
+    "fineLanded": 12334.96,
+    "k24_9999": 12333.72,
+    "k24_999": 12322.62,
+    "mcx995": 12273.28,
+    "k22_916": 11298.82,
+    "mcx995_10g": 122732.83
+  },
+  "changeVsPrevCloseFine": -0.03,
+  "predictions": {
+    "open": {
+      "label": "Next MCX open (09:00 IST)",
+      "targetIST": "2026-11-20 09:00",
+      "targetMs": 1795145400000,
+      "tradingHours": 1.75,
+      "expectedReturn": -0.000048744883696263734,
+      "sigma": 0.004799400576132406,
+      "grades": {
+        "k24_9999": {
+          "mid": 12333.12,
+          "lo68": 12274.07,
+          "hi68": 12392.46,
+          "lo95": 12217.65,
+          "hi95": 12449.69
+        },
+        "k24_999": {
+          "mid": 12322.02,
+          "lo68": 12263.03,
+          "hi68": 12381.3,
+          "lo95": 12206.65,
+          "hi95": 12438.48
+        },
+        "mcx995": {
+          "mid": 12272.68,
+          "lo68": 12213.92,
+          "hi68": 12331.73,
+          "lo95": 12157.78,
+          "hi95": 12388.68
+        },
+        "k22_916": {
+          "mid": 11298.27,
+          "lo68": 11244.18,
+          "hi68": 11352.63,
+          "lo95": 11192.49,
+          "hi95": 11405.05
+        },
+        "fineIntl": {
+          "mid": 10725.53,
+          "lo68": 10674.17,
+          "hi68": 10777.13,
+          "lo95": 10625.11,
+          "hi95": 10826.9
+        }
+      }
+    },
+    "close": {
+      "label": "Next MCX session close",
+      "targetIST": "2026-11-20 23:55",
+      "targetMs": 1795199100000,
+      "tradingHours": 16.5,
+      "expectedReturn": -0.0004595946177076294,
+      "sigma": 0.014737029303046139,
+      "grades": {
+        "k24_9999": {
+          "mid": 12328.06,
+          "lo68": 12147.71,
+          "hi68": 12511.08,
+          "lo95": 11977.06,
+          "hi95": 12689.34
+        },
+        "k24_999": {
+          "mid": 12316.96,
+          "lo68": 12136.78,
+          "hi68": 12499.82,
+          "lo95": 11966.28,
+          "hi95": 12677.92
+        },
+        "mcx995": {
+          "mid": 12267.64,
+          "lo68": 12088.18,
+          "hi68": 12449.77,
+          "lo95": 11918.37,
+          "hi95": 12627.16
+        },
+        "k22_916": {
+          "mid": 11293.63,
+          "lo68": 11128.42,
+          "hi68": 11461.3,
+          "lo95": 10972.08,
+          "hi95": 11624.6
+        },
+        "fineIntl": {
+          "mid": 10721.12,
+          "lo68": 10564.28,
+          "hi68": 10880.29,
+          "lo95": 10415.88,
+          "hi95": 11035.31
+        }
+      }
+    },
+    "followingOpen": {
+      "label": "Following MCX open",
+      "targetIST": "2026-11-23 09:00",
+      "targetMs": 1795404600000,
+      "tradingHours": 24.75,
+      "expectedReturn": -0.0006816288881233419,
+      "sigma": 0.018049101058453323,
+      "grades": {
+        "k24_9999": {
+          "mid": 12325.32,
+          "lo68": 12104.85,
+          "hi68": 12549.8,
+          "lo95": 11896.92,
+          "hi95": 12769.15
+        },
+        "k24_999": {
+          "mid": 12314.23,
+          "lo68": 12093.96,
+          "hi68": 12538.5,
+          "lo95": 11886.21,
+          "hi95": 12757.65
+        },
+        "mcx995": {
+          "mid": 12264.92,
+          "lo68": 12045.54,
+          "hi68": 12488.3,
+          "lo95": 11838.62,
+          "hi95": 12706.57
+        },
+        "k22_916": {
+          "mid": 11291.12,
+          "lo68": 11089.16,
+          "hi68": 11496.77,
+          "lo95": 10898.67,
+          "hi95": 11697.71
+        },
+        "fineIntl": {
+          "mid": 10718.74,
+          "lo68": 10527.01,
+          "hi68": 10913.96,
+          "lo95": 10346.18,
+          "hi95": 11104.72
+        }
+      }
+    }
+  },
+  "model": {
+    "backtestSessions": 989,
+    "ensembleTheilU": 0.9975579159237196,
+    "dieboldMariano": -0.6238460425575546,
+    "directionHit": 0.5581395348837209,
+    "alwaysUpBaseline": 0.5490394337714863,
+    "band68Coverage": 0.7138523761375126,
+    "band95Coverage": 0.9312436804853387,
+    "morningOpen68Coverage": 0.7727272727272727,
+    "morningOpenSamples": 22
+  },
+  "validation": [
+    {
+      "name": "Fetch: Binance hourly",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    },
+    {
+      "name": "Fetch: Binance daily",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    },
+    {
+      "name": "Fetch: Frankfurter USD/INR",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    },
+    {
+      "name": "Fetch: gold-api spot",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    },
+    {
+      "name": "Fetch: Binance 30-min",
+      "pass": true,
+      "detail": "ok",
+      "severity": "warn"
+    },
+    {
+      "name": "Fetch: ExchangeRate-API (FX cross-check)",
+      "pass": true,
+      "detail": "ok",
+      "severity": "warn"
+    },
+    {
+      "name": "Hourly bars count ≥ 900",
+      "pass": true,
+      "detail": "999",
+      "severity": "error"
+    },
+    {
+      "name": "Hourly data fresh (≤ 3 h)",
+      "pass": true,
+      "detail": "last close 2026-11-20 06:30 IST",
+      "severity": "error"
+    },
+    {
+      "name": "Daily sessions ≥ 1000",
+      "pass": true,
+      "detail": "1626 sessions from 2020-08-28",
+      "severity": "error"
+    },
+    {
+      "name": "USD/INR history ≥ 1000 fixes",
+      "pass": true,
+      "detail": "2637",
+      "severity": "error"
+    },
+    {
+      "name": "USD/INR fresh (≤ 6 days)",
+      "pass": true,
+      "detail": "ECB 2026-11-19",
+      "severity": "error"
+    },
+    {
+      "name": "USD/INR in sane range 60–150",
+      "pass": true,
+      "detail": "93.27",
+      "severity": "error"
+    },
+    {
+      "name": "Spot fresh (≤ 90 min)",
+      "pass": true,
+      "detail": "2026-11-20T01:56:04Z",
+      "severity": "error"
+    },
+    {
+      "name": "Spot in sane range $500–$20,000",
+      "pass": true,
+      "detail": "$3576.899902",
+      "severity": "error"
+    },
+    {
+      "name": "Spot vs PAXG within 2%",
+      "pass": true,
+      "detail": "XAU $3576.899902 vs PAXG $3555.99 (+0.59%)",
+      "severity": "error"
+    },
+    {
+      "name": "ECB USD/INR vs live within 1%",
+      "pass": true,
+      "detail": "ECB 93.27 vs live 93.372746",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: k24_9999",
+      "pass": true,
+      "detail": "12333.72 = 12334.96 × 0.9999",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: k24_999",
+      "pass": true,
+      "detail": "12322.62 = 12334.96 × 0.999",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: mcx995",
+      "pass": true,
+      "detail": "12273.28 = 12334.96 × 0.995",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: k22_916",
+      "pass": true,
+      "detail": "11298.82 = 12334.96 × 0.916",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: international fine",
+      "pass": true,
+      "detail": "10726.05",
+      "severity": "error"
+    },
+    {
+      "name": "Rate maths: MCX 10 g = 10 × per gram",
+      "pass": true,
+      "detail": "122732.83",
+      "severity": "error"
+    },
+    {
+      "name": "Grade ordering 24K 99.99 > 99.9 > 995 > 22K",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    },
+    {
+      "name": "Prediction bands ordered & finite",
+      "pass": true,
+      "detail": "lo95 ≤ lo68 ≤ mid ≤ hi68 ≤ hi95",
+      "severity": "error"
+    },
+    {
+      "name": "Daily sigma in 0.1%–8%",
+      "pass": true,
+      "detail": "1.74%",
+      "severity": "error"
+    },
+    {
+      "name": "Expected next-close move within ±3σ",
+      "pass": true,
+      "detail": "-0.05%",
+      "severity": "error"
+    },
+    {
+      "name": "Backtest sample ≥ 500 sessions",
+      "pass": true,
+      "detail": "989",
+      "severity": "error"
+    },
+    {
+      "name": "Backtest 68% band coverage 55–85%",
+      "pass": true,
+      "detail": "71.4%",
+      "severity": "error"
+    },
+    {
+      "name": "Backtest 95% band coverage 85–99%",
+      "pass": true,
+      "detail": "93.1%",
+      "severity": "error"
+    },
+    {
+      "name": "Naive model Theil U = 1 (scoring sanity)",
+      "pass": true,
+      "detail": "1",
+      "severity": "error"
+    },
+    {
+      "name": "24K change vs last publish ≤ 10%",
+      "pass": true,
+      "detail": "+0.35% vs 2026-11-20 07:25",
+      "severity": "error"
+    },
+    {
+      "name": "All rates finite and positive",
+      "pass": true,
+      "detail": "ok",
+      "severity": "error"
+    }
+  ],
+  "sources": {
+    "gold": "Binance PAXG/USDT (data-api.binance.vision)",
+    "spot": "gold-api.com XAU",
+    "fx": "ECB via frankfurter.dev",
+    "fxCrossCheck": "open.er-api.com"
+  },
+  "liveTrackRecord": null
+}

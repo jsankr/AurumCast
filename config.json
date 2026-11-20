@@ -1,0 +1,14 @@
+{
+  "importDutyPct": 15,
+  "importDutyNote": "10% BCD + 5% AIDC, effective 13 May 2026 (Customs Notification 16/2026). Change here if the duty changes.",
+  "mcxCalibrationPct": 0,
+  "mcxCalibrationNote": "Optional: MCX premium(+)/discount(-) vs import parity, in %. 0 = pure parity.",
+  "limits": {
+    "spotVsPaxgMaxPct": 2.0,
+    "ecbVsLiveFxMaxPct": 1.0,
+    "maxDayChangePct": 10,
+    "spotMaxAgeMin": 90,
+    "hourlyMaxAgeH": 3,
+    "fxMaxAgeDays": 6
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "aurumcast",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Daily COMEX → India gold rates (24K 99.99%, 24K 99.9%, MCX 995, 22K) with validated predictions",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "daily": "node scripts/daily.mjs",
+    "build": "node scripts/build-dashboard.mjs"
+  }
+}
