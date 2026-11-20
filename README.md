@@ -9,15 +9,15 @@ AurumCast tracks the international (COMEX) gold price hour by hour and converts 
 ![AurumCast dashboard overview](docs/img/overview.jpg)
 
 <!-- RATES:START -->
-**Latest: 2026-11-20 07:41 IST** · spot $3557.12/oz · USD/INR 93.27 · duty 15% · [full report](reports/2026-11-20.md)
+**Latest: 2026-11-20 08:11 IST** · spot $3549.70/oz · USD/INR 93.27 · duty 15% · [full report](reports/2026-11-20.md)
 
 | Grade | Today ₹/g | ₹/10 g | + 3% GST ₹/g | MCX open 11-20 09:00 IST · ₹/g (68%) | Session close 11-20 23:55 IST · ₹/g (68%) |
 |---|---:|---:|---:|---:|---:|
-| 24K · 99.99% (999.9) | **₹12,265.52** | ₹1,22,655 | ₹12,633.49 | ₹12,265 (₹12,209–₹12,321) | ₹12,260 (₹12,077–₹12,446) |
-| 24K · 99.9% (999) | **₹12,254.48** | ₹1,22,545 | ₹12,622.11 | ₹12,254 (₹12,198–₹12,310) | ₹12,249 (₹12,066–₹12,435) |
-| MCX Gold · 99.5% (995) | **₹12,205.41** | ₹1,22,054 | — | ₹12,205 (₹12,149–₹12,261) | ₹12,200 (₹12,018–₹12,385) |
-| 22K · 91.6% (916) | **₹11,236.34** | ₹1,12,363 | ₹11,573.43 | ₹11,236 (₹11,185–₹11,287) | ₹11,232 (₹11,064–₹11,402) |
-| International fine (COMEX, no Indian duty) | **₹10,666.74** | ₹1,06,667 | — | ₹10,666 (₹10,618–₹10,715) | ₹10,662 (₹10,503–₹10,824) |
+| 24K · 99.99% (999.9) | **₹12,239.93** | ₹1,22,399 | ₹12,607.13 | ₹12,240 (₹12,194–₹12,285) | ₹12,235 (₹12,056–₹12,416) |
+| 24K · 99.9% (999) | **₹12,228.92** | ₹1,22,289 | ₹12,595.78 | ₹12,229 (₹12,183–₹12,274) | ₹12,224 (₹12,045–₹12,405) |
+| MCX Gold · 99.5% (995) | **₹12,179.95** | ₹1,21,800 | — | ₹12,180 (₹12,135–₹12,225) | ₹12,175 (₹11,997–₹12,355) |
+| 22K · 91.6% (916) | **₹11,212.90** | ₹1,12,129 | ₹11,549.29 | ₹11,213 (₹11,171–₹11,254) | ₹11,208 (₹11,045–₹11,374) |
+| International fine (COMEX, no Indian duty) | **₹10,644.49** | ₹1,06,445 | — | ₹10,644 (₹10,605–₹10,684) | ₹10,640 (₹10,485–₹10,798) |
 <!-- RATES:END -->
 
 > **Read this first.** The forecast's *ranges* are reliable: about 68% of real outcomes land inside the 68% band. The *point* forecast (the single number) is **not** reliably better than "tomorrow = today". Use AurumCast to size the likely move and to time staggered buying, not to bet on direction. Not investment advice.
