@@ -254,7 +254,7 @@ node scripts/daily.mjs             # fetch + validate + publish
 node scripts/build-dashboard.mjs   # rebuild docs/index.html from src/
 ```
 
-**One-time setup:** go to Settings → Pages → *Deploy from a branch* → `main` / `/docs`. The dashboard then goes live at **https://jsankr.github.io/AurumCast/**.
+**One-time setup:** go to Settings → Pages → *Deploy from a branch* → `main`, with either `/ (root)` or `/docs` (the build puts the app in both, with Jekyll disabled). The dashboard is live at **https://jsankr.github.io/AurumCast/**.
 
 ---
 
