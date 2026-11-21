@@ -25,7 +25,9 @@
   "basis": 1.0023820174192803,
   "duty": 15,
   "prem": 0,
-  "actual": null
+  "actual": 12094.58,
+  "errorPct": 1.57,
+  "inBand68": false
  },
  {
   "kind": "open",
@@ -36,6 +38,19 @@
   "lo68": 11931.03,
   "hi68": 12340.72,
   "basis": 0.994182512603097,
+  "duty": 15,
+  "prem": 0,
+  "actual": null
+ },
+ {
+  "kind": "close",
+  "targetMs": 1795458300000,
+  "targetIST": "2026-11-23 23:55",
+  "madeIST": "2026-11-21 15:18",
+  "mid": 12150.37,
+  "lo68": 11933.37,
+  "hi68": 12371.31,
+  "basis": 1.0035246712811599,
   "duty": 15,
   "prem": 0,
   "actual": null

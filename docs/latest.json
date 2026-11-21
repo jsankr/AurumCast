@@ -1,115 +1,115 @@
 {
-  "generatedAt": "2026-11-20T06:01:01.107Z",
-  "generatedIST": "2026-11-20 11:31",
+  "generatedAt": "2026-11-21T09:48:46.274Z",
+  "generatedIST": "2026-11-21 15:18",
   "inputs": {
-    "spotUsdOz": 3522.169922,
-    "spotUpdated": "2026-11-20T06:00:35.000Z",
-    "paxgUsd": 3542.78,
-    "paxgToSpotBasisPct": -0.58,
-    "usdInr": 93.24,
-    "usdInrDate": "2026-11-20",
+    "spotUsdOz": 3539,
+    "spotUpdated": "2026-11-21T09:48:37.000Z",
+    "paxgUsd": 3526.57,
+    "paxgToSpotBasisPct": 0.35,
+    "usdInr": 92.94,
+    "usdInrDate": "2026-11-21",
     "usdInrLiveCrossCheck": 93.372746,
     "importDutyPct": 15,
     "mcxCalibrationPct": 0
   },
   "rates": {
-    "fineIntl": 10558.53,
-    "fineLanded": 12142.31,
-    "k24_9999": 12141.1,
-    "k24_999": 12130.17,
-    "mcx995": 12081.6,
-    "k22_916": 11122.36,
-    "mcx995_10g": 120816.03
+    "fineIntl": 10574.85,
+    "fineLanded": 12161.08,
+    "k24_9999": 12159.86,
+    "k24_999": 12148.92,
+    "mcx995": 12100.27,
+    "k22_916": 11139.55,
+    "mcx995_10g": 121002.74
   },
-  "changeVsPrevCloseFine": -0.04,
+  "changeVsPrevCloseFine": 0,
   "predictions": {
     "open": {
       "label": "Next MCX open (09:00 IST)",
       "targetIST": "2026-11-23 09:00",
       "targetMs": 1795404600000,
-      "tradingHours": 20.5,
-      "expectedReturn": -0.0005729620134930484,
-      "sigma": 0.016881174591436114,
+      "tradingHours": 4.5,
+      "expectedReturn": -0.0001803183644973308,
+      "sigma": 0.008656840251926022,
       "grades": {
         "k24_9999": {
-          "mid": 12134.15,
-          "lo68": 11931.03,
-          "hi68": 12340.72,
-          "lo95": 11739.23,
-          "hi95": 12542.35
+          "mid": 12157.67,
+          "lo68": 12052.88,
+          "hi68": 12263.37,
+          "lo95": 11953.13,
+          "hi95": 12365.72
         },
         "k24_999": {
-          "mid": 12123.22,
-          "lo68": 11920.29,
-          "hi68": 12329.62,
-          "lo95": 11728.66,
-          "hi95": 12531.06
+          "mid": 12146.73,
+          "lo68": 12042.03,
+          "hi68": 12252.34,
+          "lo95": 11942.37,
+          "hi95": 12354.58
         },
         "mcx995": {
-          "mid": 12074.68,
-          "lo68": 11872.56,
-          "hi68": 12280.25,
-          "lo95": 11681.7,
-          "hi95": 12480.88
+          "mid": 12098.09,
+          "lo68": 11993.81,
+          "hi68": 12203.28,
+          "lo95": 11894.55,
+          "hi95": 12305.12
         },
         "k22_916": {
-          "mid": 11115.99,
-          "lo68": 10929.91,
-          "hi68": 11305.23,
-          "lo95": 10754.21,
-          "hi95": 11489.94
+          "mid": 11137.54,
+          "lo68": 11041.54,
+          "hi68": 11234.37,
+          "lo95": 10950.16,
+          "hi95": 11328.13
         },
         "fineIntl": {
-          "mid": 10552.49,
-          "lo68": 10375.84,
-          "hi68": 10732.14,
-          "lo95": 10209.05,
-          "hi95": 10907.48
+          "mid": 10572.95,
+          "lo68": 10481.81,
+          "hi68": 10664.87,
+          "lo95": 10395.06,
+          "hi95": 10753.87
         }
       }
     },
     "close": {
       "label": "Next MCX session close",
-      "targetIST": "2026-11-20 23:55",
-      "targetMs": 1795199100000,
-      "tradingHours": 12.5,
-      "expectedReturn": -0.00034936708139820025,
-      "sigma": 0.013181982705214652,
+      "targetIST": "2026-11-23 23:55",
+      "targetMs": 1795458300000,
+      "tradingHours": 19.5,
+      "expectedReturn": -0.0007813795794884333,
+      "sigma": 0.018020650015244232,
       "grades": {
         "k24_9999": {
-          "mid": 12136.86,
-          "lo68": 11977.92,
-          "hi68": 12297.91,
-          "lo95": 11827.3,
-          "hi95": 12454.52
+          "mid": 12150.37,
+          "lo68": 11933.37,
+          "hi68": 12371.31,
+          "lo95": 11728.7,
+          "hi95": 12587.19
         },
         "k24_999": {
-          "mid": 12125.93,
-          "lo68": 11967.14,
-          "hi68": 12286.84,
-          "lo95": 11816.65,
-          "hi95": 12443.31
+          "mid": 12139.43,
+          "lo68": 11922.63,
+          "hi68": 12360.17,
+          "lo95": 11718.14,
+          "hi95": 12575.86
         },
         "mcx995": {
-          "mid": 12077.38,
-          "lo68": 11919.22,
-          "hi68": 12237.64,
-          "lo95": 11769.34,
-          "hi95": 12393.49
+          "mid": 12090.82,
+          "lo68": 11874.89,
+          "hi68": 12310.68,
+          "lo95": 11671.22,
+          "hi95": 12525.51
         },
         "k22_916": {
-          "mid": 11118.47,
-          "lo68": 10972.87,
-          "hi68": 11266.01,
-          "lo95": 10834.89,
-          "hi95": 11409.48
+          "mid": 11130.85,
+          "lo68": 10932.06,
+          "hi68": 11333.25,
+          "lo95": 10744.56,
+          "hi95": 11531.02
         },
         "fineIntl": {
-          "mid": 10554.85,
-          "lo68": 10416.63,
-          "hi68": 10694.9,
-          "lo95": 10285.64,
-          "hi95": 10831.1
+          "mid": 10566.59,
+          "lo68": 10377.88,
+          "hi68": 10758.74,
+          "lo95": 10199.89,
+          "hi95": 10946.48
         }
       }
     },
@@ -117,107 +117,107 @@
       "label": "Following MCX open",
       "targetIST": "2026-11-24 09:00",
       "targetMs": 1795491000000,
-      "tradingHours": 43.5,
-      "expectedReturn": -0.0011368430613969858,
-      "sigma": 0.024590669872559635,
+      "tradingHours": 27.5,
+      "expectedReturn": -0.0010395003126394853,
+      "sigma": 0.021400281859787533,
       "grades": {
         "k24_9999": {
-          "mid": 12127.31,
-          "lo68": 11832.72,
-          "hi68": 12429.22,
-          "lo95": 11556.66,
-          "hi95": 12726.13
+          "mid": 12147.23,
+          "lo68": 11890.04,
+          "hi68": 12409.99,
+          "lo95": 11648.26,
+          "hi95": 12667.58
         },
         "k24_999": {
-          "mid": 12116.39,
-          "lo68": 11822.07,
-          "hi68": 12418.03,
-          "lo95": 11546.26,
-          "hi95": 12714.67
+          "mid": 12136.3,
+          "lo68": 11879.34,
+          "hi68": 12398.82,
+          "lo95": 11637.77,
+          "hi95": 12656.17
         },
         "mcx995": {
-          "mid": 12067.88,
-          "lo68": 11774.74,
-          "hi68": 12368.31,
-          "lo95": 11500.03,
-          "hi95": 12663.76
+          "mid": 12087.7,
+          "lo68": 11831.77,
+          "hi68": 12349.17,
+          "lo95": 11591.18,
+          "hi95": 12605.5
         },
         "k22_916": {
-          "mid": 11109.72,
-          "lo68": 10839.86,
-          "hi68": 11386.3,
-          "lo95": 10586.96,
-          "hi95": 11658.3
+          "mid": 11127.98,
+          "lo68": 10892.36,
+          "hi68": 11368.68,
+          "lo95": 10670.87,
+          "hi95": 11604.66
         },
         "fineIntl": {
-          "mid": 10546.54,
-          "lo68": 10290.35,
-          "hi68": 10809.1,
-          "lo95": 10050.27,
-          "hi95": 11067.31
+          "mid": 10563.87,
+          "lo68": 10340.2,
+          "hi68": 10792.37,
+          "lo95": 10129.93,
+          "hi95": 11016.39
         }
       }
     }
   },
   "model": {
-    "backtestSessions": 989,
-    "ensembleTheilU": 0.9975579159237196,
-    "dieboldMariano": -0.6238460425575546,
-    "directionHit": 0.5581395348837209,
-    "alwaysUpBaseline": 0.5490394337714863,
-    "band68Coverage": 0.7138523761375126,
-    "band95Coverage": 0.9312436804853387,
+    "backtestSessions": 990,
+    "ensembleTheilU": 0.997643157449164,
+    "dieboldMariano": -0.6129901901109689,
+    "directionHit": 0.5575757575757576,
+    "alwaysUpBaseline": 0.5484848484848485,
+    "band68Coverage": 0.7131313131313132,
+    "band95Coverage": 0.9303030303030303,
     "morningOpen68Coverage": 0.7966101694915254,
     "morningOpenSamples": 59
   },
   "k22_1g": {
-    "mcxLinked": 11122.36,
-    "mcxLinkedWithGst": 11456.03,
-    "comexNoDuty": 9671.62,
+    "mcxLinked": 11139.55,
+    "mcxLinkedWithGst": 11473.74,
+    "comexNoDuty": 9686.56,
     "predictions": {
       "open": {
         "targetIST": "2026-11-23 09:00",
-        "mid": 11115.99,
-        "lo68": 10929.91,
-        "hi68": 11305.23,
-        "lo95": 10754.21,
-        "hi95": 11489.94
+        "mid": 11137.54,
+        "lo68": 11041.54,
+        "hi68": 11234.37,
+        "lo95": 10950.16,
+        "hi95": 11328.13
       },
       "close": {
-        "targetIST": "2026-11-20 23:55",
-        "mid": 11118.47,
-        "lo68": 10972.87,
-        "hi68": 11266.01,
-        "lo95": 10834.89,
-        "hi95": 11409.48
+        "targetIST": "2026-11-23 23:55",
+        "mid": 11130.85,
+        "lo68": 10932.06,
+        "hi68": 11333.25,
+        "lo95": 10744.56,
+        "hi95": 11531.02
       },
       "followingOpen": {
         "targetIST": "2026-11-24 09:00",
-        "mid": 11109.72,
-        "lo68": 10839.86,
-        "hi68": 11386.3,
-        "lo95": 10586.96,
-        "hi95": 11658.3
+        "mid": 11127.98,
+        "lo68": 10892.36,
+        "hi68": 11368.68,
+        "lo95": 10670.87,
+        "hi95": 11604.66
       }
     },
     "success": {
       "sessionCloseAll": {
-        "n": 989,
-        "band68": 0.7138523761375126,
-        "within05": 0.43174924165824063,
-        "within1": 0.7138523761375126,
-        "direction": 0.5581395348837209,
-        "mape": 0.008244185717155409,
-        "maeAbs": 80.0594938382763
+        "n": 990,
+        "band68": 0.7131313131313132,
+        "within05": 0.4313131313131313,
+        "within1": 0.7131313131313132,
+        "direction": 0.5575757575757576,
+        "mape": 0.008288022426264433,
+        "maeAbs": 81.30885854645486
       },
       "sessionCloseLast90": {
         "n": 90,
-        "band68": 0.7444444444444445,
+        "band68": 0.7333333333333333,
         "within05": 0.28888888888888886,
-        "within1": 0.6222222222222222,
+        "within1": 0.6111111111111112,
         "direction": 0.5111111111111111,
-        "mape": 0.01052209177261042,
-        "maeAbs": 140.86680754577884
+        "mape": 0.011024661659019247,
+        "maeAbs": 147.62186492039322
       },
       "morningOpenAll": {
         "n": 59,
@@ -225,8 +225,8 @@
         "within05": 0.6271186440677966,
         "within1": 0.847457627118644,
         "direction": 0.3728813559322034,
-        "mape": 0.005568766110819294,
-        "maeAbs": 71.97684333601066
+        "mape": 0.005568511112459835,
+        "maeAbs": 72.62483319844158
       }
     }
   },
@@ -276,7 +276,7 @@
     {
       "name": "Hourly data fresh (≤ 3 h)",
       "pass": true,
-      "detail": "last close 2026-11-20 11:30 IST",
+      "detail": "last close 2026-11-21 14:30 IST",
       "severity": "error"
     },
     {
@@ -288,79 +288,79 @@
     {
       "name": "USD/INR history ≥ 1000 fixes",
       "pass": true,
-      "detail": "2638",
+      "detail": "2639",
       "severity": "error"
     },
     {
       "name": "USD/INR fresh (≤ 6 days)",
       "pass": true,
-      "detail": "ECB 2026-11-20",
+      "detail": "ECB 2026-11-21",
       "severity": "error"
     },
     {
       "name": "USD/INR in sane range 60–150",
       "pass": true,
-      "detail": "93.24",
+      "detail": "92.94",
       "severity": "error"
     },
     {
       "name": "Spot fresh (≤ 90 min)",
       "pass": true,
-      "detail": "2026-11-20T06:00:35Z",
+      "detail": "2026-11-21T09:48:37Z",
       "severity": "error"
     },
     {
       "name": "Spot in sane range $500–$20,000",
       "pass": true,
-      "detail": "$3522.169922",
+      "detail": "$3539",
       "severity": "error"
     },
     {
       "name": "Spot vs PAXG within 2%",
       "pass": true,
-      "detail": "XAU $3522.169922 vs PAXG $3542.78 (-0.58%)",
+      "detail": "XAU $3539 vs PAXG $3526.57 (+0.35%)",
       "severity": "error"
     },
     {
       "name": "ECB USD/INR vs live within 1%",
       "pass": true,
-      "detail": "ECB 93.24 vs live 93.372746",
+      "detail": "ECB 92.94 vs live 93.372746",
       "severity": "error"
     },
     {
       "name": "Rate maths: k24_9999",
       "pass": true,
-      "detail": "12141.1 = 12142.31 × 0.9999",
+      "detail": "12159.86 = 12161.08 × 0.9999",
       "severity": "error"
     },
     {
       "name": "Rate maths: k24_999",
       "pass": true,
-      "detail": "12130.17 = 12142.31 × 0.999",
+      "detail": "12148.92 = 12161.08 × 0.999",
       "severity": "error"
     },
     {
       "name": "Rate maths: mcx995",
       "pass": true,
-      "detail": "12081.6 = 12142.31 × 0.995",
+      "detail": "12100.27 = 12161.08 × 0.995",
       "severity": "error"
     },
     {
       "name": "Rate maths: k22_916",
       "pass": true,
-      "detail": "11122.36 = 12142.31 × 0.916",
+      "detail": "11139.55 = 12161.08 × 0.916",
       "severity": "error"
     },
     {
       "name": "Rate maths: international fine",
       "pass": true,
-      "detail": "10558.53",
+      "detail": "10574.85",
       "severity": "error"
     },
     {
       "name": "Rate maths: MCX 10 g = 10 × per gram",
       "pass": true,
-      "detail": "120816.03",
+      "detail": "121002.74",
       "severity": "error"
     },
     {
@@ -378,49 +378,49 @@
     {
       "name": "Daily sigma in 0.1%–8%",
       "pass": true,
-      "detail": "1.79%",
+      "detail": "1.96%",
       "severity": "error"
     },
     {
       "name": "Expected next-close move within ±3σ",
       "pass": true,
-      "detail": "-0.03%",
+      "detail": "-0.08%",
       "severity": "error"
     },
     {
       "name": "Backtest sample ≥ 500 sessions",
       "pass": true,
-      "detail": "989",
+      "detail": "990",
       "severity": "error"
     },
     {
       "name": "Backtest 68% band coverage 55–85%",
       "pass": true,
-      "detail": "71.4%",
+      "detail": "71.3%",
       "severity": "error"
     },
     {
       "name": "Backtest 95% band coverage 85–99%",
       "pass": true,
-      "detail": "93.1%",
+      "detail": "93.0%",
       "severity": "error"
     },
     {
       "name": "22K success stats: ≥ 500 scored session closes",
       "pass": true,
-      "detail": "989",
+      "detail": "990",
       "severity": "error"
     },
     {
       "name": "22K 68% range hit rate 55–85%",
       "pass": true,
-      "detail": "71.4%",
+      "detail": "71.3%",
       "severity": "error"
     },
     {
       "name": "22K rate = 24K 99.99% × 0.916 / 0.9999",
       "pass": true,
-      "detail": "11122.36",
+      "detail": "11139.55",
       "severity": "error"
     },
     {
@@ -432,7 +432,7 @@
     {
       "name": "24K change vs last publish ≤ 10%",
       "pass": true,
-      "detail": "-0.81% vs 2026-11-20 08:11",
+      "detail": "+0.15% vs 2026-11-20 11:31",
       "severity": "error"
     },
     {
@@ -449,8 +449,8 @@
     "fxCrossCheck": "open.er-api.com"
   },
   "liveTrackRecord": {
-    "n": 1,
+    "n": 2,
     "inBand68": 0,
-    "meanAbsErrorPct": 0.98
+    "meanAbsErrorPct": 1.275
   }
 }
