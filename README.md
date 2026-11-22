@@ -9,17 +9,17 @@ AurumCast tracks the international (COMEX) gold price hour by hour and converts 
 ![AurumCast dashboard overview](docs/img/overview.jpg)
 
 <!-- RATES:START -->
-**Latest: 2026-11-21 15:18 IST** · spot $3539.00/oz · USD/INR 92.94 · duty 15% · [full report](reports/2026-11-21.md)
+**Latest: 2026-11-22 15:15 IST** · spot $3539.00/oz · USD/INR 92.82 · duty 15% · [full report](reports/2026-11-22.md)
 
 | Grade | Today ₹/g | ₹/10 g | + 3% GST ₹/g | MCX open 11-23 09:00 IST · ₹/g (68%) | Session close 11-23 23:55 IST · ₹/g (68%) |
 |---|---:|---:|---:|---:|---:|
-| 24K · 99.99% (999.9) | **₹12,159.86** | ₹1,21,599 | ₹12,524.66 | ₹12,158 (₹12,053–₹12,263) | ₹12,150 (₹11,933–₹12,371) |
-| 24K · 99.9% (999) | **₹12,148.92** | ₹1,21,489 | ₹12,513.39 | ₹12,147 (₹12,042–₹12,252) | ₹12,139 (₹11,923–₹12,360) |
-| MCX Gold · 99.5% (995) | **₹12,100.27** | ₹1,21,003 | — | ₹12,098 (₹11,994–₹12,203) | ₹12,091 (₹11,875–₹12,311) |
-| 22K · 91.6% (916) | **₹11,139.55** | ₹1,11,395 | ₹11,473.74 | ₹11,138 (₹11,042–₹11,234) | ₹11,131 (₹10,932–₹11,333) |
-| International fine (COMEX, no Indian duty) | **₹10,574.85** | ₹1,05,749 | — | ₹10,573 (₹10,482–₹10,665) | ₹10,567 (₹10,378–₹10,759) |
+| 24K · 99.99% (999.9) | **₹12,144.16** | ₹1,21,442 | ₹12,508.49 | ₹12,142 (₹12,037–₹12,248) | ₹12,134 (₹11,916–₹12,356) |
+| 24K · 99.9% (999) | **₹12,133.23** | ₹1,21,332 | ₹12,497.23 | ₹12,131 (₹12,026–₹12,237) | ₹12,123 (₹11,905–₹12,345) |
+| MCX Gold · 99.5% (995) | **₹12,084.65** | ₹1,20,847 | — | ₹12,082 (₹11,978–₹12,188) | ₹12,074 (₹11,858–₹12,295) |
+| 22K · 91.6% (916) | **₹11,125.17** | ₹1,11,252 | ₹11,458.92 | ₹11,123 (₹11,027–₹11,220) | ₹11,116 (₹10,916–₹11,319) |
+| International fine (COMEX, no Indian duty) | **₹10,561.20** | ₹1,05,612 | — | ₹10,559 (₹10,468–₹10,651) | ₹10,552 (₹10,363–₹10,745) |
 
-**22K 1 gram:** ₹11,139.55 MCX-linked · ₹11,473.74 with GST · ₹9,686.56 COMEX (no duty). Prediction success over 990 session closes: **71.3% inside the 68% range**, 71.3% within ±1%; 59 MCX morning opens: 79.7% inside range.
+**22K 1 gram:** ₹11,125.17 MCX-linked · ₹11,458.92 with GST · ₹9,674.06 COMEX (no duty). Prediction success over 990 session closes: **71.3% inside the 68% range**, 71.3% within ±1%; 59 MCX morning opens: 79.7% inside range.
 <!-- RATES:END -->
 
 > **Read this first.** The forecast's *ranges* are reliable: about 68% of real outcomes land inside the 68% band. The *point* forecast (the single number) is **not** reliably better than "tomorrow = today". Use AurumCast to size the likely move and to time staggered buying, not to bet on direction. Not investment advice.
