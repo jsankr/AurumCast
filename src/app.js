@@ -92,6 +92,7 @@ async function loadAll() {
   if (!D.hRaw || !D.dRaw || !D.fxRaw) {
     setLive('err', 'Data unavailable');
     $('banner').innerHTML = `<b>Could not load the required live data.</b> ${Object.entries(D.err).map(([k, v]) => `${k}: ${v}`).join(' · ')}. Nothing is shown instead of real data. Check your connection and press <b>Refresh now</b>. (If you opened this inside a sandboxed viewer, download the file and open it directly in Chrome/Edge/Firefox.)`;
+    if (window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update', { detail: window.AurumBridge.snapshot() }));
     return false;
   }
   return true;
@@ -298,7 +299,7 @@ window.AurumBridge = {
     const old = D.daily[D.lastC], prevMcx = toMcx(old.inr, old.date)/10;
     const validation = D.sc?.res?.ens || {};
     return {
-      ready: true, fetchedAt: D.fetchedAt, now, spot: sp, spotChange24h: change,
+      ready: true, fetchedAt: D.fetchedAt, now, theme: S.theme, spot: sp, spotChange24h: change,
       fx: D.fxNow, fxDate: D.fxDate, duty: S.duty, calibration: S.prem,
       rates, mcxChange: rates.mcx995 / prevMcx - 1,
       open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
