@@ -1,47 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 300" role="img" aria-label="Fine gold bullion bars and wireframe globe">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" aria-label="Fine gold bullion ingots against luminous golden market grid and globe">
 <defs>
-<radialGradient id="halo"><stop stop-color="#e6a135" stop-opacity=".67"/><stop offset=".4" stop-color="#ab6117" stop-opacity=".19"/><stop offset="1" stop-color="#110c0c" stop-opacity="0"/></radialGradient>
-<linearGradient id="top" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff6cb"/><stop offset=".22" stop-color="#ffda62"/><stop offset=".47" stop-color="#f6ac24"/><stop offset=".72" stop-color="#d78a13"/><stop offset="1" stop-color="#fff5ab"/></linearGradient>
-<linearGradient id="front" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff1a4"/><stop offset=".28" stop-color="#ffd051"/><stop offset=".52" stop-color="#d89116"/><stop offset=".79" stop-color="#ba6c0d"/><stop offset="1" stop-color="#f2bd37"/></linearGradient>
-<linearGradient id="side"><stop stop-color="#bf7c17"/><stop offset=".5" stop-color="#653605"/><stop offset="1" stop-color="#d38c21"/></linearGradient>
-<filter id="shadow" x="-30%" y="-30%" width="160%" height="175%"><feGaussianBlur stdDeviation="15"/></filter>
-<filter id="light" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>
-<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<clipPath id="globeclip"><circle cx="580" cy="154" r="115"/></clipPath>
+<linearGradient id="sky" x2="1" y2="1"><stop stop-color="#100e13"/><stop offset=".35" stop-color="#4a2e19"/><stop offset="1" stop-color="#0c111b"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#ffba47" stop-opacity=".65"/><stop offset=".37" stop-color="#d58b30" stop-opacity=".28"/><stop offset="1" stop-color="#bd7514" stop-opacity="0"/></radialGradient>
+<linearGradient id="goldface" x1="0" x2=".98" y1="0" y2=".9"><stop stop-color="#fff5b5"/><stop offset=".13" stop-color="#d7a02d"/><stop offset=".29" stop-color="#fff2a7"/><stop offset=".5" stop-color="#f6ae20"/><stop offset=".66" stop-color="#b66c08"/><stop offset=".8" stop-color="#fcd46d"/><stop offset="1" stop-color="#7a3c04"/></linearGradient>
+<linearGradient id="goldtop" x1="0" x2="1" y1=".2" y2=".8"><stop stop-color="#fffbd2"/><stop offset=".18" stop-color="#ffe991"/><stop offset=".46" stop-color="#f5b32b"/><stop offset=".68" stop-color="#fff0a2"/><stop offset="1" stop-color="#ce7b0b"/></linearGradient>
+<linearGradient id="goldside" x1="0" x2="1"><stop stop-color="#f3ab22"/><stop offset=".3" stop-color="#8b4707"/><stop offset=".6" stop-color="#fdc342"/><stop offset="1" stop-color="#5f3007"/></linearGradient>
+<linearGradient id="reflection" x1="0" x2="1"><stop stop-color="#fff7c5" stop-opacity=".8"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff2b2" stop-opacity=".5"/></linearGradient>
+<filter id="blur"><feGaussianBlur stdDeviation="22"/></filter><filter id="spark"><feGaussianBlur stdDeviation="2"/></filter>
 </defs>
-<ellipse cx="365" cy="148" rx="344" ry="180" fill="url(#halo)"/>
-<g opacity=".68" fill="none" stroke="#e7a450" stroke-width="1.25">
-<circle cx="580" cy="154" r="115" stroke-width="2"/><ellipse cx="580" cy="154" rx="84" ry="115"/><ellipse cx="580" cy="154" rx="42" ry="115"/>
-<ellipse cx="580" cy="154" rx="115" ry="43"/><ellipse cx="580" cy="154" rx="115" ry="87"/>
-<path d="M465 154h230M580 39v230"/>
+<ellipse cx="456" cy="190" rx="405" ry="185" fill="url(#halo)"/>
+<g stroke="#dd9d47" opacity=".18" stroke-width="1">
+<path d="M0 245L900 88M0 282L900 126M25 331L900 170M170 330L850 0M280 330L900 42"/>
+<path d="M66 0v330M125 0v330M184 0v330M242 0v330M302 0v330M361 0v330M421 0v330M480 0v330M540 0v330M601 0v330M663 0v330M724 0v330M784 0v330"/>
 </g>
-<g clip-path="url(#globeclip)" fill="#d09c5a" opacity=".28">
-<path d="M504 58l29 8 9 20 19 9 8 21-17 10-7 27-16-13-17 9-7-33-20-20z"/>
-<path d="M595 77l24 4 10 15-10 14 9 13-11 26-19-4-1-20-18-15 3-18z"/>
-<path d="M626 155l25-5 15 17-12 20-11 5 7 29-20 4-15-17 4-23z"/>
+<g opacity=".6"><path d="M74 197l32-44 18 18 24-51 22 27 23-13 24-63 19 25 25-21 22 49 21-20 28-17 25 33 17-18 23 42 22-23 32 7" fill="none" stroke="#a87433" stroke-width="4"/>
+<path d="M74 197l32-44 18 18 24-51 22 27 23-13 24-63 19 25 25-21 22 49 21-20 28-17 25 33 17-18 23 42 22-23 32 7" fill="none" stroke="#e3b858" stroke-width="1.2"/></g>
+<g fill="none" stroke="#e3a344" opacity=".7">
+<circle cx="758" cy="158" r="130" stroke-width="2"/>
+<ellipse cx="758" cy="158" rx="43" ry="130"/><ellipse cx="758" cy="158" rx="87" ry="130"/>
+<ellipse cx="758" cy="158" rx="130" ry="47"/><ellipse cx="758" cy="158" rx="130" ry="92"/>
+<path d="M628 158H888M758 28V288"/>
 </g>
-<g opacity=".3"><path d="M40 266L140 244l100 17 100-27 80 23 140-17" fill="none" stroke="#d69a35"/><path d="M51 243L190 201l91 26 122-20" fill="none" stroke="#b27c2a"/></g>
-<ellipse cx="318" cy="251" rx="253" ry="28" fill="#030405" opacity=".72" filter="url(#shadow)"/>
-<!-- rear gold bar -->
-<g transform="translate(252 91) rotate(-7)">
-<path d="M28 40L181 16l43 28-155 31Z" fill="url(#top)" stroke="#ffe7a0" stroke-width="2"/>
-<path d="M28 40l41 35v84l-41-37z" fill="url(#side)" stroke="#ba6d0b" stroke-width="2"/>
-<path d="M69 75l155-31v84L69 159Z" fill="url(#front)" stroke="#ffe28a" stroke-width="2"/>
-<path d="M82 81l127-27v4L82 85z" fill="#fff6b0" opacity=".53"/>
-<text x="147" y="103" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#8d5108" text-anchor="middle" transform="rotate(-10 147 103)">FINE GOLD</text>
-<text x="148" y="124" font-family="Georgia,serif" font-size="18" font-weight="bold" fill="#8a4a07" text-anchor="middle" transform="rotate(-10 148 124)">999.9</text>
+<g fill="#f2a947" opacity=".24">
+<path d="M706 70l27-10 20 17 11 28-17 20-27-6-3-26-19-5z"/>
+<path d="M773 91l25-12 35 17 17 25-28 18-3 43-27-18-21-33z"/>
+<path d="M724 165l32-9 17 36-11 34-26 29-17-22 2-28z"/>
+<path d="M811 206l27 10 14 22-21 15-30-6-5-28z"/>
 </g>
-<!-- front gold bar -->
-<g transform="translate(105 16) rotate(-8 105 100)">
-<path d="M54 45L204 15l49 34L99 84Z" fill="url(#top)" stroke="#fff0ba" stroke-width="3"/>
-<path d="M54 45l45 39v116l-45-46Z" fill="url(#side)" stroke="#b66e0a" stroke-width="2"/>
-<path d="M99 84l154-35v117L99 200Z" fill="url(#front)" stroke="#ffdf82" stroke-width="3"/>
-<path d="M109 91l133-30v6L109 96z" fill="#fffbc6" opacity=".71"/>
-<path d="M114 185l124-29" stroke="#ffec9c" opacity=".5" stroke-width="1.5"/>
-<text x="178" y="119" font-size="22" font-family="Georgia,serif" fill="#764107" text-anchor="middle" font-weight="bold" transform="rotate(-12 178 119)">FINE GOLD</text>
-<text x="178" y="151" font-size="27" font-family="Georgia,serif" fill="#754007" text-anchor="middle" font-weight="bold" transform="rotate(-12 178 151)">999.9</text>
+<ellipse cx="426" cy="290" rx="296" ry="28" fill="#010202" opacity=".7" filter="url(#blur)"/>
+<!-- left stacked bullion: strongly beveled pressed ingot with faceted side -->
+<g transform="translate(80 108) skewY(-4)">
+<path d="M36 48L204 5L257 50L91 95Z" fill="url(#goldtop)" stroke="#ffe8a2" stroke-width="3"/>
+<path d="M36 48L91 95L88 159L36 112Z" fill="url(#goldside)" stroke="#ab690f" stroke-width="2"/>
+<path d="M91 95L257 50L257 113L88 159Z" fill="url(#goldface)" stroke="#ffd56b" stroke-width="2.5"/>
+<path d="M44 51L205 11L244 48L93 87Z" fill="none" stroke="#fff9d2" stroke-width="1.4" opacity=".8"/>
+<path d="M95 105L250 62" stroke="#fff5af" stroke-width="2" opacity=".7"/>
+<path d="M94 153L251 111" stroke="#753c00" stroke-width="3" opacity=".6"/>
+<path d="M41 53L89 94L86 152" fill="none" stroke="#fff4b2" stroke-width="1.7" opacity=".6"/>
+<text x="170" y="114" font-size="19" font-family="Georgia,serif" font-weight="bold" fill="#855007" text-anchor="middle" transform="rotate(-15 170 114)">FINE GOLD</text>
+<text x="176" y="133" font-size="18" font-family="Georgia,serif" font-weight="bold" fill="#814606" text-anchor="middle" transform="rotate(-15 176 133)">999.9</text>
 </g>
-<g fill="#f8cf72" opacity=".7" filter="url(#glow)">
-<circle cx="322" cy="21" r="1.5"/><circle cx="378" cy="39" r="2"/><circle cx="498" cy="20" r="1.6"/><circle cx="466" cy="259" r="1.2"/><circle cx="181" cy="17" r="1.3"/>
+<!-- right horizontal ingot -->
+<g transform="translate(341 129) rotate(5)">
+<path d="M20 40L176 0L232 40L75 82Z" fill="url(#goldtop)" stroke="#fff0ad" stroke-width="3"/>
+<path d="M20 40L75 82L74 142L20 101Z" fill="url(#goldside)" stroke="#ad650d" stroke-width="2"/>
+<path d="M75 82L232 40L231 103L74 142Z" fill="url(#goldface)" stroke="#ffc34e" stroke-width="2.4"/>
+<path d="M33 43L177 6L219 42L81 77Z" fill="none" stroke="#fff5bf" stroke-width="2"/>
+<path d="M78 88L226 48" stroke="#fff8cb" opacity=".8" stroke-width="1.5"/>
+<text x="161" y="100" font-size="18" font-family="Georgia,serif" font-weight="bold" fill="#885109" text-anchor="middle" transform="rotate(-14 161 100)">FINE GOLD</text>
+<text x="166" y="118" font-size="18" font-family="Georgia,serif" font-weight="bold" fill="#885109" text-anchor="middle" transform="rotate(-14 166 118)">999.9</text>
 </g>
+<!-- raised principal 1kg bar, sloping facets and hot reflection -->
+<g transform="translate(287 20) rotate(-12 112 139)">
+<path d="M57 28L183 6L242 39L108 67Z" fill="url(#goldtop)" stroke="#fff6c3" stroke-width="3.5"/>
+<path d="M57 28L108 67L95 255L37 213Z" fill="url(#goldside)" stroke="#ba720e" stroke-width="3"/>
+<path d="M108 67L242 39L229 215L95 255Z" fill="url(#goldface)" stroke="#ffe29a" stroke-width="3.5"/>
+<path d="M66 32L185 12L232 43L114 61" fill="none" stroke="#fffbd3" stroke-width="2" opacity=".82"/>
+<path d="M118 73L234 48L220 205L103 242Z" fill="none" stroke="#ffec9b" stroke-width="2" opacity=".55"/>
+<path d="M127 74L145 225" stroke="#fffbd7" opacity=".55" stroke-width="3"/>
+<path d="M57 28L95 255" stroke="#ffd469" stroke-width="1.5"/>
+<text x="170" y="129" font-size="23" font-weight="bold" font-family="Georgia,serif" fill="#794509" text-anchor="middle" transform="rotate(-11 170 129)">FINE GOLD</text>
+<text x="172" y="165" font-size="26" font-weight="bold" font-family="Georgia,serif" fill="#7e470a" text-anchor="middle" transform="rotate(-11 172 165)">999.9</text>
+<text x="172" y="193" font-size="12" font-weight="bold" font-family="Georgia,serif" fill="#7e470a" text-anchor="middle" transform="rotate(-11 172 193)">NET WT 1000g</text>
+<path d="M111 73L120 72L106 245L98 249Z" fill="#ffebb8" opacity=".22"/>
+</g>
+<g fill="#fff0a6" opacity=".87"><circle cx="319" cy="40" r="2.2"/><circle cx="441" cy="12" r="1.4"/><circle cx="522" cy="62" r="1.7"/><circle cx="638" cy="34" r="1.9"/><circle cx="679" cy="251" r="1.3"/></g>
 </svg>
