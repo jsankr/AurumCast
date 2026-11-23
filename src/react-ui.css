@@ -150,3 +150,11 @@ html.ac2-fallback #main-wrap{margin-left:0!important;max-width:1480px;margin-rig
 html.ac2-fallback #main-wrap>header.top{display:flex!important}
 html.ac2-fallback #main-wrap>.gstrip{display:grid!important}
 html.ac2-fallback #main-wrap>.kpis{display:grid!important}
+
+.ac2-analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:14px;margin-top:19px}
+.ac2-analytics-grid>div{min-width:0}
+.ac2-analytics-grid h3{font-size:12px;font-weight:700;color:#b7c2d2;margin:6px 0 12px}
+.ac2-linechart{width:100%;height:290px;min-width:0}
+.ac2-analytics-context{font-size:11px;color:#a2aebe;line-height:1.65;border-left:2px solid #deb768;padding:13px;background:#ffffff05;margin-top:12px}
+.ac2-table .ac2-explanation{max-width:540px;color:#a8b5c4;line-height:1.6;white-space:normal}
+@media(max-width:640px){.ac2-linechart{height:250px}}
