@@ -418,7 +418,11 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
       h('div',{className:'ac2-top-controls'},
        h('span',{className:'ac2-status'},'● ',m.ready?'Market data ready':'Fetching feeds'),
        btn(h(Icon,{name:'bell'}),()=>setAlerts(true),'ac2-square'),
-       btn('☼',()=>window.AurumBridge?.setTheme(m.theme==='ivory'?'aurum':'ivory'),'ac2-square ac3-theme-toggle'),
+       h('div',{className:'ac4-theme-picker',role:'group','aria-label':'Dashboard color theme'},
+        ...[['aurum','Gold'],['obsidian','Obsidian'],['rose','Rose'],['ivory','Ivory']].map(([id,label])=>
+         h('button',{key:id,type:'button',className:'ac4-swatch ac4-'+id+(m.theme===id?' active':''),
+          title:label+' theme','aria-label':label+' theme','aria-pressed':m.theme===id,
+          onClick:()=>window.AurumBridge?.setTheme(id)},h('span',{className:'ac4-swatch-dot'})))) ,
        h('div',{className:'ac3-profile-wrap'},btn(h(R.Fragment,null,h('span',{className:'ac3-profile-avatar'},'Au'),' AurumCast'),()=>setProfile(!profile),'ac3-profile-button'),
         profile&&h('div',{className:'ac3-profile-menu'},btn('Settings',()=>{setSettings(true);setProfile(false)}),btn('Methodology',()=>{navTo('data');setProfile(false)}))),
        btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refresh(),'ac2-square'))),
