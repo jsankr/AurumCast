@@ -8,7 +8,7 @@ The new interface follows the approved black-and-gold market-intelligence refere
 
 - Gold market landing page with premium gold graphics, responsive icon navigation, searchable module links, refresh status and mobile drawer
 - Live XAU reference, MCX 995 import parity, 22K pricing and ECB USD/INR cards
-- Native React candlestick and volume chart with EMA-like **simple moving averages** (SMA 20 / SMA 50) and live-history range selection
+- Native React candlestick and volume chart with EMA-like **exponential moving averages** (EMA 20 / EMA 50) and live-history range selection
 - React purity-rate table and adjustable metal-weight / purity calculator with explicit duty and GST context
 - React next-MCX-open and next-session-close forecast panels using existing 68%/95% probabilistic engine results
 - React model diagnostic card showing Theil U and Diebold–Mariano evidence rather than fabricated prediction-success claims
