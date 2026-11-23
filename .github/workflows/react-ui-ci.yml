@@ -1,0 +1,27 @@
+name: React UI quality gates
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests and React contract tests
+        run: npm test
+      - name: Regenerate both Pages entry points
+        run: npm run build
+      - name: Verify deployment outputs reproduce exactly
+        run: |
+          git diff --exit-code -- index.html docs/index.html
+          grep -q 'R.createRoot(mount)' index.html
+          grep -q 'ac2-hero' docs/index.html
+          cmp index.html docs/index.html
