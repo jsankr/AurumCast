@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 300" role="img" aria-label="Fine gold bullion bars and wireframe globe">
+<defs>
+<radialGradient id="halo"><stop stop-color="#e6a135" stop-opacity=".67"/><stop offset=".4" stop-color="#ab6117" stop-opacity=".19"/><stop offset="1" stop-color="#110c0c" stop-opacity="0"/></radialGradient>
+<linearGradient id="top" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff6cb"/><stop offset=".22" stop-color="#ffda62"/><stop offset=".47" stop-color="#f6ac24"/><stop offset=".72" stop-color="#d78a13"/><stop offset="1" stop-color="#fff5ab"/></linearGradient>
+<linearGradient id="front" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff1a4"/><stop offset=".28" stop-color="#ffd051"/><stop offset=".52" stop-color="#d89116"/><stop offset=".79" stop-color="#ba6c0d"/><stop offset="1" stop-color="#f2bd37"/></linearGradient>
+<linearGradient id="side"><stop stop-color="#bf7c17"/><stop offset=".5" stop-color="#653605"/><stop offset="1" stop-color="#d38c21"/></linearGradient>
+<filter id="shadow" x="-30%" y="-30%" width="160%" height="175%"><feGaussianBlur stdDeviation="15"/></filter>
+<filter id="light" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<clipPath id="globeclip"><circle cx="580" cy="154" r="115"/></clipPath>
+</defs>
+<ellipse cx="365" cy="148" rx="344" ry="180" fill="url(#halo)"/>
+<g opacity=".68" fill="none" stroke="#e7a450" stroke-width="1.25">
+<circle cx="580" cy="154" r="115" stroke-width="2"/><ellipse cx="580" cy="154" rx="84" ry="115"/><ellipse cx="580" cy="154" rx="42" ry="115"/>
+<ellipse cx="580" cy="154" rx="115" ry="43"/><ellipse cx="580" cy="154" rx="115" ry="87"/>
+<path d="M465 154h230M580 39v230"/>
+</g>
+<g clip-path="url(#globeclip)" fill="#d09c5a" opacity=".28">
+<path d="M504 58l29 8 9 20 19 9 8 21-17 10-7 27-16-13-17 9-7-33-20-20z"/>
+<path d="M595 77l24 4 10 15-10 14 9 13-11 26-19-4-1-20-18-15 3-18z"/>
+<path d="M626 155l25-5 15 17-12 20-11 5 7 29-20 4-15-17 4-23z"/>
+</g>
+<g opacity=".3"><path d="M40 266L140 244l100 17 100-27 80 23 140-17" fill="none" stroke="#d69a35"/><path d="M51 243L190 201l91 26 122-20" fill="none" stroke="#b27c2a"/></g>
+<ellipse cx="318" cy="251" rx="253" ry="28" fill="#030405" opacity=".72" filter="url(#shadow)"/>
+<!-- rear gold bar -->
+<g transform="translate(252 91) rotate(-7)">
+<path d="M28 40L181 16l43 28-155 31Z" fill="url(#top)" stroke="#ffe7a0" stroke-width="2"/>
+<path d="M28 40l41 35v84l-41-37z" fill="url(#side)" stroke="#ba6d0b" stroke-width="2"/>
+<path d="M69 75l155-31v84L69 159Z" fill="url(#front)" stroke="#ffe28a" stroke-width="2"/>
+<path d="M82 81l127-27v4L82 85z" fill="#fff6b0" opacity=".53"/>
+<text x="147" y="103" font-family="Georgia,serif" font-size="20" font-weight="bold" fill="#8d5108" text-anchor="middle" transform="rotate(-10 147 103)">FINE GOLD</text>
+<text x="148" y="124" font-family="Georgia,serif" font-size="18" font-weight="bold" fill="#8a4a07" text-anchor="middle" transform="rotate(-10 148 124)">999.9</text>
+</g>
+<!-- front gold bar -->
+<g transform="translate(105 16) rotate(-8 105 100)">
+<path d="M54 45L204 15l49 34L99 84Z" fill="url(#top)" stroke="#fff0ba" stroke-width="3"/>
+<path d="M54 45l45 39v116l-45-46Z" fill="url(#side)" stroke="#b66e0a" stroke-width="2"/>
+<path d="M99 84l154-35v117L99 200Z" fill="url(#front)" stroke="#ffdf82" stroke-width="3"/>
+<path d="M109 91l133-30v6L109 96z" fill="#fffbc6" opacity=".71"/>
+<path d="M114 185l124-29" stroke="#ffec9c" opacity=".5" stroke-width="1.5"/>
+<text x="178" y="119" font-size="22" font-family="Georgia,serif" fill="#764107" text-anchor="middle" font-weight="bold" transform="rotate(-12 178 119)">FINE GOLD</text>
+<text x="178" y="151" font-size="27" font-family="Georgia,serif" fill="#754007" text-anchor="middle" font-weight="bold" transform="rotate(-12 178 151)">999.9</text>
+</g>
+<g fill="#f8cf72" opacity=".7" filter="url(#glow)">
+<circle cx="322" cy="21" r="1.5"/><circle cx="378" cy="39" r="2"/><circle cx="498" cy="20" r="1.6"/><circle cx="466" cy="259" r="1.2"/><circle cx="181" cy="17" r="1.3"/>
+</g>
+</svg>
