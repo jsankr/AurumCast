@@ -1,5 +1,40 @@
 # AurumCast — India gold rates, monitor & forecast
 
+## React professional UI refresh (migration phase 1)
+
+AurumCast now includes a **React 18 application shell** in the original GitHub Pages dashboard. This is an incremental migration: React handles responsive navigation and application-level presentation, while the existing numerical engine, ECharts views, calculations, live polling, browser settings, history and prediction ledger remain operational and unchanged.
+
+### What changed
+
+- Persistent sidebar navigation (Overview, Live monitor, Forecast studio, Model validation, Market analytics, Investor insights, Data & methodology).
+- Mobile drawer navigation with accessible controls, active-section tracking and reduced-motion support.
+- Premium dark-gold visual tokens, card hierarchy, refined spacing, responsive KPI surfaces, desktop/mobile layouts, focus and hover states.
+- React quick actions delegate to the original Refresh and Settings controls, so the existing app remains the source of truth.
+- The existing root and `docs/` GitHub Pages outputs are preserved; the scheduled data job continues to use the same forecast models and validation checks.
+
+### Build and run
+
+```bash
+npm run build
+npm test
+```
+
+Serve the repository root using any static HTTP server (avoid opening HTML via `file://` because browser APIs and third-party feeds may be restricted):
+
+```bash
+npx serve .
+```
+
+Open the local address reported by the static server. GitHub Pages continues to serve `index.html` or `docs/index.html` based on repository settings.
+
+React and ReactDOM are pinned to 18.3.1 and loaded from jsDelivr; the unchanged ECharts 5.5.1 dependency is also CDN-hosted. An internet connection is required for live market feeds and CDN scripts. If React fails to load, the core legacy dashboard remains usable.
+
+**Architecture:** `src/react-shell.js` is the React navigation layer, `src/react-ui.css` is the design system, `src/dashboard.html` is the retained semantic DOM/visualization layout, `src/app.js` runs data and charts, `src/engine.cjs` is the existing shared numerical engine, and `scripts/build-dashboard.mjs` assembles the deployment.
+
+**Known migration boundary:** This version does not convert every chart, table, calculator and settings drawer into React components. Those proven modules remain in their existing implementation and still work. A full component-by-component React migration should preserve the numerical regression tests and validate browser functionality before replacing those sections.
+
+---
+
 **Live dashboard → [https://jsankr.github.io/AurumCast/](https://jsankr.github.io/AurumCast/)**
 
 *Aurum* is Latin for gold (chemical symbol **Au**); AurumCast = gold + forecast.
