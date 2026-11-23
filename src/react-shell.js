@@ -35,7 +35,7 @@
   useEffect(()=>{
    if(!market.ready||!ref.current||!window.echarts)return;
    let chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
-   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='1Y'?8760:range==='ALL'?all.length:168;
+   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='ALL'?all.length:168;
    const bars=all.slice(-n),dates=bars.map(b=>dataTime(b.t).replace(' IST','')),candles=bars.map(b=>[b.o,b.c,b.l,b.h]);
    const close=bars.map(b=>b.c),average=(count)=>close.map((_,i)=>i<count-1?null:close.slice(i-count+1,i+1).reduce((a,b)=>a+b,0)/count);
    const option={animationDuration:350,backgroundColor:'transparent',
@@ -96,7 +96,7 @@
   const graded= m.ready?m.rates:{};
   const sentiment=m.ready?(m.score>.05?'Accumulation-leaning':m.score<-.05?'Wait / cautious':'Neutral / mixed'):'Not available';
   const score=m.ready?Math.round(Math.max(-1,Math.min(1,m.score))*100):0;
-  return h('div',{className:'ac2-dashboard'},
+  return h('div',{className:'ac2-dashboard',id:'ac-dashboard'},
     h('section',{className:'ac2-hero'},h('div',{className:'ac2-hero-copy'},
       h('div',{className:'ac2-eyebrow'},'AURUMCAST · GOLD MARKET INTELLIGENCE'),
       h('h1',null,'Global Gold ',h('em',null,'Market Intelligence')),
@@ -112,7 +112,7 @@
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗'})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
-        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','1Y','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
+        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
        h('div',{className:'ac2-spotline'},money(m.spot,2,'$'),h('span',{className:m.spotChange24h>=0?'positive':'negative'},pct(m.spotChange24h))),
        h(Chart,{market:m,range})),
        h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,h(Icon,{name:'target'}),' Price forecast'),h('p',null,'Next MCX open and next session close'))),
