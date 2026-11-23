@@ -245,6 +245,20 @@ body{background:#090d13!important;color:#f0f2f5!important;font-family:Inter,syst
 @media(max-width:970px){:root{--ac2-side:0px}.ac2-side{transform:translateX(-105%);width:263px;transition:transform .2s}.ac2-side.open{transform:translateX(0)}.ac2-screen{display:block;position:fixed;inset:0;background:#000b;z-index:45}.ac2-mobile-trigger{position:fixed;bottom:14px;left:14px;z-index:42;display:flex;gap:7px;align-items:center;color:#f9d484;background:#162334;border:1px solid #d3ac66;border-radius:30px;padding:11px 17px;box-shadow:0 10px 32px #000b}.ac2-topbar,.ac2-content,#main-wrap{margin-left:0}.ac2-topbar{padding:11px 16px}.ac2-content{padding:16px}.ac2-mini-grid{grid-template-columns:1fr 1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:1/-1}.ac2-main-grid{grid-template-columns:1fr}.ac2-gold-art{right:-18px;opacity:.65}}
 @media(max-width:630px){.ac2-search{width:60%}.ac2-status{display:none}.ac2-hero{padding:26px 20px;min-height:200px}.ac2-hero-copy{max-width:100%}.ac2-hero h1{font-size:28px}.ac2-hero p{max-width:75%}.ac2-gold-art{opacity:.24;right:-86px}.ac2-metrics,.ac2-mini-grid,.ac2-fields{grid-template-columns:1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:auto}.ac2-panel{padding:16px}.ac2-panel-head{flex-direction:column}.ac2-chart-panel{min-height:350px}.ac-native-chart{height:260px}.ac2-spotline{font-size:22px}#main-wrap{padding:0 14px 65px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Progressive enhancement: retain fully usable original dashboard without React CDN. */
+html.ac2-fallback #main-wrap{margin-left:0!important;max-width:1480px;margin-right:auto;margin-left:auto!important}
+html.ac2-fallback #main-wrap>header.top{display:flex!important}
+html.ac2-fallback #main-wrap>.gstrip{display:grid!important}
+html.ac2-fallback #main-wrap>.kpis{display:grid!important}
+
+.ac2-analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:14px;margin-top:19px}
+.ac2-analytics-grid>div{min-width:0}
+.ac2-analytics-grid h3{font-size:12px;font-weight:700;color:#b7c2d2;margin:6px 0 12px}
+.ac2-linechart{width:100%;height:290px;min-width:0}
+.ac2-analytics-context{font-size:11px;color:#a2aebe;line-height:1.65;border-left:2px solid #deb768;padding:13px;background:#ffffff05;margin-top:12px}
+.ac2-table .ac2-explanation{max-width:540px;color:#a8b5c4;line-height:1.6;white-space:normal}
+@media(max-width:640px){.ac2-linechart{height:250px}}
 </style>
 </head>
 <body>
@@ -982,6 +996,17 @@ window.AurumBridge = {
       rates, mcxChange: rates.mcx995 / prevMcx - 1,
       open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
       candle: h.map(b => ({ t: b.t, o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      analysis: {
+        daily: D.daily.slice(-260).map(x => ({ date:x.date, mcx:x.inr * D.basis * mcxF() })),
+        rsi: GE.rsi(D.px, 14).slice(-260),
+        macd: GE.macd(D.px).hist.slice(-260),
+        backtest: D.wf.rows.filter(r=>r.actual != null && r.t+1<D.px.length).slice(-260).map(r => ({
+          date:D.daily[r.t+1].date, predicted:D.px[r.t] * Math.exp(r.pred.ens)*D.basis*mcxF(),
+          actual:D.px[r.t+1]*D.basis*mcxF(),
+          lower:D.px[r.t]*Math.exp(r.pred.ens-r.sigma)*D.basis*mcxF(),
+          upper:D.px[r.t]*Math.exp(r.pred.ens+r.sigma)*D.basis*mcxF()
+        }))
+      },
       score: D.card.score, factors: D.card.factors.map(f => ({ name: f.k, score: f.v, weight: f.w, reason: f.why })),
       accuracy: { theilU: validation.theilU, dm: validation.dm, coverage: validation.coverage, n: validation.n },
       openValidation: D.mc ? { n: D.mc.n, coverage: D.mc.cov } : null,
@@ -1315,7 +1340,7 @@ fullRefresh();
  */
 (() => {
  'use strict';
- if (!window.React || !window.ReactDOM) { console.error('React not loaded; existing dashboard stays available'); return; }
+ if (!window.React || !window.ReactDOM) { document.documentElement.classList.add('ac2-fallback'); console.error('React not loaded; existing dashboard stays available'); return; }
  const R=React, h=R.createElement, useState=R.useState, useEffect=R.useEffect, useRef=R.useRef;
  const nav=[
   ['overview','Dashboard','layout-dashboard'],['monitor','Market Live','activity'],['forecast','Forecast & Prediction','trending-up'],
@@ -1346,7 +1371,7 @@ fullRefresh();
   useEffect(()=>{
    if(!market.ready||!ref.current||!window.echarts)return;
    let chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
-   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='1Y'?8760:range==='ALL'?all.length:168;
+   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='ALL'?all.length:168;
    const bars=all.slice(-n),dates=bars.map(b=>dataTime(b.t).replace(' IST','')),candles=bars.map(b=>[b.o,b.c,b.l,b.h]);
    const close=bars.map(b=>b.c),average=(count)=>close.map((_,i)=>i<count-1?null:close.slice(i-count+1,i+1).reduce((a,b)=>a+b,0)/count);
    const option={animationDuration:350,backgroundColor:'transparent',
@@ -1401,13 +1426,76 @@ fullRefresh();
     h('div',{className:'ac2-actions'},btn('Calibrate',()=>{if(window.AurumBridge.calibrate(+quote))close()},'ac2-gold-btn'),btn('Clear calibration',()=>window.AurumBridge.configure({calibration:0}))),
     h('hr'),btn('Clear locally stored prediction ledger',()=>{if(window.confirm('Clear predictions saved in this browser?'))window.AurumBridge.clearLedger()}),
     h('p',{className:'ac2-disclaimer'},'Your custom preferences and prediction ledger are stored in this browser.')));}
+ function LineChart({rows,fields,title,percent=false}){
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!rows?.length||!ref.current||!window.echarts)return;
+    const chart=window.echarts.init(ref.current);
+    const colors=['#e6b861','#60bffa','#47cc9c','#ed7c7f'];
+    chart.setOption({backgroundColor:'transparent',animationDuration:300,
+      tooltip:{trigger:'axis',backgroundColor:'#172232',borderColor:'#485566',textStyle:{color:'#f2f4f6'}},
+      legend:{top:0,left:12,textStyle:{color:'#aeb6c4'},data:fields.map(f=>f.label)},
+      grid:{top:42,left:65,right:18,bottom:48},
+      xAxis:{type:'category',data:rows.map(r=>r.date),axisLabel:{color:'#a1aab8',hideOverlap:true},axisLine:{lineStyle:{color:'#3b495a'}}},
+      yAxis:{type:'value',scale:true,axisLabel:{color:'#a1aab8',formatter:v=>percent?v.toFixed(0):'₹'+Math.round(v).toLocaleString('en-IN')},splitLine:{lineStyle:{color:'rgba(255,255,255,.07)'}}},
+      dataZoom:[{type:'inside'},{type:'slider',height:12,bottom:10,borderColor:'#364358',fillerColor:'rgba(237,185,94,.11)',textStyle:{color:'#97a0b0'}}],
+      series:fields.map((f,i)=>({name:f.label,type:'line',data:rows.map(r=>Number.isFinite(r[f.key])?r[f.key]:null),
+        connectNulls:false,showSymbol:false,lineStyle:{color:colors[i%colors.length],width:1.8},
+        itemStyle:{color:colors[i%colors.length]}}))
+    },true);
+    const obs=new ResizeObserver(()=>chart.resize());obs.observe(ref.current);
+    return()=>{obs.disconnect();chart.dispose()};
+  },[rows,fields,title,percent]);
+  return h('div',{ref,className:'ac2-linechart',role:'img','aria-label':title});
+ }
+ const historicalFields=[{key:'mcx',label:'MCX parity · ₹/10g'}];
+ const backtestFields=[{key:'predicted',label:'Predicted'},{key:'actual',label:'Actual'},{key:'lower',label:'Lower 68%'},{key:'upper',label:'Upper 68%'}];
+ const rsiFields=[{key:'rsi',label:'RSI (14)'}];
+ function NativeAnalytics({m}){
+  const [tab,setTab]=useState('backtest');
+  const rows=m.analysis?.daily||[];
+  const indicators=rows.map((r,i)=>({...r,rsi:m.analysis?.rsi?.[i]??null,macd:m.analysis?.macd?.[i]??null}));
+  return h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-native-analytics'},
+    h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Technical & walk-forward analytics'),
+      h('p',null,'Native React charts sourced from the original model and historical market series.')),
+      h('div',{className:'ac2-ranges'},btn('Backtesting',()=>setTab('backtest'),tab==='backtest'?'active':''),
+        btn('Technical indicators',()=>setTab('technical'),tab==='technical'?'active':''))),
+    tab==='backtest'?
+      h('div',{className:'ac2-analytics-grid'},h('div',null,h('h3',null,'Predicted vs actual MCX import parity'),
+        h(LineChart,{rows:m.analysis?.backtest||[],fields:backtestFields,title:'Walk-forward predicted vs actual MCX parity with 68 percent interval'})),
+        h('aside',{className:'ac2-analytics-context'},'Backtest uses out-of-sample ensemble predictions. Its uncertainty bands are estimates, not guarantees. Historical values use today’s duty and calibration for consistent comparison.')):
+      h('div',{className:'ac2-analytics-grid'},h('div',null,h('h3',null,'MCX parity · last 260 trading sessions'),
+        h(LineChart,{rows:indicators,fields:historicalFields,title:'Historical daily MCX import parity'})),
+        h('div',null,h('h3',null,'Relative Strength Index · 14 sessions'),
+        h(LineChart,{rows:indicators,fields:rsiFields,title:'RSI 14 daily momentum indicator',percent:true}))),
+    h('p',{className:'ac2-disclaimer'},'The underlying COMEX-equivalent price series is a spot-adjusted PAXG proxy. Exchange futures quotes require a licensed feed.'));
+ }
+ function EvidenceTables({m}){
+  const [tab,setTab]=useState('factors');
+  const rows=tab==='factors'?(m.factors||[]):(m.ledger||[]).slice().reverse().slice(0,40);
+  return h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-evidence-tables'},
+   h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Transparent model & investor evidence'),
+     h('p',null,'Inspect the actual rules-based factors and forecasts saved in this browser.')),
+     h('div',{className:'ac2-ranges'},btn('Factor breakdown',()=>setTab('factors'),tab==='factors'?'active':''),
+       btn('Prediction ledger',()=>setTab('ledger'),tab==='ledger'?'active':''))),
+   h('div',{className:'ac2-table-wrap'},tab==='factors'?
+     h('table',{className:'ac2-table'},h('thead',null,h('tr',null,['Factor','Contribution','Weight','Explanation'].map(n=>h('th',{key:n},n)))),
+       h('tbody',null,rows.map((r,i)=>h('tr',{key:i},h('td',null,r.name),h('td',null,pct(r.score/1)),h('td',null,pct(r.weight)),
+         h('td',{className:'ac2-explanation'},r.reason))))):
+     h('table',{className:'ac2-table'},h('thead',null,h('tr',null,['Target date','Forecast parity','Actual parity','Within 68% band'].map(n=>h('th',{key:n},n)))),
+       h('tbody',null,rows.length?rows.map((r,i)=>h('tr',{key:i},
+         h('td',null,r.target),h('td',null,money(r.predicted,2)),h('td',null,r.actual==null?'Pending':money(r.actual,2)),
+         h('td',null,r.actual==null?'Pending':r.actual>=r.lo68&&r.actual<=r.hi68?'Yes':'No'))):
+         h('tr',null,h('td',{colSpan:4},'No locally scored forecast records yet.'))))),
+   h('p',{className:'ac2-disclaimer'},'The forecast ledger is browser-local. Factor weights and numbers are generated from the original market engine.'));
+ }
  function Dashboard({m,go}){
   const [range,setRange]=useState('1M'),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
   const [target,setTarget]=useState(0);
   const graded= m.ready?m.rates:{};
   const sentiment=m.ready?(m.score>.05?'Accumulation-leaning':m.score<-.05?'Wait / cautious':'Neutral / mixed'):'Not available';
   const score=m.ready?Math.round(Math.max(-1,Math.min(1,m.score))*100):0;
-  return h('div',{className:'ac2-dashboard'},
+  return h('div',{className:'ac2-dashboard',id:'ac-dashboard'},
     h('section',{className:'ac2-hero'},h('div',{className:'ac2-hero-copy'},
       h('div',{className:'ac2-eyebrow'},'AURUMCAST · GOLD MARKET INTELLIGENCE'),
       h('h1',null,'Global Gold ',h('em',null,'Market Intelligence')),
@@ -1423,7 +1511,7 @@ fullRefresh();
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗'})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
-        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','1Y','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
+        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
        h('div',{className:'ac2-spotline'},money(m.spot,2,'$'),h('span',{className:m.spotChange24h>=0?'positive':'negative'},pct(m.spotChange24h))),
        h(Chart,{market:m,range})),
        h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,h(Icon,{name:'target'}),' Price forecast'),h('p',null,'Next MCX open and next session close'))),
@@ -1451,6 +1539,8 @@ fullRefresh();
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
        h('p',{className:'ac2-disclaimer'},'MCX values are import-parity estimates, not an official MCX market feed. GST is shown separately; making charges vary.'))),
+    h(NativeAnalytics,{m}),
+    h(EvidenceTables,{m}),
     h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
     showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
  }
