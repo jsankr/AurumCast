@@ -304,7 +304,7 @@ window.AurumBridge = {
       return { days, target: horizon, mid: q.mid, lo68: q.lo68, hi68: q.hi68 };
     };
     const scoreRows = D.wf.rows.filter(r => r.actual != null);
-    const rangeCoverage = scoreRows.length ? scoreRows.filter(r => Math.abs(Math.log(r.actual / D.px[r.t]) - r.pred.ens) <= r.sigma).length / scoreRows.length : null;
+    const rangeCoverage = scoreRows.length ? scoreRows.filter(r => Math.abs(r.actual - r.pred.ens) <= r.sigma).length / scoreRows.length : null;
     const closes = D.daily.map(x => x.inr);
     const rsi14 = GE.rsi(closes,14).at(-1);
     const macdHist = GE.macd(closes).hist.at(-1);
