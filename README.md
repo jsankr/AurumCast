@@ -327,3 +327,16 @@ node scripts/build-dashboard.mjs   # rebuild docs/index.html from src/
 - **Shocks aren't modelled.** Fed surprises, RBI action, duty changes and geopolitical events cause the largest days; that is why the 95% band exists.
 
 *Not investment advice. MCX futures are leveraged and can lose more than the margin.*
+
+
+## Premium v4 UI and silver parity (2026-11-23)
+
+- **Gold hero and alpine sidebar:** custom beveled bullion and layered mountain SVG art in `assets/aurum-hero.svg` and `assets/mountain-landscape.svg`; docs mirrors are committed for root or docs hosting.
+- **Themes:** Gold (Aurum), Obsidian, Rose and Ivory swatches at the top. Theme selection is stored locally and affects card/background colors.
+- **Silver XAG/USD live spot:** `https://api.gold-api.com/price/XAG` is fetched independently of gold. Symbol, quote currency, positive price, and UTC timestamp are verified. Failure is visibly labeled; no fake prices.
+- **India silver metal value:** `USD per troy ounce × ECB USD/INR / 31.1034768 × fineness` yields ₹/gram, grades 999 (fine), 925 (sterling) and 915 (91.5% alloy); 999 is also shown per kilogram.
+- **Targets:** users set their own ₹/gram target for each grade in the bottom silver strip. Percentage distance to the target is computed from the current spot-based rate. **These targets are not predictions**; no silver-return or future-price model is implied.
+- **Silver charts:** only actually received XAG spot observations (stored in the current browser) appear as a line chart; the application does not manufacture historical XAG candles. A newly opened browser may initially have only one point.
+- **Not MCX live futures:** gold MCX and silver INR figures are clearly distinguished from exchange streaming quotes. Indian duties, tax, premiums and making charges are *not* added to the silver spot-only number.
+
+Check desktop and mobile UI via the `AurumCast visual browser smoke` workflow and `Deploy AurumCast v3 to GitHub Pages` workflow. Do not publish screenshot-only mockups as functioning rate information.

@@ -49,6 +49,11 @@ const inspect=async (name,contextOptions,width,height)=>{
  assert.equal(await page.locator('.ac2-metrics .ac2-metric').count(),4,'Four market cards must render while data is pending');
  assert.equal(await page.locator('.ac2-main-grid').count(),1,'Chart and forecast must render while data is pending');
  assert.equal(await page.locator('.ac2-mini-grid').count(),1,'Lower insights must render while data is pending');
+ assert.equal(await page.locator('#silver-rates').count(),1,'Live silver purity section exists');
+ assert.equal(await page.locator('.ac4-silver-grade').count(),3,'Silver 999, 925, and 915 rates must be shown');
+ assert.equal(await page.locator('.ac4-swatch').count(),4,'Four selectable themes must be present');
+ assert.equal(await page.locator('.ac3-sidebar-landscape').count(),1,'Layered mountain footer must exist');
+
  mkdirSync('browser-artifacts',{recursive:true});
  await page.screenshot({path:'browser-artifacts/'+name+'.png',fullPage:true});
  console.log(name,JSON.stringify(state));
