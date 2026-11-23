@@ -582,7 +582,7 @@ function renderSources() {
 let nextFull = 0;
 function scheduleNext() { const now = Date.now(), h = 3600e3; nextFull = Math.ceil(now / h) * h + 90e3; if (nextFull - now < 120e3) nextFull += h; }
 async function pollSpot() {
-  try { const s = await getJSON(SRC.spot, 10000); if (s && s.price) { D.spot = s; const t = Date.parse(s.updatedAt) || Date.now(); if (!D.ticks.length || D.ticks.at(-1).t !== t) D.ticks.push({ t, p: s.price }); if (D.ticks.length > 1440) D.ticks.shift(); if (D.ready) { renderStrip(); renderPurity(); renderK22(); renderKpis(); renderTicks(); } setLive('ok', 'Live'); } }
+  try { const s = await getJSON(SRC.spot, 10000); if (s && s.price) { D.spot = s; const t = Date.parse(s.updatedAt) || Date.now(); if (!D.ticks.length || D.ticks.at(-1).t !== t) D.ticks.push({ t, p: s.price }); if (D.ticks.length > 1440) D.ticks.shift(); if (D.ready) { renderStrip(); renderPurity(); renderK22(); renderKpis(); renderTicks(); if (window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update', { detail: window.AurumBridge.snapshot() })); } setLive('ok', 'Live'); } }
   catch { setLive('err', 'Spot feed retrying'); }
 }
 async function fullRefresh() {
