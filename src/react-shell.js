@@ -319,6 +319,16 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
     },'ac2-gold-btn'),
     h('p',{className:hit?'ac3-alert-hit':''},hit?'● Threshold reached · current '+money(actual):enabled?'Monitoring the current price while this page is open.':'No active alert.')));
  }
+ function BrandMark(){
+   return h('svg',{className:'ac3-brand-mark',viewBox:'0 0 78 62',width:59,height:47,role:'img','aria-label':'AurumCast three gold bullion bars'},
+     h('path',{d:'M29 3h20l12 25H18Z',fill:'#f4bb41',stroke:'#ffecae',strokeWidth:2}),
+     h('path',{d:'M29 3h20l-6 14H24Z',fill:'#fff0a1'}),
+     h('path',{d:'M18 28h43l-4 8H22Z',fill:'#a15b0d'}),
+     h('path',{d:'M12 31h24l11 24H1Z',fill:'#e7a722',stroke:'#ffe2a0',strokeWidth:1.5}),
+     h('path',{d:'M12 31h24l-5 13H7Z',fill:'#fff3af'}),
+     h('path',{d:'M45 31h20l12 24H33Z',fill:'#edae2b',stroke:'#ffe2a0',strokeWidth:1.5}),
+     h('path',{d:'M45 31h20l-6 13H39Z',fill:'#ffe397'}));
+ }
  function App(){
   const m=useMarket(),[selected,setSelected]=useState('overview'),[drawer,setDrawer]=useState(false),
         [settings,setSettings]=useState(false),[alerts,setAlerts]=useState(false),[profile,setProfile]=useState(false),[query,setQuery]=useState('');
@@ -349,7 +359,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
     btn(h(R.Fragment,null,h(Icon,{name:'menu'}),' AurumCast'),()=>setDrawer(true),'ac2-mobile-trigger'),
     drawer&&h('div',{className:'ac2-screen',onClick:()=>setDrawer(false)}),
     h('aside',{className:'ac2-side'+(drawer?' open':''),role:'navigation','aria-label':'Application navigation'},
-      h('div',{className:'ac2-brand'},h('div',{className:'ac3-gold-logo'},'◆'),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold Market Intelligence & Forecasting'))),
+      h('div',{className:'ac2-brand'},h(BrandMark),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold Market Intelligence & Forecasting'))),
       h('nav',null,nav.map(([id,label,glyph])=>h('button',{key:id,className:selected===id?'active':'',onClick:()=>navTo(id),'aria-current':selected===id?'page':undefined},h(Icon,{name:glyph}),label))),
       h('div',{className:'ac3-sidebar-landscape','aria-hidden':'true'},'⌁'),
       h('div',{className:'ac2-side-version'},'● AurumCast v3 · Premium Dashboard')),
