@@ -4,7 +4,7 @@
  */
 (() => {
  'use strict';
- if (!window.React || !window.ReactDOM) { console.error('React not loaded; existing dashboard stays available'); return; }
+ if (!window.React || !window.ReactDOM) { document.documentElement.classList.add('ac2-fallback'); console.error('React not loaded; existing dashboard stays available'); return; }
  const R=React, h=R.createElement, useState=R.useState, useEffect=R.useEffect, useRef=R.useRef;
  const nav=[
   ['overview','Dashboard','layout-dashboard'],['monitor','Market Live','activity'],['forecast','Forecast & Prediction','trending-up'],
