@@ -1,37 +1,44 @@
 # AurumCast — India gold rates, monitor & forecast
 
-## React professional UI refresh (migration phase 1)
+## AurumCast 2.0 — premium React market dashboard
 
-AurumCast now includes a **React 18 application shell** in the original GitHub Pages dashboard. This is an incremental migration: React handles responsive navigation and application-level presentation, while the existing numerical engine, ECharts views, calculations, live polling, browser settings, history and prediction ledger remain operational and unchanged.
+The new interface follows the approved black-and-gold market-intelligence reference and retains the original transparent COMEX-to-MCX modelling approach. **It is a working React dashboard, not a screenshot.** All displayed market prices and forecast values come from the validated `src/engine.cjs` engine and existing data feeds; the reference image's illustrative numbers are not used.
 
-### What changed
+### React-native functionality (current)
 
-- Persistent sidebar navigation (Overview, Live monitor, Forecast studio, Model validation, Market analytics, Investor insights, Data & methodology).
-- Mobile drawer navigation with accessible controls, active-section tracking and reduced-motion support.
-- Premium dark-gold visual tokens, card hierarchy, refined spacing, responsive KPI surfaces, desktop/mobile layouts, focus and hover states.
-- React quick actions delegate to the original Refresh and Settings controls, so the existing app remains the source of truth.
-- The existing root and `docs/` GitHub Pages outputs are preserved; the scheduled data job continues to use the same forecast models and validation checks.
+- Gold market landing page with premium gold graphics, responsive icon navigation, searchable module links, refresh status and mobile drawer
+- Live XAU reference, MCX 995 import parity, 22K pricing and ECB USD/INR cards
+- Native React candlestick and volume chart with EMA-like **simple moving averages** (SMA 20 / SMA 50) and live-history range selection
+- React purity-rate table and adjustable metal-weight / purity calculator with explicit duty and GST context
+- React next-MCX-open and next-session-close forecast panels using existing 68%/95% probabilistic engine results
+- React model diagnostic card showing Theil U and Diebold–Mariano evidence rather than fabricated prediction-success claims
+- React rules-based investor-score presentation, quick tools, and settings dialog (duty, refresh, history, brokerage calibration and local ledger reset)
+- A narrow read-only `window.AurumBridge` snapshot/control boundary connects React to the unchanged market-data engine. Live spot polling also refreshes React state.
 
-### Build and run
+### Preserved legacy modules during migration
+
+The original detailed hourly monitoring, 22K prediction-success charts, forecast cone, model comparison, walk-forward backtesting, technical indicators, volatility analytics, investor factor table, historical ledger and source/methodology sections remain available and function through the existing ECharts DOM implementation. **They are not yet fully native React components.** This incremental strategy avoids replacing the mathematical engine or losing advanced capabilities before a component parity audit.
+
+### Build, test and deployment
 
 ```bash
-npm run build
 npm test
-```
-
-Serve the repository root using any static HTTP server (avoid opening HTML via `file://` because browser APIs and third-party feeds may be restricted):
-
-```bash
+npm run build
 npx serve .
 ```
 
-Open the local address reported by the static server. GitHub Pages continues to serve `index.html` or `docs/index.html` based on repository settings.
+GitHub Pages serves identical generated `index.html` and `docs/index.html` files. A dedicated `.github/workflows/react-ui-ci.yml` quality gate checks unit/regression tests and that both generated deployments are reproducible. The daily gold workflow still fetches and validates market data before publishing. Browser smoke tests across mobile Safari, Firefox and Chromium should be completed for release acceptance.
 
-React and ReactDOM are pinned to 18.3.1 and loaded from jsDelivr; the unchanged ECharts 5.5.1 dependency is also CDN-hosted. An internet connection is required for live market feeds and CDN scripts. If React fails to load, the core legacy dashboard remains usable.
+**Data integrity:** AurumCast does not claim to have an exchange-licensed MCX streaming feed. MCX figures are estimated import parity adjusted by editable duty and optional broker calibration; gold spot, PAXG market history and ECB FX inputs retain their source identification. Forecast intervals are estimates and neither directional accuracy nor a gain is guaranteed.
 
-**Architecture:** `src/react-shell.js` is the React navigation layer, `src/react-ui.css` is the design system, `src/dashboard.html` is the retained semantic DOM/visualization layout, `src/app.js` runs data and charts, `src/engine.cjs` is the existing shared numerical engine, and `scripts/build-dashboard.mjs` assembles the deployment.
+### Main files
 
-**Known migration boundary:** This version does not convert every chart, table, calculator and settings drawer into React components. Those proven modules remain in their existing implementation and still work. A full component-by-component React migration should preserve the numerical regression tests and validate browser functionality before replacing those sections.
+`src/react-shell.js` — native React dashboard components and ECharts component lifecycle  
+`src/react-ui.css` — responsive premium design system  
+`src/app.js` — preserved live-data/render logic plus React snapshot bridge  
+`src/engine.cjs` — unchanged financial/statistical model engine  
+`scripts/build-dashboard.mjs` — deterministic static GitHub Pages bundle
+
 
 ---
 
