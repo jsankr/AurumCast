@@ -144,3 +144,9 @@ body{background:#090d13!important;color:#f0f2f5!important;font-family:Inter,syst
 @media(max-width:970px){:root{--ac2-side:0px}.ac2-side{transform:translateX(-105%);width:263px;transition:transform .2s}.ac2-side.open{transform:translateX(0)}.ac2-screen{display:block;position:fixed;inset:0;background:#000b;z-index:45}.ac2-mobile-trigger{position:fixed;bottom:14px;left:14px;z-index:42;display:flex;gap:7px;align-items:center;color:#f9d484;background:#162334;border:1px solid #d3ac66;border-radius:30px;padding:11px 17px;box-shadow:0 10px 32px #000b}.ac2-topbar,.ac2-content,#main-wrap{margin-left:0}.ac2-topbar{padding:11px 16px}.ac2-content{padding:16px}.ac2-mini-grid{grid-template-columns:1fr 1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:1/-1}.ac2-main-grid{grid-template-columns:1fr}.ac2-gold-art{right:-18px;opacity:.65}}
 @media(max-width:630px){.ac2-search{width:60%}.ac2-status{display:none}.ac2-hero{padding:26px 20px;min-height:200px}.ac2-hero-copy{max-width:100%}.ac2-hero h1{font-size:28px}.ac2-hero p{max-width:75%}.ac2-gold-art{opacity:.24;right:-86px}.ac2-metrics,.ac2-mini-grid,.ac2-fields{grid-template-columns:1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:auto}.ac2-panel{padding:16px}.ac2-panel-head{flex-direction:column}.ac2-chart-panel{min-height:350px}.ac-native-chart{height:260px}.ac2-spotline{font-size:22px}#main-wrap{padding:0 14px 65px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Progressive enhancement: retain fully usable original dashboard without React CDN. */
+html.ac2-fallback #main-wrap{margin-left:0!important;max-width:1480px;margin-right:auto;margin-left:auto!important}
+html.ac2-fallback #main-wrap>header.top{display:flex!important}
+html.ac2-fallback #main-wrap>.gstrip{display:grid!important}
+html.ac2-fallback #main-wrap>.kpis{display:grid!important}
