@@ -74,3 +74,12 @@ test('live silver is validated and purity/target UI never claims an MCX futures 
  assert.ok(Math.abs(fine*.999/fine-.999)<1e-12);
  assert.ok(fine*.925>fine*.915 && fine*.915>0);
 });
+
+test('silver and FX arrive independently of gold model history',()=>{
+ const app=read('src/app.js');
+ assert.ok(app.includes('void refreshSilver();\nfullRefresh();'),'XAG must begin loading independently at boot');
+ assert.ok(app.includes('const [metal,fx] = await Promise.allSettled(['));
+ assert.ok(app.includes('D.fxNow=+last[1]'));
+ assert.ok(app.includes('theme:S.theme, errors: { ...D.err }, silver: silverSnapshot()'));
+ assert.ok(!app.includes('const [h, d, fx, spot, er, m30, silver] = await Promise.allSettled(['));
+});
