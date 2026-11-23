@@ -32,6 +32,7 @@ jobs:
           mkdir -p _site/assets
           cp index.html _site/index.html
           cp assets/aurum-hero.svg _site/assets/aurum-hero.svg
+          cp assets/mountain-landscape.svg _site/assets/mountain-landscape.svg
           touch _site/.nojekyll
           grep -q 'v3-reference-20261123' _site/index.html
           grep -q 'ac3-mounted' _site/index.html
