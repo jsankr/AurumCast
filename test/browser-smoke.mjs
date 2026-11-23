@@ -7,9 +7,28 @@ const errors=[];
 const inspect=async (name,contextOptions,width,height)=>{
  const context=await browser.newContext(contextOptions);
  const page=await context.newPage();
- page.on('pageerror',error=>errors.push(name+': '+error.message));
+ page.on('pageerror',error=>{errors.push(name+': '+error.message);console.error('PAGE ERROR',name,error.message)});
+ page.on('console',msg=>{if(msg.type()==='error')console.error('BROWSER CONSOLE',name,msg.text())});
+ page.on('requestfailed',req=>console.error('REQUEST FAILED',name,req.url(),req.failure()?.errorText));
  await page.goto('http://127.0.0.1:8765/',{waitUntil:'load',timeout:60000});
- await page.waitForFunction(()=>document.documentElement.classList.contains('ac3-mounted'),{timeout:30000});
+ console.log('INITIAL BROWSER STATE',name,JSON.stringify(await page.evaluate(()=>({
+  react:!!window.React,reactDOM:!!window.ReactDOM,echarts:!!window.echarts,
+  rootExists:!!document.getElementById('ac-react-root'),
+  rootMarkup:document.getElementById('ac-react-root')?.innerHTML.slice(0,350),
+  docReady:document.readyState,legacy:!!document.getElementById('main-wrap'),
+  versions:document.querySelector('meta[name="aurumcast-ui-release"]')?.content
+ }))));
+ try{await page.waitForFunction(()=>document.documentElement.classList.contains('ac3-mounted'),{timeout:12000});}
+ catch(error){
+   mkdirSync('browser-artifacts',{recursive:true});
+   await page.screenshot({path:'browser-artifacts/'+name+'-FAILED.png',fullPage:true});
+   console.error('FAILED MOUNT',JSON.stringify(await page.evaluate(()=>({
+     react:!!window.React,reactDOM:!!window.ReactDOM,echarts:!!window.echarts,
+     rootMarkup:document.getElementById('ac-react-root')?.innerHTML.slice(0,800),
+     legacyDisplay:getComputedStyle(document.getElementById('main-wrap')).display
+   }))));
+   throw error;
+ }
  const state=await page.evaluate(()=>{
   const legacy=document.getElementById('main-wrap');
   return {
