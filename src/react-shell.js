@@ -154,8 +154,8 @@
          h('tr',null,h('td',{colSpan:4},'No locally scored forecast records yet.'))))),
    h('p',{className:'ac2-disclaimer'},'The forecast ledger is browser-local. Factor weights and numbers are generated from the original market engine.'));
  }
- function Dashboard({m,go}){
-  const [range,setRange]=useState('1M'),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
+ function Dashboard({m,go,onAlerts}){
+  const [range,setRange]=useState('1M'),[instrument,setInstrument]=useState('gold'),[term,setTerm]=useState(0),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
   const [target,setTarget]=useState(0);
   const graded= m.ready?m.rates:{};
   const sentiment=m.ready?(m.score>.05?'Accumulation-leaning':m.score<-.05?'Wait / cautious':'Neutral / mixed'):'Not available';
@@ -163,8 +163,8 @@
   return h('div',{className:'ac2-dashboard',id:'ac-dashboard'},
     h('section',{className:'ac2-hero'},h('div',{className:'ac2-hero-copy'},
       h('div',{className:'ac2-eyebrow'},'AURUMCAST · GOLD MARKET INTELLIGENCE'),
-      h('h1',null,'Global Gold ',h('em',null,'Market Intelligence')),
-      h('p',null,'Live spot context, Indian import parity, probability ranges and independently scored forecasts.'),
+      h('h1',null,'Global ',h('em',null,'Gold Market'),' Intelligence'),
+      h('p',null,'Live prices • Forecasts • Technicals • Purity • Investor Insights'),
       h('div',{className:'ac2-hero-actions'},h('span',{className:'ac2-live-dot'},'● ',m.ready?'Data received':'Loading market feeds'),
         h('span',null,m.ready?dataTime(m.fetchedAt):'Waiting for validated data'))),
      h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
@@ -172,7 +172,7 @@
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆'}),
        h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈'}),
-       h(Metric,{title:'22K · 916 jewellery parity',value:money(m.rates.k22_916,2)+' /g',secondary:'3% GST not included',positive:null,icon:'◉'}),
+       h(Metric,{title:'Silver · MCX',value:'Unavailable',secondary:'No verified silver feed',positive:null,icon:'◈'}),
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗'})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
