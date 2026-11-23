@@ -303,6 +303,17 @@ window.AurumBridge = {
       rates, mcxChange: rates.mcx995 / prevMcx - 1,
       open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
       candle: h.map(b => ({ t: b.t, o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      analysis: {
+        daily: D.daily.slice(-260).map(x => ({ date:x.date, mcx:x.inr * D.basis * mcxF() })),
+        rsi: GE.rsi(D.px, 14).slice(-260),
+        macd: GE.macd(D.px).hist.slice(-260),
+        backtest: D.wf.rows.filter(r=>r.actual != null && r.t+1<D.px.length).slice(-260).map(r => ({
+          date:D.daily[r.t+1].date, predicted:D.px[r.t] * Math.exp(r.pred.ens)*D.basis*mcxF(),
+          actual:D.px[r.t+1]*D.basis*mcxF(),
+          lower:D.px[r.t]*Math.exp(r.pred.ens-r.sigma)*D.basis*mcxF(),
+          upper:D.px[r.t]*Math.exp(r.pred.ens+r.sigma)*D.basis*mcxF()
+        }))
+      },
       score: D.card.score, factors: D.card.factors.map(f => ({ name: f.k, score: f.v, weight: f.w, reason: f.why })),
       accuracy: { theilU: validation.theilU, dm: validation.dm, coverage: validation.coverage, n: validation.n },
       openValidation: D.mc ? { n: D.mc.n, coverage: D.mc.cov } : null,
