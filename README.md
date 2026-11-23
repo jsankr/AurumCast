@@ -340,3 +340,5 @@ node scripts/build-dashboard.mjs   # rebuild docs/index.html from src/
 - **Not MCX live futures:** gold MCX and silver INR figures are clearly distinguished from exchange streaming quotes. Indian duties, tax, premiums and making charges are *not* added to the silver spot-only number.
 
 Check desktop and mobile UI via the `AurumCast visual browser smoke` workflow and `Deploy AurumCast v3 to GitHub Pages` workflow. Do not publish screenshot-only mockups as functioning rate information.
+
+Silver XAG/USD spot and ECB USD/INR are requested independently during application startup so silver rates can populate while the larger gold price-history and backtesting models load. Theme switching likewise works before these gold data feeds resolve.
