@@ -30,32 +30,47 @@
   'calculator':'M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 15h2 M14 15h2 M8 19h2 M14 19h2',
   'target':'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z'};
  return h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.7,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},h('path',{d:path[name]||path.activity}));}
- function Chart({market,range}){
+
+ function Chart({market,range,instrument='gold'}){
   const ref=useRef(null);
   useEffect(()=>{
-   if(!market.ready||!ref.current||!window.echarts)return;
-   let chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
-   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='ALL'?all.length:168;
-   const bars=all.slice(-n),dates=bars.map(b=>dataTime(b.t).replace(' IST','')),candles=bars.map(b=>[b.o,b.c,b.l,b.h]);
-   const close=bars.map(b=>b.c),average=(count)=>close.map((_,i)=>i<count-1?null:close.slice(i-count+1,i+1).reduce((a,b)=>a+b,0)/count);
-   const option={animationDuration:350,backgroundColor:'transparent',
-    tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#151e2b',borderColor:'#526078',textStyle:{color:'#f4f0e8'}},
-    legend:{top:1,left:12,textStyle:{color:'#a7afbd'},data:['Gold spot proxy','SMA 20','SMA 50']},
-    grid:[{left:60,right:18,top:38,height:'62%'},{left:60,right:18,top:'81%',height:'13%'}],
-    xAxis:[{type:'category',data:dates,axisLine:{lineStyle:{color:'#42516a'}},axisLabel:{color:'#8490a0',hideOverlap:true},splitLine:{show:false}},
-      {type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],
-    yAxis:[{scale:true,axisLabel:{color:'#8490a0',formatter:v=>'$'+Math.round(v).toLocaleString()},splitLine:{lineStyle:{color:'rgba(255,255,255,.07)'}}},
-      {scale:true,gridIndex:1,axisLabel:{show:false},splitLine:{show:false}}],
-    dataZoom:[{type:'inside',xAxisIndex:[0,1]}],
-    series:[{name:'Gold spot proxy',type:'candlestick',data:candles,itemStyle:{color:'#20c78d',color0:'#f16672',borderColor:'#20c78d',borderColor0:'#f16672'}},
-      {name:'SMA 20',type:'line',data:average(20),showSymbol:false,lineStyle:{color:'#53b8ff',width:1.6},itemStyle:{color:'#53b8ff'}},
-      {name:'SMA 50',type:'line',data:average(50),showSymbol:false,lineStyle:{color:'#f2b84b',width:1.6},itemStyle:{color:'#f2b84b'}},
-      {name:'Volume',type:'bar',data:bars.map(b=>({value:b.v,itemStyle:{color:b.c>=b.o?'rgba(32,199,141,.42)':'rgba(241,102,114,.38)'}})),xAxisIndex:1,yAxisIndex:1,barMaxWidth:9}]};
-   chart.setOption(option,true);
-   const observer=new ResizeObserver(()=>chart.resize());observer.observe(ref.current);
-   return()=>{observer.disconnect();if(!chart.isDisposed())chart.dispose()};
-  },[market,range]);
-  return h('div',{ref,className:'ac-native-chart',role:'img','aria-label':'Gold proxy candlestick price chart with SMA 20 and SMA 50 and volume'});
+   if(!market.ready||!ref.current||!window.echarts||instrument==='silver')return;
+   const chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
+   const n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:10000;
+   const isFx=instrument==='fx',isMcx=instrument==='mcx';
+   const spotBars=(market.candle||[]).slice(-n);
+   const bars=spotBars.map(b=>{
+     const factor=(b.fx||market.fx)*10/31.1034768*.995*(1+market.duty/100)*(1+market.calibration/100);
+     return isMcx?{...b,o:b.o*factor,h:b.h*factor,l:b.l*factor,c:b.c*factor}:b;
+   });
+   const fxBars=(market.fxHistory||[]).map(v=>({t:Date.parse(v.date+'T00:00:00Z'),c:v.rate}));
+   const data=isFx?fxBars:bars;
+   const dates=data.map(v=>new Date(v.t).toLocaleDateString('en-GB',{month:'short',day:'2-digit'}));
+   const closes=data.map(v=>v.c);
+   const sma=k=>closes.map((_,i)=>i<k-1?null:closes.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k);
+   const series=isFx?[{name:'USD/INR',type:'line',data:closes,symbol:'none',lineStyle:{width:2,color:'#e7bb61'},itemStyle:{color:'#e7bb61'}}]:
+      [{name:isMcx?'MCX import parity':'Gold spot proxy',type:'candlestick',data:bars.map(b=>[b.o,b.c,b.l,b.h]),
+       itemStyle:{color:'#2ace89',color0:'#ed6472',borderColor:'#2ace89',borderColor0:'#ed6472'}},
+       {name:'SMA 20',type:'line',data:sma(20),showSymbol:false,lineStyle:{color:'#44aaff',width:1.7}},
+       {name:'SMA 50',type:'line',data:sma(50),showSymbol:false,lineStyle:{color:'#f3bc4e',width:1.7}},
+       {name:'Volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:bars.map(b=>({value:b.v,itemStyle:{color:b.c>=b.o?'#238d67aa':'#ba4c5caa'}})),barMaxWidth:8}];
+   chart.setOption({
+     backgroundColor:'transparent',animationDuration:250,
+     tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#14202e',borderColor:'#45536a',textStyle:{color:'#f4f5f6'}},
+     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:isFx?['USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
+     grid:isFx?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
+     xAxis:isFx?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
+      [{type:'category',data:dates,axisLabel:{color:'#93a0b1',hideOverlap:true},axisLine:{lineStyle:{color:'#39465a'}}},
+       {type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],
+     yAxis:isFx?{scale:true,axisLabel:{color:'#93a0b1'},splitLine:{lineStyle:{color:'#ffffff13'}}}:
+      [{scale:true,axisLabel:{color:'#93a0b1',formatter:v=>(isMcx?'₹':'$')+Number(v).toLocaleString(undefined,{maximumFractionDigits:0})},splitLine:{lineStyle:{color:'#ffffff13'}}},
+       {scale:true,gridIndex:1,axisLabel:{show:false},splitLine:{show:false}}],
+     dataZoom:[{type:'inside'}],series
+   },true);
+   const ro=new ResizeObserver(()=>chart.resize());ro.observe(ref.current);
+   return()=>{ro.disconnect();chart.dispose()};
+  },[market,range,instrument]);
+  return h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
  }
  function Metric({title,value,secondary,positive,icon}){return h('article',{className:'ac2-metric'},h('span',{className:'ac2-metric-icon'},icon||'◆'),
   h('div',{className:'ac2-metric-info'},h('div',{className:'ac2-muted'},title),h('strong',null,value),h('small',{className:positive===null?'':positive?'positive':'negative'},secondary||'—')));}
