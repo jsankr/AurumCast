@@ -322,7 +322,7 @@
  const mount=document.getElementById('ac-react-root');if(!mount)return;
  // The legacy layout is a data-rendering and advanced-module fallback.
  // Hide its homepage ONLY after React has successfully rendered the new sidebar.
- const root=R.createRoot(mount);
+ const root=ReactDOM.createRoot(mount);
  const observer=new MutationObserver(()=>{
    if(mount.querySelector('.ac2-side')&&mount.querySelector('#ac-dashboard')){
      document.documentElement.classList.add('ac3-mounted');

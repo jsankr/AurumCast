@@ -8,7 +8,7 @@ test('published HTML files contain the same React application', () => {
  const a = read('index.html'), b = read('docs/index.html');
  assert.equal(a, b, 'GitHub Pages root and docs builds must not diverge');
  for (const marker of [
-  'R.createRoot(mount)', 'id="ac-react-root"', 'ac2-hero', 'ac-native-chart',
+  'ReactDOM.createRoot(mount)', 'id="ac-react-root"', 'ac2-hero', 'ac-native-chart',
   'AurumBridge', 'ac2-table', 'ac2-calculator', 'ac2-modal',
   'id="monitor"', 'id="forecast"', 'id="proof"', 'id="analytics"', 'id="invest"', 'id="data"'
  ]) assert.ok(a.includes(marker), 'Missing UI or legacy module: ' + marker);

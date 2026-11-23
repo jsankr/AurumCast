@@ -41,7 +41,7 @@ jobs:
 
       - name: Verify both Pages entry points
         run: |
-          grep -q 'R.createRoot(mount)' index.html
+          grep -q 'ReactDOM.createRoot(mount)' index.html
           grep -q 'ac2-hero' docs/index.html
           cmp index.html docs/index.html
           test -f assets/aurum-hero.svg
