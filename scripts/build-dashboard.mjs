@@ -9,6 +9,10 @@ const html = rd('src/dashboard.html')
   .replace('/*REACT_STYLES*/', () => rd('src/react-ui.css'))
   .replace('/*REACT_SHELL*/', () => rd('src/react-shell.js'));
 if (html.includes('/*ENGINE*/') || html.includes('/*APP*/') || html.includes('/*REACT_SHELL*/') || html.includes('/*REACT_STYLES*/')) throw new Error('template markers not replaced');
+// Prevent a scheduled refresh from silently reverting the UI to the pre-React static layout.
+for (const required of ['ReactDOM.createRoot', '.ac-sidebar', 'ac-mobile-bar', 'id="gComex"', 'id="cGram"', 'id="monitor"', 'id="forecast"', 'id="proof"', 'id="analytics"', 'id="invest"', 'id="data"']) {
+  if (!html.includes(required)) throw new Error('Required React UI or legacy module missing from built dashboard: ' + required);
+}
 // Publish the app at BOTH the repo root and /docs, with Jekyll disabled in both, so GitHub Pages serves the
 // application (not README.md) whichever folder is selected in Settings → Pages.
 mkdirSync(join(R, 'docs'), { recursive: true });
