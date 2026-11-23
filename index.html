@@ -413,6 +413,126 @@ html.ac3-mounted .ac2-chart-panel .ac2-panel-head{margin-bottom:8px}
 .ac2-mini-grid .ac3-tools .ac2-quick-tools button{font-size:9px;padding:7px 3px;min-height:80px;line-height:1.3;word-break:normal;white-space:normal}
 @media(max-width:970px){.ac2-mini-grid .ac3-tools .ac2-quick-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){html.ac3-mounted .ac2-chart-panel .ac2-panel-head{margin-top:0}}
+
+/* AurumCast premium market UI v4 - bullion, alpine footer, themes and silver.
+   Deliberately overlays earlier visual rules without changing the validated engine. */
+:root{--ac4-border:#765a2c8a;--ac4-foreground:#f5f6f8;--ac4-muted:#a6afbc;--ac4-panel:#151e29;--ac4-panel2:#0d1622;--ac4-glow:#e0a842;}
+html[data-theme=aurum]{--ac4-border:#8d6b3b8c;--ac4-foreground:#f5f6f8;--ac4-muted:#a9b2c0;--ac4-panel:#151e29;--ac4-panel2:#0c131c;--ac4-glow:#ebb65a}
+html[data-theme=obsidian]{--ac4-border:#526887a0;--ac4-foreground:#eff6ff;--ac4-muted:#a7b5cc;--ac4-panel:#182236;--ac4-panel2:#10182a;--ac4-glow:#88a9ed}
+html[data-theme=rose]{--ac4-border:#a36d91a8;--ac4-foreground:#fff2f7;--ac4-muted:#d0b2cb;--ac4-panel:#291c2e;--ac4-panel2:#1a1425;--ac4-glow:#e6a0c5}
+html[data-theme=ivory]{--ac4-border:#b9a47d;--ac4-foreground:#2b2c30;--ac4-muted:#5b6272;--ac4-panel:#fff9ed;--ac4-panel2:#eee6d7;--ac4-glow:#bc8741}
+html[data-theme=obsidian] body{background:#0e1326!important}
+html[data-theme=rose] body{background:#1b1220!important}
+html[data-theme=ivory] body{background:#efeae2!important;color:#2c2f38!important}
+html[data-theme=obsidian] .ac2-side,html[data-theme=obsidian] .ac2-topbar{background:#10192b!important}
+html[data-theme=rose] .ac2-side,html[data-theme=rose] .ac2-topbar{background:#1a1525!important}
+html[data-theme=ivory] .ac2-side,html[data-theme=ivory] .ac2-topbar{background:#f7f3eb!important;color:#252833!important}
+html[data-theme=ivory] .ac2-side nav button{color:#34353c!important}
+html[data-theme=ivory] .ac2-brand strong{color:#75502b!important}
+html[data-theme=ivory] .ac2-brand small{color:#515768!important}
+html[data-theme=ivory] .ac2-search{background:#fffcf6!important;border-color:#d2c4ac!important}
+html[data-theme=ivory] .ac2-search input{color:#272a30!important}
+html[data-theme=ivory] .ac3-profile-button{color:#323640!important}
+html[data-theme=ivory] #ac-react-root{color:#202936}
+html[data-theme=ivory] .ac2-hero h1{color:#fff}
+html[data-theme=ivory] .ac2-hero p{color:#cbd1da}
+html[data-theme=ivory] .ac2-metric strong{color:#262b37!important}
+html[data-theme=ivory] .ac2-metric small{color:#586a7e}
+html[data-theme=ivory] .ac2-panel h2,html[data-theme=ivory] .ac2-panel p{color:#323b4b!important}
+html[data-theme=ivory] .ac2-panel .ac3-instrument-tabs button,html[data-theme=ivory] .ac2-panel .ac2-ranges button{color:#51515b}
+html[data-theme=ivory] .ac2-forecast-value{color:#283242}
+html[data-theme=ivory] .ac2-forecast-details b{color:#293241}
+html[data-theme=ivory] .ac2-evidence b{color:#293241}
+html[data-theme=ivory] .ac2-evidence>span{color:#5b6170}
+html[data-theme=ivory] .ac2-gauge-inner,html[data-theme=ivory] .ac3-accuracy-circle>div{background:#eae3d8}
+html[data-theme=ivory] .ac2-gauge-inner strong,html[data-theme=ivory] .ac3-accuracy-circle b{color:#292d35}
+html[data-theme=ivory] .ac2-table td{color:#292d35}
+#ac-react-root .ac2-panel,.ac2-metric,.ac4-silver-strip{
+ border-color:var(--ac4-border)!important;
+ background:linear-gradient(141deg,var(--ac4-panel),var(--ac4-panel2))!important;
+ color:var(--ac4-foreground);
+ box-shadow:inset 0 1px rgba(255,255,255,.075),0 10px 30px rgba(0,0,0,.13)}
+.ac2-panel:has(.ac3-accuracy-circle),.ac4-silver-strip{box-shadow:inset 0 1px rgba(255,255,255,.085),0 3px 20px rgba(210,151,53,.07)}
+.ac2-side{border-right-color:var(--ac4-border)!important}
+.ac3-sidebar-landscape{
+ height:150px!important;min-height:150px;margin-top:auto;background:url("assets/mountain-landscape.svg") center bottom / cover no-repeat!important;
+ font-size:0!important;color:transparent!important;filter:drop-shadow(0 -2px 14px rgba(234,169,65,.14))}
+.ac2-gold-art{background:url("assets/aurum-hero.svg") center center / contain no-repeat!important;width:min(42vw,610px)!important;height:196px!important;top:-46px!important;right:-15px!important;opacity:1!important;filter:drop-shadow(0 6px 20px rgba(245,164,40,.22))!important}
+.ac2-hero{background:radial-gradient(ellipse at 75% 40%,rgba(173,96,28,.32),transparent 65%),linear-gradient(110deg,#0a121b,#171921 65%,#17120d)!important}
+.ac2-hero-copy{position:relative;z-index:2}
+.ac2-topbar{min-height:61px!important;height:61px!important}
+.ac2-content{padding-top:0!important}
+.ac2-hero{min-height:133px!important;height:133px!important;margin-bottom:9px!important}
+.ac2-metrics{gap:12px!important;margin-bottom:12px!important}
+.ac2-metric{height:101px!important;min-height:101px!important}
+.ac2-main-grid{gap:12px!important;margin-bottom:12px!important}
+.ac2-chart-panel,.ac2-forecast{height:324px!important;min-height:324px!important}
+.ac-native-chart.ac3-chart{height:206px!important}
+.ac2-mini-grid{gap:12px!important;margin-bottom:12px!important}
+.ac2-mini-grid>.ac2-panel{min-height:195px!important;padding:13px 14px!important}
+.ac3-accuracy-circle{width:96px;height:96px}
+.ac3-accuracy-circle>div{width:75px;height:75px}
+.ac3-accuracy-circle b{font-size:19px}
+.ac2-gauge{width:139px;height:75px;margin-top:11px}
+.ac2-gauge-inner{height:66px}
+.ac4-theme-picker{display:flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid rgba(190,165,102,.23);background:rgba(255,255,255,.035);border-radius:50px}
+.ac4-swatch{width:24px;height:24px;border:1px solid rgba(255,255,255,.3);padding:3px;border-radius:50%;display:grid;place-items:center;background:transparent;transition:transform .15s,border-color .15s;cursor:pointer}
+.ac4-swatch:hover{transform:scale(1.12)}
+.ac4-swatch.active{border-color:#f8d47d;box-shadow:0 0 0 1px rgba(255,222,148,.5),0 0 13px rgba(249,189,77,.28)}
+.ac4-swatch-dot{width:16px;height:16px;border-radius:50%;display:block}
+.ac4-aurum .ac4-swatch-dot{background:radial-gradient(circle at 30% 20%,#ffdc7b,#8d4f0a)}
+.ac4-obsidian .ac4-swatch-dot{background:radial-gradient(circle at 30% 20%,#9cafe4,#343d7b)}
+.ac4-rose .ac4-swatch-dot{background:radial-gradient(circle at 30% 20%,#eab3db,#7b305f)}
+.ac4-ivory .ac4-swatch-dot{background:radial-gradient(circle at 30% 20%,#fefdf4,#d4ac61)}
+.ac4-silver-strip{border:1px solid var(--ac4-border);border-radius:14px;margin:0 0 14px;padding:11px 15px;display:grid;grid-template-columns:minmax(205px,.88fr) minmax(0,3fr);gap:8px 15px;align-items:center}
+.ac4-silver-heading{display:flex;align-items:center;gap:10px;min-width:0}
+.ac4-silver-emblem{flex:0 0 39px;display:grid;place-items:center;width:39px;height:39px;font-family:Georgia,serif;font-weight:800;font-size:20px;color:#e8f0f6;border-radius:10px;background:linear-gradient(140deg,#eff6fd,#8b9aa8 44%,#333c4b 100%);text-shadow:0 1px 3px #344}
+.ac4-silver-heading>div{min-width:0;flex:1}
+.ac4-silver-heading h2{font-size:14px!important;line-height:1.2;font-weight:750;color:var(--ac4-foreground);margin:0 0 3px}
+.ac4-silver-heading p{font-size:9px;line-height:1.4;color:var(--ac4-muted);margin:0;overflow-wrap:anywhere}
+.ac4-refresh-silver{border:1px solid var(--ac4-border);background:transparent;color:var(--ac4-foreground);padding:6px;border-radius:8px;flex:0 0 auto;display:grid;place-items:center}
+.ac4-silver-grades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.ac4-silver-grade{min-width:0;border:1px solid rgba(176,188,208,.22);border-radius:11px;padding:9px 11px;background:linear-gradient(135deg,rgba(182,199,218,.075),rgba(95,108,126,.06))}
+.ac4-silver-grade-head{display:flex;justify-content:space-between;gap:7px;align-items:center;font-size:11px}
+.ac4-silver-grade-head strong{white-space:nowrap;font-weight:720}
+.ac4-silver-grade-head span{font-size:9px;color:var(--ac4-muted)}
+.ac4-silver-value{font-size:20px;font-weight:760;line-height:1.55;color:var(--ac4-foreground);letter-spacing:-.025em}
+.ac4-silver-value::first-letter{color:var(--ac4-glow)}
+.ac4-target-row{display:flex;align-items:end;justify-content:space-between;gap:7px}
+.ac4-target-row label{font-size:9px;color:var(--ac4-muted);display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.ac4-target-row input{width:100%;min-width:0;border:1px solid rgba(182,192,207,.33);border-radius:6px;padding:5px 7px;background:rgba(5,10,17,.24);color:var(--ac4-foreground);font-size:11px}
+.ac4-target-row>span{font-size:9px;color:var(--ac4-muted);max-width:89px;text-align:right;white-space:normal;line-height:1.4}
+.ac4-target-row .ac4-above{color:#39d29d}.ac4-target-row .ac4-below{color:#edae60}
+.ac4-silver-footnote{grid-column:1/-1;margin:0;color:var(--ac4-muted);font-size:9px;line-height:1.5}
+html[data-theme=ivory] .ac4-target-row input{background:#fff;color:#303440}
+html[data-theme=ivory] .ac4-silver-grade{background:#f8f1e4}
+@media(max-width:1450px){
+ .ac2-mini-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ .ac4-silver-strip{grid-template-columns:1fr}
+ .ac4-silver-footnote{grid-column:1}
+}
+@media(max-width:1160px){
+ .ac4-theme-picker{gap:2px;padding:4px}
+ .ac4-swatch{width:20px;height:20px}.ac4-swatch-dot{width:13px;height:13px}
+ .ac2-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .ac2-mini-grid>.ac2-panel{min-height:210px!important}
+ .ac4-silver-grades{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .ac2-gold-art{width:380px!important;right:-10px!important;top:-25px!important}
+}
+@media(max-width:970px){
+ .ac2-gold-art{right:-80px!important;opacity:.65!important}
+ .ac2-chart-panel,.ac2-forecast{height:auto!important;min-height:330px!important}
+ .ac4-silver-strip{padding:13px}
+ .ac4-silver-grades{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:680px){
+ .ac4-theme-picker{display:none}
+ .ac2-gold-art{width:310px!important;right:-120px!important;top:-5px!important;opacity:.45!important}
+ .ac2-mini-grid{grid-template-columns:1fr!important}
+ .ac4-silver-grades{grid-template-columns:1fr}
+ .ac4-silver-value{font-size:21px}
+ .ac4-silver-strip{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -1583,21 +1703,28 @@ fullRefresh();
  function Chart({market,range,instrument='gold'}){
   const ref=useRef(null);
   useEffect(()=>{
-   if(!market.ready||!ref.current||!window.echarts||instrument==='silver')return;
+   if(!ref.current||!window.echarts)return;
+   if(instrument!=='silver'&&!market.ready)return;
+   if(instrument==='silver'&&(market.silver?.history?.length||0)<2)return;
    const chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
    const n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:10000;
-   const isFx=instrument==='fx',isMcx=instrument==='mcx';
+   const isFx=instrument==='fx',isMcx=instrument==='mcx',isSilver=instrument==='silver';
    const spotBars=(market.candle||[]).slice(-n);
    const bars=spotBars.map(b=>{
      const factor=(b.fx||market.fx)*10/31.1034768*.995*(1+market.duty/100)*(1+market.calibration/100);
      return isMcx?{...b,o:b.o*factor,h:b.h*factor,l:b.l*factor,c:b.c*factor}:b;
    });
    const fxBars=(market.fxHistory||[]).map(v=>({t:Date.parse(v.date+'T00:00:00Z'),c:v.rate}));
-   const data=isFx?fxBars:bars;
+   const silverBars=(market.silver?.history||[])
+    .filter(b=>b.t>=Date.now()-(range==='1D'?86400000:range==='5D'?5*86400000:range==='1M'?30*86400000:range==='3M'?90*86400000:90*86400000))
+    .map(b=>({t:b.t,c:b.usdOz}));
+   const data=isSilver?silverBars:isFx?fxBars:bars;
    const dates=data.map(v=>new Date(v.t).toLocaleDateString('en-GB',{month:'short',day:'2-digit'}));
    const closes=data.map(v=>v.c);
    const sma=k=>closes.map((_,i)=>i<k-1?null:closes.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k);
-   const series=isFx?[{name:'USD/INR',type:'line',data:closes,symbol:'none',lineStyle:{width:2,color:'#e7bb61'},itemStyle:{color:'#e7bb61'}}]:
+   const series=(isFx||isSilver)?[{name:isSilver?'Observed silver XAG/USD':'USD/INR',type:'line',data:closes,symbol:'circle',
+     symbolSize:isSilver?5:0,connectNulls:false,lineStyle:{width:2.4,color:isSilver?'#d3dce5':'#e7bb61'},
+     areaStyle:{color:isSilver?'rgba(186,203,219,.12)':'rgba(231,187,97,.08)'},itemStyle:{color:isSilver?'#e4ebf2':'#e7bb61'}}]:
       [{name:isMcx?'MCX import parity':'Gold spot proxy',type:'candlestick',data:bars.map(b=>[b.o,b.c,b.l,b.h]),
        itemStyle:{color:'#2ace89',color0:'#ed6472',borderColor:'#2ace89',borderColor0:'#ed6472'}},
        {name:'SMA 20',type:'line',data:sma(20),showSymbol:false,lineStyle:{color:'#44aaff',width:1.7}},
@@ -1606,12 +1733,12 @@ fullRefresh();
    chart.setOption({
      backgroundColor:'transparent',animationDuration:250,
      tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#14202e',borderColor:'#45536a',textStyle:{color:'#f4f5f6'}},
-     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:isFx?['USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
-     grid:isFx?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
-     xAxis:isFx?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
+     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:(isFx||isSilver)?[isSilver?'Observed silver XAG/USD':'USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
+     grid:(isFx||isSilver)?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
+     xAxis:(isFx||isSilver)?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
       [{type:'category',data:dates,axisLabel:{color:'#93a0b1',hideOverlap:true},axisLine:{lineStyle:{color:'#39465a'}}},
        {type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],
-     yAxis:isFx?{scale:true,axisLabel:{color:'#93a0b1'},splitLine:{lineStyle:{color:'#ffffff13'}}}:
+     yAxis:(isFx||isSilver)?{scale:true,axisLabel:{color:'#93a0b1'},splitLine:{lineStyle:{color:'#ffffff13'}}}:
       [{scale:true,axisLabel:{color:'#93a0b1',formatter:v=>(isMcx?'₹':'$')+Number(v).toLocaleString(undefined,{maximumFractionDigits:0})},splitLine:{lineStyle:{color:'#ffffff13'}}},
        {scale:true,gridIndex:1,axisLabel:{show:false},splitLine:{show:false}}],
      dataZoom:[{type:'inside'}],series
@@ -1619,7 +1746,10 @@ fullRefresh();
    const ro=new ResizeObserver(()=>chart.resize());ro.observe(ref.current);
    return()=>{ro.disconnect();chart.dispose()};
   },[market,range,instrument]);
-  return h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
+  return instrument==='silver'&&(market.silver?.history?.length||0)<2?
+   h('div',{className:'ac3-unavailable-chart'},'Silver spot '+(market.silver?.ready?'received. Chart will show as more live observations are collected.':'waiting for verified source.')+
+      ' Only observed quotes are plotted — no synthetic historical candles.'):
+   h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
  }
  function Metric({title,value,secondary,positive,icon,spark}) {
   const usable=(spark||[]).filter(Number.isFinite).slice(-48);
@@ -1734,7 +1864,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
  const entries=[
   ['Gold · international spot','◆','Awaiting live XAU price'],
   ['MCX · 995 import parity','🇮🇳','Awaiting gold and FX inputs'],
-  ['Silver · MCX','◈','No verified silver feed connected'],
+  ['Silver · XAG spot','◈','Fetching verified XAG quote'],
   ['USD / INR · ECB reference','↗','Awaiting reference FX rate']];
  const metrics=h('div',{className:'ac2-metrics'},...entries.map(([title,icon,secondary])=>
   h(Metric,{key:title,title,icon,secondary,value:'—',positive:null})));
@@ -1776,7 +1906,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
    btn('▣ Gold calculator',()=>go('tools')),btn('◇ Purity rates',()=>go('purityCard')),
    btn('◉ Investor insights',()=>go('invest')),btn('♧ Alert setup',onAlerts)));
  const lower=h('div',{className:'ac2-mini-grid'},sentiment,technical,accuracy,tools);
- return h(R.Fragment,null,metrics,main,lower,h('p',{className:'ac3-loading-caption',role:'status'},status));
+ return h(R.Fragment,null,metrics,main,lower,h(SilverRates,{m}),h('p',{className:'ac3-loading-caption',role:'status'},status));
 }
 
  function SilverRates({m}){
@@ -1830,14 +1960,16 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆',spark:(m.candle||[]).map(b=>b.c)}),
        h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈',spark:(m.candle||[]).map(b=>b.c*b.fx)}),
-       h(Metric,{title:'Silver · MCX',value:'Unavailable',secondary:'No verified silver feed',positive:null,icon:'◈'}),
+       h(Metric,{title:'Silver · 999 spot',value:money(m.silver?.perKg,0)+' /kg',
+ secondary:m.silver?.ready?'XAG/USD · '+dataTime(m.silver.updatedAt):'Waiting for verified XAG/USD',positive:null,icon:'◈',
+ spark:(m.silver?.history||[]).map(b=>b.usdOz)}),
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗',spark:(m.fxHistory||[]).map(b=>b.rate)})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
         h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
        h('div',{className:'ac3-instrument-tabs'},[['gold','Gold (XAU)'],['mcx','Gold (MCX)'],['silver','Silver'],['fx','USD/INR']].map(([id,label])=>btn(label,()=>setInstrument(id),instrument===id?'active':''))),
-       h('div',{className:'ac2-spotline'},instrument==='silver'?'No verified silver quote':instrument==='mcx'?money(m.rates.mcx995*10)+' /10g':instrument==='fx'?money(m.fx,2,'₹'):money(m.spot,2,'$')),
-       instrument==='silver'?h('div',{className:'ac3-unavailable-chart'},'Silver chart requires a verified feed.'):h(Chart,{market:m,range,instrument})),
+       h('div',{className:'ac2-spotline'},instrument==='silver'?money(m.silver?.usdOz,2,'$')+' /troy oz':instrument==='mcx'?money(m.rates.mcx995*10)+' /10g':instrument==='fx'?money(m.fx,2,'₹'):money(m.spot,2,'$')),
+       h(Chart,{market:m,range,instrument})),
        h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'◎ Price Forecast'),h('p',null,'Next MCX open and next session close'))),
         h('div',{className:'ac3-term-tabs'},['Short Term','Medium Term','Long Term'].map((label,i)=>btn(label,()=>setTerm(i),term===i?'active':''))),
         h('div',{className:'ac2-forecast-value'},money(m.horizons?.[term]?.lo68)+' – '+money(m.horizons?.[term]?.hi68),h('span',null,'₹ / 10g · MCX parity · estimated 68% band')),
@@ -1869,6 +2001,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
         btn(h(R.Fragment,null,h(Icon,{name:'coins'}),'Purity rates'),()=>{setTool('prices');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
         btn(h(R.Fragment,null,h(Icon,{name:'target'}),'Forecast explorer'),()=>go('forecast')),
         btn(h(R.Fragment,null,h(Icon,{name:'bell'}),'Alerts'),onAlerts)))),
+      h(SilverRates,{m}),
       h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-tools'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold rates & calculators'),h('p',null,'Gold purity conversion with live international reference and Indian landed parity')),
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
@@ -1951,7 +2084,11 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
       h('div',{className:'ac2-top-controls'},
        h('span',{className:'ac2-status'},'● ',m.ready?'Market data ready':'Fetching feeds'),
        btn(h(Icon,{name:'bell'}),()=>setAlerts(true),'ac2-square'),
-       btn('☼',()=>window.AurumBridge?.setTheme(m.theme==='ivory'?'aurum':'ivory'),'ac2-square ac3-theme-toggle'),
+       h('div',{className:'ac4-theme-picker',role:'group','aria-label':'Dashboard color theme'},
+        ...[['aurum','Gold'],['obsidian','Obsidian'],['rose','Rose'],['ivory','Ivory']].map(([id,label])=>
+         h('button',{key:id,type:'button',className:'ac4-swatch ac4-'+id+(m.theme===id?' active':''),
+          title:label+' theme','aria-label':label+' theme','aria-pressed':m.theme===id,
+          onClick:()=>window.AurumBridge?.setTheme(id)},h('span',{className:'ac4-swatch-dot'})))) ,
        h('div',{className:'ac3-profile-wrap'},btn(h(R.Fragment,null,h('span',{className:'ac3-profile-avatar'},'Au'),' AurumCast'),()=>setProfile(!profile),'ac3-profile-button'),
         profile&&h('div',{className:'ac3-profile-menu'},btn('Settings',()=>{setSettings(true);setProfile(false)}),btn('Methodology',()=>{navTo('data');setProfile(false)}))),
        btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refresh(),'ac2-square'))),
