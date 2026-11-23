@@ -99,6 +99,69 @@ footer{margin-top:36px;color:var(--tx3);font-size:12px;line-height:1.6}
 @media (max-width:1200px){.gstrip{grid-template-columns:1fr 1fr 1fr}.gchart{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){#k22Card .grid{grid-template-columns:1fr!important}.k22stats{grid-template-columns:1fr 1fr}.gstrip{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.g2,.g3,.g21,.g12{grid-template-columns:1fr}nav.links{display:none}.big{font-size:32px}}
 </style>
+<style>/* AurumCast professional React shell — visual layer only; existing quantitative engine remains intact. */
+:root{--ac-side:258px;--ac-gold:#e7bd72;--ac-border:rgba(255,255,255,.095)}
+html{scroll-behavior:smooth}
+body{background:#090d16}
+.wrap{max-width:none;margin-left:var(--ac-side);padding:26px clamp(18px,2.8vw,48px) 70px}
+.bg{left:var(--ac-side);background:radial-gradient(ellipse at 90% 0%,rgba(37,44,65,.65),transparent 50%),#090d16}
+.bg i{opacity:.10!important;filter:blur(120px)}
+header.top{top:14px;border-radius:18px;padding:12px 18px;margin-bottom:27px;background:rgba(23,29,42,.85);box-shadow:0 16px 40px rgba(0,0,0,.17)}
+header.top .brand,header.top nav.links{display:none!important}
+header.top:before{content:"Market intelligence / Live overview";font-size:12px;letter-spacing:.06em;color:var(--tx2);font-weight:650}
+header.top .pill{font-size:11px}
+.glass{background:linear-gradient(135deg,rgba(29,36,52,.84),rgba(17,22,35,.86));border:1px solid var(--ac-border);box-shadow:0 8px 30px rgba(0,0,0,.15),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(26px);border-radius:19px}
+.gstrip{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gstrip>.gchart{grid-column:1/-1}
+.gstrip>.gtile{min-height:160px;display:flex;flex-direction:column;justify-content:center}
+.gstrip .gv{font-family:'Inter',sans-serif;font-size:36px!important;letter-spacing:-.05em;font-weight:750}
+.gstrip .hero{background:linear-gradient(130deg,rgba(229,177,85,.17),rgba(29,36,52,.7));border-color:rgba(230,185,105,.3)}
+.kpi{padding:21px 23px}.kpi .l{font-weight:650;letter-spacing:.09em}.kpi .v{letter-spacing:-.035em}
+.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:22px 24px}.card h3{font-size:15px}
+h2{font-family:'Inter',sans-serif;font-weight:750;letter-spacing:-.045em;font-size:26px}
+section{margin-top:42px;scroll-margin-top:110px}
+.sub{max-width:850px;line-height:1.65}
+.btn,.seg{border-radius:10px}
+.btn{transition:background .2s,border-color .2s,transform .2s}.btn:hover{transform:translateY(-1px)}
+table{font-size:12.5px}th{letter-spacing:.035em}
+th,td{padding:12px 10px}tr:hover td{background:rgba(255,255,255,.025)}
+#purityCard,#k22Card{margin-bottom:15px!important}
+#banner{border-left:3px solid var(--ac-gold)}
+#ac-shell{position:relative;z-index:30}
+.ac-sidebar{position:fixed;inset:0 auto 0 0;width:var(--ac-side);background:linear-gradient(180deg,#131a27 0%,#0d121e 100%);border-right:1px solid rgba(255,255,255,.075);display:flex;flex-direction:column;padding:28px 15px 17px;z-index:40}
+.ac-brand{display:flex;align-items:center;gap:12px;padding:0 13px 28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ac-symbol{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:14px;background:linear-gradient(130deg,#fae0a4,#aa7423);color:#22201a;box-shadow:0 8px 24px rgba(220,157,67,.18);font-size:24px;font-family:Georgia,serif}
+.ac-brand strong{font-size:19px;letter-spacing:-.035em;color:#f9f6ef}.ac-brand small{display:block;color:#8790a4;font-size:10px;margin-top:3px;letter-spacing:.07em;text-transform:uppercase}
+.ac-kicker{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#778298;font-weight:700;padding:29px 16px 10px}
+.ac-nav{display:grid;gap:5px}
+.ac-nav button{appearance:none;border:0;color:#aeb6c7;background:transparent;text-align:left;font:inherit;font-size:13px;font-weight:550;display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:12px;cursor:pointer;transition:.16s ease}
+.ac-nav button:hover{background:rgba(255,255,255,.06);color:#fff}
+.ac-nav button.active{background:linear-gradient(90deg,rgba(226,180,102,.18),rgba(226,180,102,.065));color:#f4d397;box-shadow:inset 3px 0 #e6bd78}
+.ac-icon{width:22px;text-align:center;font-size:17px}
+.ac-spacer{flex:1}
+.ac-info{margin:20px 8px 0;padding:17px;border:1px solid rgba(229,190,118,.17);background:rgba(229,190,118,.055);border-radius:16px}
+.ac-info b{display:block;font-size:12px;color:#ead7b5}.ac-info p{font-size:11px;line-height:1.6;color:#a8acb5;margin:8px 0 0}
+.ac-foot{font-size:10px;color:#697485;text-align:center;margin-top:20px}
+.ac-page-title{margin:8px 0 21px;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.ac-page-title .eyebrow{font-size:11px;color:#d9ad65;font-weight:750;letter-spacing:.15em;text-transform:uppercase}
+.ac-page-title h1{font-family:Inter,system-ui;font-size:clamp(27px,3vw,39px);line-height:1.15;letter-spacing:-.055em;font-weight:780;margin:9px 0 6px;color:#f6f3ee}
+.ac-page-title p{color:#9098a9;font-size:13px;line-height:1.65;margin:0}
+.ac-timestamp{color:#9eabb9;font-size:11px;border:1px solid var(--ac-border);border-radius:100px;padding:9px 13px;white-space:nowrap}
+.ac-mobile-bar{display:none}
+.ac-overlay{display:none}
+.ac-top-actions{display:flex;align-items:center;gap:8px}
+.ac-top-actions button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:#cbd1dc;border-radius:10px;padding:9px 12px;cursor:pointer}
+.ac-top-actions button:hover{border-color:#cfa963;color:#f0d29f}
+[data-theme=ivory] .ac-page-title h1{color:#25231f}
+[data-theme=ivory] .ac-page-title p{color:#5f6064}
+[data-theme=ivory] .glass{background:rgba(255,255,255,.8);box-shadow:0 9px 26px rgba(70,55,20,.08);border-color:rgba(57,47,27,.12)}
+[data-theme=ivory] .bg{background:#f3f0e9}
+@media(max-width:1260px){:root{--ac-side:218px}.wrap{padding:20px}.ac-sidebar{padding:20px 9px}.gstrip{grid-template-columns:repeat(2,minmax(0,1fr))}.gstrip>.gchart{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){:root{--ac-side:0px}.wrap{margin-left:0;padding:16px 14px 50px}.bg{left:0}.ac-sidebar{width:260px;transform:translateX(-105%);transition:transform .25s;box-shadow:25px 0 50px rgba(0,0,0,.4)}.ac-sidebar.open{transform:translateX(0)}.ac-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:35}.ac-mobile-bar{display:flex;position:sticky;top:0;z-index:32;background:#111725;border-bottom:1px solid var(--ac-border);height:58px;align-items:center;justify-content:space-between;padding:0 16px;color:#f7dbab;font-weight:750}.ac-mobile-bar button{background:transparent;border:1px solid rgba(255,255,255,.12);color:inherit;border-radius:9px;padding:7px 11px}header.top{top:70px;gap:7px}header.top:before{display:none}.ac-page-title{align-items:start}.ac-timestamp{display:none}.gstrip{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.gstrip,.kpis{grid-template-columns:1fr}.gstrip>.gchart{grid-column:auto}.ac-page-title h1{font-size:29px}.card{padding:15px}.gstrip .gv{font-size:29px!important}header.top .pill:nth-of-type(2),header.top .themes{display:none}.ac-top-actions{display:none}}
+@media(prefers-reduced-motion:reduce){.ac-sidebar,.ac-nav button,.btn{transition:none!important}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
 <div class="bg"><i></i><i></i><i></i></div>
@@ -1111,5 +1174,87 @@ fullRefresh();
 })();
 
 </script>
+<script defer src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script>window.addEventListener("load", () => { /* React-owned navigation, accessibility and presentation shell.
+ * Existing DOM charts, settings, live polling, forecast engine and history remain untouched.
+ * This is a progressive migration, not a port of the numerical engine.
+ */
+(function () {
+  'use strict';
+  if (!window.React || !window.ReactDOM) {
+    console.warn('React unavailable; existing AurumCast dashboard remains usable.');
+    return;
+  }
+  const h = React.createElement;
+  const items = [
+    { id:'overview', label:'Overview', glyph:'◈', desc:'Global and Indian gold prices' },
+    { id:'monitor', label:'Live monitor', glyph:'◷', desc:'Intraday moves and hourly candles' },
+    { id:'forecast', label:'Forecast studio', glyph:'⌁', desc:'Session outlook and probability ranges' },
+    { id:'proof', label:'Model validation', glyph:'▤', desc:'Walk-forward forecast evidence' },
+    { id:'analytics', label:'Market analytics', glyph:'▥', desc:'Technical indicators and volatility' },
+    { id:'invest', label:'Investor insights', glyph:'◇', desc:'Transparent multi-factor score' },
+    { id:'data', label:'Data & methodology', glyph:'⚙', desc:'Sources, assumptions and settings' }
+  ];
+  const useState = React.useState, useEffect = React.useEffect;
+  function shell() {
+    const [active,setActive] = useState('overview');
+    const [open,setOpen] = useState(false);
+    const [clock,setClock] = useState('');
+    useEffect(() => {
+      const update = () => setClock(new Intl.DateTimeFormat('en-IN', { dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'}).format(new Date()) + ' IST');
+      update();const tid=setInterval(update,60000);
+      const handler=() => {
+        const ids=items.map(x=>x.id).filter(x=>x!=='overview');
+        const scrolled=ids.filter(id=>{const el=document.getElementById(id);return el&&el.getBoundingClientRect().top<220;});
+        setActive(scrolled.length ? scrolled[scrolled.length-1] : 'overview');
+      };
+      window.addEventListener('scroll',handler,{passive:true});handler();
+      return()=>{clearInterval(tid);window.removeEventListener('scroll',handler)};
+    },[]);
+    function go(id) {
+      setOpen(false);setActive(id);
+      const target=id==='overview'?document.querySelector('.gstrip'):document.getElementById(id);
+      target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+      history.replaceState(null,'',id==='overview'?location.pathname:'#'+id);
+    }
+    function clickExisting(id) { document.getElementById(id)?.click(); }
+    const side=h('aside',{className:'ac-sidebar'+(open?' open':''),'aria-label':'Main navigation'},
+      h('div',{className:'ac-brand'},h('div',{className:'ac-symbol','aria-hidden':'true'},'Au'),
+        h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold intelligence'))),
+      h('div',{className:'ac-kicker'},'Workspace'),
+      h('nav',{className:'ac-nav'},items.map(it=>h('button',{key:it.id,type:'button',className:active===it.id?'active':'',onClick:()=>go(it.id),title:it.desc,'aria-current':active===it.id?'page':undefined},
+        h('span',{className:'ac-icon','aria-hidden':'true'},it.glyph),it.label))),
+      h('div',{className:'ac-spacer'}),
+      h('div',{className:'ac-info'},h('b',null,'Confidence over certainty'),h('p',null,'Forecast ranges are estimates. Point forecasts have not demonstrated a consistent edge over the naive baseline.')),
+      h('div',{className:'ac-foot'},'AURUMCAST · MARKET RESEARCH'));
+    return h(React.Fragment,null,
+      h('div',{className:'ac-mobile-bar'},h('button',{onClick:()=>setOpen(true),'aria-label':'Open navigation','aria-expanded':open},'☰'),h('span',null,'◈ AurumCast'),h('button',{onClick:()=>clickExisting('setBtn'),'aria-label':'Open settings'},'⚙')),
+      h('div',{className:'ac-overlay'+(open?' show':''),onClick:()=>setOpen(false),'aria-hidden':'true'}),
+      side,
+      h('div',{className:'ac-page-title'},
+        h('div',null,h('div',{className:'eyebrow'},'MARKET INTELLIGENCE PLATFORM'),
+          h('h1',null,'Gold market overview'),
+          h('p',null,'Real-time price intelligence, predictive ranges and model evidence — COMEX to MCX.')),
+        h('div',{className:'ac-top-actions'},
+          h('span',{className:'ac-timestamp'},clock),
+          h('button',{type:'button',onClick:()=>clickExisting('refreshBtn'),'aria-label':'Refresh live market data'},'↻ Refresh'),
+          h('button',{type:'button',onClick:()=>clickExisting('setBtn'),'aria-label':'Open dashboard settings'},'⚙ Settings'))));
+  }
+  const root=document.createElement('div');root.id='ac-shell';document.body.prepend(root);
+  const title=document.createElement('div');title.id='ac-react-heading';
+  const strip=document.querySelector('.gstrip');
+  if(strip)strip.parentNode.insertBefore(title,strip);
+  ReactDOM.createRoot(root).render(h(shell));
+  /* React owns the shell and heading. Keep heading within dashboard layout. */
+  const heading=document.createElement('div');heading.id='ac-title-portal';title.appendChild(heading);
+  ReactDOM.createRoot(heading).render(h('div',{className:'ac-page-title'},
+    h('div',null,h('div',{className:'eyebrow'},'MARKET INTELLIGENCE PLATFORM'),
+      h('h1',null,'Gold market overview'),
+      h('p',null,'Real-time price intelligence, predictive ranges and model evidence — COMEX to MCX.'))));
+  // Remove duplicate title in the fixed shell to avoid two visible headings.
+  const style=document.createElement('style');style.textContent='#ac-shell>.ac-page-title{display:none}';document.head.appendChild(style);
+})();
+ });</script>
 </body>
 </html>
