@@ -30,7 +30,7 @@ test('React source and bridge are syntactically valid and keep original engine i
 test('live quotes never use a mock-data default', () => {
  const shell = read('src/react-shell.js');
  assert.ok(shell.includes("if(!market.ready||!ref.current||!window.echarts||instrument==='silver')return"));
- assert.ok(shell.includes('Fetching and validating live gold and FX data'));
+ assert.ok(shell.includes('Connecting to verified market feeds…'));
  assert.ok(!/Math\.random\(/.test(shell));
 });
 
