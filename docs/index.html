@@ -1655,7 +1655,7 @@ fullRefresh();
        h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'◎ Price Forecast'),h('p',null,'Next MCX open and next session close'))),
         h('div',{className:'ac3-term-tabs'},['Short Term','Medium Term','Long Term'].map((label,i)=>btn(label,()=>setTerm(i),term===i?'active':''))),
         h('div',{className:'ac2-forecast-value'},money(m.horizons?.[term]?.lo68)+' – '+money(m.horizons?.[term]?.hi68),h('span',null,'₹ / 10g · MCX parity · estimated 68% band')),
-        h('div',{className:'ac2-range-bar'},h('span',null,'68% interval'),h('b',null,money(m.open.lo68,0)+' – '+money(m.open.hi68,0))),
+        h('div',{className:'ac2-range-bar'},h('span',null,'68% interval · selected horizon'),h('b',null,money(m.horizons?.[term]?.lo68,0)+' – '+money(m.horizons?.[term]?.hi68,0))),
         h('p',null,'Forecast target · ',dataTime(m.horizons?.[term]?.target)),
         h('div',{className:'ac2-forecast-details'},h('span',null,'Next close / 10g',h('b',null,money(m.close.mid))),
         h('span',null,'68% interval / 10g',h('b',null,money(m.close.lo68)+' – '+money(m.close.hi68)))),
