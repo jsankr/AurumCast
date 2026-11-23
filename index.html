@@ -853,7 +853,7 @@ const store = {
   set(k, v) { try { localStorage.setItem('aurum.' + k, JSON.stringify(v)); } catch {} },
 };
 const S = { k22Kind: 'close', k22N: 90, gMode: 'mcx', theme: store.get('theme', 'aurum'), duty: store.get('duty', 15), prem: store.get('prem', 0), hours: store.get('hours', 2000), auto: store.get('auto', true), hrN: 168, hrOv: 'bb', dN: 260, coneH: 20, hm: 'abs' };
-const D = { ticks: [], err: {} };
+const D = { ticks: [], err: {}, silver: null, silverError: null, silverTicks: store.get('silverTicks', []) };
 const C = {};
 const OZ = GE.OZ_G;
 // India gold import duty (BCD + AIDC [+SWS]) by effective date. From 13 May 2026 the user-editable setting applies.
@@ -862,6 +862,7 @@ const dutyAt = d => GE.dutyAt(d, S.duty);
 const BIN = 'https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT';
 const SRC = {
   bin: 'https://data-api.binance.vision', spot: 'https://api.gold-api.com/price/XAU',
+  silver: 'https://api.gold-api.com/price/XAG',
   fx2: 'https://api.frankfurter.dev/v2/rates?base=USD&quotes=INR&from=2019-09-01', fx1: 'https://api.frankfurter.dev/v1/2019-09-01..?base=USD&symbols=INR',
   er: 'https://open.er-api.com/v6/latest/USD',
 };
@@ -913,6 +914,40 @@ async function getJSON(url, ms = 20000) {
   const c = new AbortController(), t = setTimeout(() => c.abort(), ms);
   try { const r = await fetch(url, { signal: c.signal, cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); } finally { clearTimeout(t); }
 }
+
+/* Independent, validated XAG/USD spot feed. Silver is not an MCX exchange quote.
+ * Persist only observed source quotes; no extrapolated or synthetic history. */
+function acceptSilver(data) {
+  const price = Number(data?.price);
+  const at = Date.parse(data?.updatedAt);
+  if (data?.symbol !== 'XAG' || data?.currency !== 'USD' || !Number.isFinite(price) || price <= 0.1 || price >= 1000)
+    throw new Error('Silver source returned an invalid XAG/USD quote');
+  if (!Number.isFinite(at) || at > Date.now() + 300000 || Date.now() - at > 96 * 3600000)
+    throw new Error('Silver source quote timestamp is stale or invalid');
+  D.silver = { usdOz: price, updatedAt: at, source: 'gold-api.com XAG/USD spot' };
+  D.silverError = null;
+  const ticks = (Array.isArray(D.silverTicks) ? D.silverTicks : []).filter(t => Number.isFinite(t.t) && Number.isFinite(t.p) && t.p > 0 && t.t > Date.now() - 90 * 86400000);
+  if (!ticks.some(t => t.t === at)) ticks.push({t:at,p:price});
+  D.silverTicks = ticks.sort((a,b)=>a.t-b.t).slice(-1200);
+  store.set('silverTicks',D.silverTicks);
+}
+async function refreshSilver() {
+  try { acceptSilver(await getJSON(SRC.silver, 12000)); }
+  catch (err) { D.silverError = String(err?.message || err); }
+  if (window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update',{detail:window.AurumBridge.snapshot()}));
+}
+function silverSnapshot(){
+  const v=D.silver;
+  const fx=Number(D.fxNow);
+  if(!v) return {ready:false,error:D.silverError || 'Awaiting live XAG/USD feed',source:'gold-api.com /price/XAG',purities:[999,925,915]};
+  const fine=Number.isFinite(fx)&&fx>0?v.usdOz * fx / OZ:null;
+  const perGram=fine==null?null:{'999':fine*.999,'925':fine*.925,'915':fine*.915};
+  return {ready:true,usdOz:v.usdOz,updatedAt:v.updatedAt,fxRate:Number.isFinite(fx)?fx:null,
+   spotInrGram:fine,perGram,perKg:perGram?.['999']*1000??null,
+   history:D.silverTicks.map(x=>({t:x.t,usdOz:x.p})),
+   error:D.silverError,source:v.source,sourceType:'international spot conversion; not MCX'};
+}
+
 async function klinesBack(interval, total, extra = '') {
   let out = [], end = null;
   while (out.length < total) {
@@ -924,11 +959,14 @@ async function klinesBack(interval, total, extra = '') {
 }
 async function loadAll() {
   setLive('load', 'Fetching…');
-  const [h, d, fx, spot, er, m30] = await Promise.allSettled([
+  const [h, d, fx, spot, er, m30, silver] = await Promise.allSettled([
     klinesBack('1h', S.hours), klinesBack('1d', 3000, '&timeZone=5:30'),
-    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 4000),
+    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 4000), getJSON(SRC.silver),
   ]);
   D.err = {};
+  if (silver.status === 'fulfilled') {
+    try { acceptSilver(silver.value); } catch (error) { D.silverError = error.message; }
+  } else D.silverError = silver.reason?.message || 'Silver source unavailable';
   if (m30.status === 'fulfilled') D.mRaw = m30.value; else { D.mRaw = null; D.err['30-min'] = m30.reason.message; }
   if (h.status === 'fulfilled') D.hRaw = h.value; else D.err.hourly = h.reason.message;
   if (d.status === 'fulfilled') D.dRaw = d.value; else D.err.daily = d.reason.message;
@@ -1135,7 +1173,7 @@ function renderAll() {
    The original GE math, browser ledger, validation, and live polling remain the source of truth. */
 window.AurumBridge = {
   snapshot() {
-    if (!D.ready) return { ready: false, errors: { ...D.err } };
+    if (!D.ready) return { ready: false, errors: { ...D.err }, silver: silverSnapshot() };
     const now = Date.now(), sp = spotNow(), rates = GE.rates(sp, D.fxNow, S.duty, S.prem / 100);
     const target = nextMcxOpen(now), trh = openHours(now, target);
     const m = D.fc.r * trh / 23, sig = D.fc.sigma * Math.sqrt(Math.max(trh, .25) / 23);
@@ -1157,6 +1195,7 @@ window.AurumBridge = {
     const macdHist = GE.macd(closes).hist.at(-1);
     return {
       ready: true, fetchedAt: D.fetchedAt, now, theme: S.theme, spot: sp, spotChange24h: change,
+      silver: silverSnapshot(),
       fx: D.fxNow, fxDate: D.fxDate, duty: S.duty, calibration: S.prem,
       rates, mcxChange: rates.mcx995 / prevMcx - 1,
       open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
@@ -1181,10 +1220,11 @@ window.AurumBridge = {
       openValidation: D.mc ? { n: D.mc.n, coverage: D.mc.cov } : null,
       ledger: (D.ledger || []).map(e => ({ target: e.target, predicted: e.ex, actual: e.actual ?? null, lo68: e.lo, hi68: e.hi })),
       auto: S.auto, hours: S.hours, errors: { ...D.err },
-      sourceNotice: 'USD spot (gold-api.com), PAXG candles (Binance), ECB FX; MCX is calculated import parity, not an exchange tick.'
+      sourceNotice: 'XAU and XAG spot (gold-api.com), PAXG history (Binance), ECB FX. Silver INR is spot conversion; gold MCX is computed import parity. Neither is an MCX exchange quote.'
     };
   },
   refresh() { fullRefresh(); },
+  refreshSilver() { return refreshSilver(); },
   setTheme(name) { if (['aurum','obsidian','rose','ivory'].includes(name)) setTheme(name); },
   configure({ duty, hours, auto, calibration }) {
     if (duty != null && Number.isFinite(+duty) && +duty >= 0 && +duty < 50) { S.duty = +duty; store.set('duty',S.duty); $('sDuty').value=S.duty; }
@@ -1455,6 +1495,7 @@ function renderSources() {
 let nextFull = 0;
 function scheduleNext() { const now = Date.now(), h = 3600e3; nextFull = Math.ceil(now / h) * h + 90e3; if (nextFull - now < 120e3) nextFull += h; }
 async function pollSpot() {
+  void refreshSilver();
   try { const s = await getJSON(SRC.spot, 10000); if (s && s.price) { D.spot = s; const t = Date.parse(s.updatedAt) || Date.now(); if (!D.ticks.length || D.ticks.at(-1).t !== t) D.ticks.push({ t, p: s.price }); if (D.ticks.length > 1440) D.ticks.shift(); if (D.ready) { renderStrip(); renderPurity(); renderK22(); renderKpis(); renderTicks(); if (window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update', { detail: window.AurumBridge.snapshot() })); } setLive('ok', 'Live'); } }
   catch { setLive('err', 'Spot feed retrying'); }
 }
