@@ -90,6 +90,25 @@
     h('div',{className:'ac2-actions'},btn('Calibrate',()=>{if(window.AurumBridge.calibrate(+quote))close()},'ac2-gold-btn'),btn('Clear calibration',()=>window.AurumBridge.configure({calibration:0}))),
     h('hr'),btn('Clear locally stored prediction ledger',()=>{if(window.confirm('Clear predictions saved in this browser?'))window.AurumBridge.clearLedger()}),
     h('p',{className:'ac2-disclaimer'},'Your custom preferences and prediction ledger are stored in this browser.')));}
+ function EvidenceTables({m}){
+  const [tab,setTab]=useState('factors');
+  const rows=tab==='factors'?(m.factors||[]):(m.ledger||[]).slice().reverse().slice(0,40);
+  return h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-evidence-tables'},
+   h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Transparent model & investor evidence'),
+     h('p',null,'Inspect the actual rules-based factors and forecasts saved in this browser.')),
+     h('div',{className:'ac2-ranges'},btn('Factor breakdown',()=>setTab('factors'),tab==='factors'?'active':''),
+       btn('Prediction ledger',()=>setTab('ledger'),tab==='ledger'?'active':''))),
+   h('div',{className:'ac2-table-wrap'},tab==='factors'?
+     h('table',{className:'ac2-table'},h('thead',null,h('tr',null,['Factor','Contribution','Weight','Explanation'].map(n=>h('th',{key:n},n)))),
+       h('tbody',null,rows.map((r,i)=>h('tr',{key:i},h('td',null,r.name),h('td',null,pct(r.score/1)),h('td',null,pct(r.weight)),
+         h('td',{className:'ac2-explanation'},r.reason))))):
+     h('table',{className:'ac2-table'},h('thead',null,h('tr',null,['Target date','Forecast parity','Actual parity','Within 68% band'].map(n=>h('th',{key:n},n)))),
+       h('tbody',null,rows.length?rows.map((r,i)=>h('tr',{key:i},
+         h('td',null,r.target),h('td',null,money(r.predicted,2)),h('td',null,r.actual==null?'Pending':money(r.actual,2)),
+         h('td',null,r.actual==null?'Pending':r.actual>=r.lo68&&r.actual<=r.hi68?'Yes':'No'))):
+         h('tr',null,h('td',{colSpan:4},'No locally scored forecast records yet.'))))),
+   h('p',{className:'ac2-disclaimer'},'The forecast ledger is browser-local. Factor weights and numbers are generated from the original market engine.'));
+ }
  function Dashboard({m,go}){
   const [range,setRange]=useState('1M'),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
   const [target,setTarget]=useState(0);
@@ -140,6 +159,7 @@
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
        h('p',{className:'ac2-disclaimer'},'MCX values are import-parity estimates, not an official MCX market feed. GST is shown separately; making charges vary.'))),
+    h(EvidenceTables,{m}),
     h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
     showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
  }
