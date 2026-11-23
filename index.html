@@ -1778,6 +1778,40 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
  const lower=h('div',{className:'ac2-mini-grid'},sentiment,technical,accuracy,tools);
  return h(R.Fragment,null,metrics,main,lower,h('p',{className:'ac3-loading-caption',role:'status'},status));
 }
+
+ function SilverRates({m}){
+ const silver=m.silver||{};
+ const [targets,setTargets]=useState(()=>{
+  try{const saved=JSON.parse(localStorage.getItem('aurum.silver.targets')||'{}');return {'999':saved['999']||'','925':saved['925']||'','915':saved['915']||''};}
+  catch{return {'999':'','925':'','915':''};}
+ });
+ const update=(grade,val)=>{const next={...targets,[grade]:val};setTargets(next);try{localStorage.setItem('aurum.silver.targets',JSON.stringify(next))}catch{}};
+ const grades=[['999','Fine silver','99.9%'],['925','Sterling silver','92.5%'],['915','Silver alloy','91.5%']];
+ const rates=grades.map(([grade,label,purity])=>{
+  const rate=silver.perGram?.[grade],target=Number(targets[grade]);
+  const delta=Number.isFinite(rate)&&Number.isFinite(target)&&target>0?(rate/target-1)*100:null;
+  return h('article',{className:'ac4-silver-grade',key:grade},
+   h('div',{className:'ac4-silver-grade-head'},h('strong',null,label+' '+grade),h('span',null,purity)),
+   h('div',{className:'ac4-silver-value'},money(rate,2),' /g'),
+   h('div',{className:'ac4-target-row'},
+    h('label',null,'Your target ₹/g',h('input',{type:'number',inputMode:'decimal',min:'0',step:'.01',value:targets[grade],placeholder:'Set target',
+     onChange:e=>update(grade,e.target.value),'aria-label':label+' target in rupees per gram'})),
+    h('span',{className:delta==null?'':delta>=0?'ac4-above':'ac4-below'},
+     delta==null?'Not set':(delta>=0?'+':'')+delta.toFixed(1)+'% vs target')));
+ });
+ const status=silver.ready?'Source: '+silver.source+' · updated '+dataTime(silver.updatedAt):'Connecting to live XAG/USD source…';
+ const foot=silver.ready?
+  'XAG/USD '+money(silver.usdOz,2,'$')+'/troy oz · FX '+money(silver.fxRate,2,'₹')+
+  '. Spot metal value only: no duty, GST, making charges or dealer premium. Not MCX futures.':
+  (silver.error||'No silver quotation yet. Verify network access.');
+ return h('section',{className:'ac4-silver-strip',id:'silver-rates'},
+  h('div',{className:'ac4-silver-heading'},
+   h('span',{className:'ac4-silver-emblem','aria-hidden':'true'},'Ag'),
+   h('div',null,h('h2',null,'Silver Purity & Rates'),h('p',null,status)),
+   btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refreshSilver(),'ac4-refresh-silver')),
+  h('div',{className:'ac4-silver-grades'},...rates),
+  h('p',{className:'ac4-silver-footnote'},foot,' Targets are user-entered references, not forecasts. Sterling = 925; 915 is a separate alloy.'));
+ }
  function Dashboard({m,go,onAlerts}){
   const [range,setRange]=useState('1M'),[instrument,setInstrument]=useState('gold'),[term,setTerm]=useState(0),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
   const [target,setTarget]=useState(0);
