@@ -298,12 +298,26 @@ window.AurumBridge = {
     const last = D.hDone.at(-24), change = last ? sp / (last.c * D.basis) - 1 : null;
     const old = D.daily[D.lastC], prevMcx = toMcx(old.inr, old.date)/10;
     const validation = D.sc?.res?.ens || {};
+    const rangedForecast = (days) => {
+      const horizon = GE.nextMcxClose(now + days * 86400000);
+      const q = GE.forecastTo(now, horizon, D.fc).factor(parityNow());
+      return { days, target: horizon, mid: q.mid, lo68: q.lo68, hi68: q.hi68 };
+    };
+    const scoreRows = D.wf.rows.filter(r => r.actual != null);
+    const rangeCoverage = scoreRows.length ? scoreRows.filter(r => Math.abs(Math.log(r.actual / D.px[r.t]) - r.pred.ens) <= r.sigma).length / scoreRows.length : null;
+    const closes = D.daily.map(x => x.inr);
+    const rsi14 = GE.rsi(closes,14).at(-1);
+    const macdHist = GE.macd(closes).hist.at(-1);
     return {
       ready: true, fetchedAt: D.fetchedAt, now, theme: S.theme, spot: sp, spotChange24h: change,
       fx: D.fxNow, fxDate: D.fxDate, duty: S.duty, calibration: S.prem,
       rates, mcxChange: rates.mcx995 / prevMcx - 1,
       open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
-      candle: h.map(b => ({ t: b.t, o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      candle: h.map(b => ({ t: b.t, fx: GE.fxLookup(D.fx)(GE.istDate(b.t)), o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      fxHistory: D.fx.slice(-370).map(([date,rate]) => ({ date, rate })),
+      horizons: [rangedForecast(1), rangedForecast(7), rangedForecast(30)],
+      indicators: { rsi14, macdHist, trend: D.card?.score ?? null },
+      historicalCoverage: { n: scoreRows.length, band68: rangeCoverage },
       analysis: {
         daily: D.daily.slice(-260).map(x => ({ date:x.date, mcx:x.inr * D.basis * mcxF() })),
         rsi: GE.rsi(D.px, 14).slice(-260),
