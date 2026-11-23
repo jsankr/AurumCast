@@ -288,3 +288,10 @@ html.ac3-mounted .ac2-chart-panel .ac3-unavailable-chart{order:3;flex:1}
 @media(max-width:650px){html.ac3-mounted .ac2-chart-panel .ac3-instrument-tabs{max-width:100%;margin-bottom:8px}
 html.ac3-mounted .ac2-chart-panel .ac2-panel-head{margin-top:0;justify-content:flex-start;min-height:auto;margin-bottom:6px}
 html.ac3-mounted .ac2-chart-panel{height:auto;min-height:420px}}
+
+/* Preserve target dashboard layout while live gold/FX data is pending. */
+.ac3-pending-chart{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:235px;gap:12px;overflow:hidden;color:#a6b1bf;font-size:12px;text-align:center;background:repeating-linear-gradient(to bottom,transparent 0 49px,#ffffff0e 49px 50px),repeating-linear-gradient(to right,transparent 0 95px,#ffffff0c 95px 96px)}
+.ac3-pending-chart>*{position:relative;z-index:1}
+.ac3-pending-gauge{background:conic-gradient(from 270deg at 50% 100%,#506174 0deg,#697b8e 180deg,transparent 180deg)}
+.ac3-loading-caption{color:#acb6c3;font-size:11px;margin:0 0 20px 4px}
+.ac3-tools .ac2-quick-tools{grid-template-columns:repeat(2,minmax(0,1fr))}

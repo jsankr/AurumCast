@@ -391,6 +391,13 @@ html.ac3-mounted .ac2-chart-panel .ac3-unavailable-chart{order:3;flex:1}
 @media(max-width:650px){html.ac3-mounted .ac2-chart-panel .ac3-instrument-tabs{max-width:100%;margin-bottom:8px}
 html.ac3-mounted .ac2-chart-panel .ac2-panel-head{margin-top:0;justify-content:flex-start;min-height:auto;margin-bottom:6px}
 html.ac3-mounted .ac2-chart-panel{height:auto;min-height:420px}}
+
+/* Preserve target dashboard layout while live gold/FX data is pending. */
+.ac3-pending-chart{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:235px;gap:12px;overflow:hidden;color:#a6b1bf;font-size:12px;text-align:center;background:repeating-linear-gradient(to bottom,transparent 0 49px,#ffffff0e 49px 50px),repeating-linear-gradient(to right,transparent 0 95px,#ffffff0c 95px 96px)}
+.ac3-pending-chart>*{position:relative;z-index:1}
+.ac3-pending-gauge{background:conic-gradient(from 270deg at 50% 100%,#506174 0deg,#697b8e 180deg,transparent 180deg)}
+.ac3-loading-caption{color:#acb6c3;font-size:11px;margin:0 0 20px 4px}
+.ac3-tools .ac2-quick-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
 </style>
 </head>
 <body>
@@ -1665,6 +1672,56 @@ fullRefresh();
          h('tr',null,h('td',{colSpan:4},'No locally scored forecast records yet.'))))),
    h('p',{className:'ac2-disclaimer'},'The forecast ledger is browser-local. Factor weights and numbers are generated from the original market engine.'));
  }
+
+function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument,term,setTerm}){
+ const status=Object.keys(m.errors||{}).length?'Market feed unavailable — retry to reconnect':'Connecting to verified market feeds…';
+ const entries=[
+  ['Gold · international spot','◆','Awaiting live XAU price'],
+  ['MCX · 995 import parity','🇮🇳','Awaiting gold and FX inputs'],
+  ['Silver · MCX','◈','No verified silver feed connected'],
+  ['USD / INR · ECB reference','↗','Awaiting reference FX rate']];
+ const metrics=h('div',{className:'ac2-metrics'},...entries.map(([title,icon,secondary])=>
+  h(Metric,{key:title,title,icon,secondary,value:'—',positive:null})));
+ const instrumentTabs=h('div',{className:'ac3-instrument-tabs'},...[
+  ['gold','Gold (XAU)'],['mcx','Gold (MCX)'],['silver','Silver'],['fx','USD/INR']
+ ].map(([key,label])=>btn(label,()=>setInstrument(key),instrument===key?'active':'')));
+ const periods=h('div',{className:'ac2-ranges'},...['1D','5D','1M','3M','ALL'].map(key=>
+  btn(key,()=>setRange(key),range===key?'active':'')));
+ const chart=h('section',{className:'ac2-panel ac2-chart-panel'},
+  h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Live Market Chart')),periods),
+  instrumentTabs,h('div',{className:'ac2-spotline'},'—'),
+  h('div',{className:'ac3-pending-chart'},h('span',null,instrument==='silver'?'Silver feed not connected':status),
+   Object.keys(m.errors||{}).length>0?btn('Retry feeds',()=>window.AurumBridge?.refresh(),'ac2-gold-btn'):null));
+ const forecast=h('section',{className:'ac2-panel ac2-forecast'},
+  h('h2',null,'◎ Price Forecast'),
+  h('div',{className:'ac3-term-tabs'},...['Short Term','Medium Term','Long Term'].map((name,i)=>
+   btn(name,()=>setTerm(i),term===i?'active':''))),
+  h('div',{className:'ac2-forecast-value'},'—',h('span',null,'₹ / 10g · forecast 68% interval')),
+  h('div',{className:'ac2-range-bar'},h('span',null,'Selected horizon'),h('b',null,['Next session','Next 7 days','Next 30 days'][term])),
+  h('div',{className:'ac2-forecast-details'},...['Next session','Next 7 days','Next 30 days'].map(name=>
+   h('span',{key:name},name,h('b',null,'—')))),
+  h('p',{className:'ac2-disclaimer'},'No synthetic forecasts are displayed.'));
+ const main=h('div',{className:'ac2-main-grid'},chart,forecast);
+ const sentiment=h('section',{className:'ac2-panel ac2-sentiment'},
+  h('h2',null,'◈ Market Sentiment'),h('p',null,'Rules-based investor score'),
+  h('div',{className:'ac2-gauge ac3-pending-gauge'},h('div',{className:'ac2-gauge-inner'},h('strong',null,'—'),h('small',null,'score / ±100'))),
+  h('b',{className:'ac2-gauge-label'},'Awaiting factors'));
+ const technical=h('section',{className:'ac2-panel ac3-technical-card'},
+  h('h2',null,'▥ Technical Indicators'),h('p',null,'Validated market history'),
+  h('div',{className:'ac2-evidence'},...['RSI (14)','MACD histogram','Trend','Support / Resistance'].map(name=>
+   h('span',{key:name},name,h('b',null,'—')))));
+ const accuracy=h('section',{className:'ac2-panel ac3-accuracy-card'},
+  h('h2',null,'◎ Prediction Accuracy'),h('p',null,'Walk-forward range coverage'),
+  h('div',{className:'ac3-accuracy-circle',style:{'--fill':'0%'}},h('div',null,h('b',null,'—'),h('small',null,'no data'))),
+  btn('View backtest',()=>go('proof'),'ac2-mini-link'));
+ const tools=h('section',{className:'ac2-panel ac3-tools'},
+  h('h2',null,'⚒ Quick Tools'),h('p',null,'Explore market intelligence'),
+  h('div',{className:'ac2-quick-tools'},
+   btn('▣ Gold calculator',()=>go('tools')),btn('◇ Purity rates',()=>go('purityCard')),
+   btn('◉ Investor insights',()=>go('invest')),btn('♧ Alert setup',onAlerts)));
+ const lower=h('div',{className:'ac2-mini-grid'},sentiment,technical,accuracy,tools);
+ return h(R.Fragment,null,metrics,main,lower,h('p',{className:'ac3-loading-caption',role:'status'},status));
+}
  function Dashboard({m,go,onAlerts}){
   const [range,setRange]=useState('1M'),[instrument,setInstrument]=useState('gold'),[term,setTerm]=useState(0),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
   const [target,setTarget]=useState(0);
@@ -1679,7 +1736,7 @@ fullRefresh();
       h('div',{className:'ac2-hero-actions'},h('span',{className:'ac2-live-dot'},'● ',m.ready?'Data received':'Loading market feeds'),
         h('span',null,m.ready?dataTime(m.fetchedAt):'Waiting for validated data'))),
      h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
-    !m.ready?h('div',{className:'ac2-loading'},h('p',null,Object.keys(m.errors||{}).length?'Required market data could not be loaded. The dashboard will not show fabricated prices.':'Fetching and validating live gold and FX data. No simulated prices will be shown.'),Object.keys(m.errors||{}).length&&h('div',null,Object.entries(m.errors).map(([k,v])=>h('p',{key:k},k+': '+v)),btn('Retry market data',()=>window.AurumBridge?.refresh(),'ac2-gold-btn'))):h(R.Fragment,null,
+    !m.ready?h(PendingDashboard,{m,go,onAlerts,range,setRange,instrument,setInstrument,term,setTerm}):h(R.Fragment,null,
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆',spark:(m.candle||[]).map(b=>b.c)}),
        h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈',spark:(m.candle||[]).map(b=>b.c*b.fx)}),
@@ -1726,8 +1783,8 @@ fullRefresh();
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
        h('p',{className:'ac2-disclaimer'},'MCX values are import-parity estimates, not an official MCX market feed. GST is shown separately; making charges vary.'))),
-    h(NativeAnalytics,{m}),
-    h(EvidenceTables,{m}),
+    m.ready&&h(NativeAnalytics,{m}),
+    m.ready&&h(EvidenceTables,{m}),
     h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
     showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
  }

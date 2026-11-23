@@ -46,6 +46,9 @@ const inspect=async (name,contextOptions,width,height)=>{
  assert.equal(state.nav,true);
  assert.equal(state.hero,true);
  assert.equal(state.branded,true);
+ assert.equal(await page.locator('.ac2-metrics .ac2-metric').count(),4,'Four market cards must render while data is pending');
+ assert.equal(await page.locator('.ac2-main-grid').count(),1,'Chart and forecast must render while data is pending');
+ assert.equal(await page.locator('.ac2-mini-grid').count(),1,'Lower insights must render while data is pending');
  mkdirSync('browser-artifacts',{recursive:true});
  await page.screenshot({path:'browser-artifacts/'+name+'.png',fullPage:true});
  console.log(name,JSON.stringify(state));
