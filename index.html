@@ -99,73 +99,158 @@ footer{margin-top:36px;color:var(--tx3);font-size:12px;line-height:1.6}
 @media (max-width:1200px){.gstrip{grid-template-columns:1fr 1fr 1fr}.gchart{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){#k22Card .grid{grid-template-columns:1fr!important}.k22stats{grid-template-columns:1fr 1fr}.gstrip{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.g2,.g3,.g21,.g12{grid-template-columns:1fr}nav.links{display:none}.big{font-size:32px}}
 </style>
-<style>/* AurumCast professional React shell — visual layer only; existing quantitative engine remains intact. */
-:root{--ac-side:258px;--ac-gold:#e7bd72;--ac-border:rgba(255,255,255,.095)}
-html{scroll-behavior:smooth}
-body{background:#090d16}
-.wrap{max-width:none;margin-left:var(--ac-side);padding:26px clamp(18px,2.8vw,48px) 70px}
-.bg{left:var(--ac-side);background:radial-gradient(ellipse at 90% 0%,rgba(37,44,65,.65),transparent 50%),#090d16}
-.bg i{opacity:.10!important;filter:blur(120px)}
-header.top{top:14px;border-radius:18px;padding:12px 18px;margin-bottom:27px;background:rgba(23,29,42,.85);box-shadow:0 16px 40px rgba(0,0,0,.17)}
-header.top .brand,header.top nav.links{display:none!important}
-header.top:before{content:"Market intelligence / Live overview";font-size:12px;letter-spacing:.06em;color:var(--tx2);font-weight:650}
-header.top .pill{font-size:11px}
-.glass{background:linear-gradient(135deg,rgba(29,36,52,.84),rgba(17,22,35,.86));border:1px solid var(--ac-border);box-shadow:0 8px 30px rgba(0,0,0,.15),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(26px);border-radius:19px}
-.gstrip{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.gstrip>.gchart{grid-column:1/-1}
-.gstrip>.gtile{min-height:160px;display:flex;flex-direction:column;justify-content:center}
-.gstrip .gv{font-family:'Inter',sans-serif;font-size:36px!important;letter-spacing:-.05em;font-weight:750}
-.gstrip .hero{background:linear-gradient(130deg,rgba(229,177,85,.17),rgba(29,36,52,.7));border-color:rgba(230,185,105,.3)}
-.kpi{padding:21px 23px}.kpi .l{font-weight:650;letter-spacing:.09em}.kpi .v{letter-spacing:-.035em}
-.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
-.card{padding:22px 24px}.card h3{font-size:15px}
-h2{font-family:'Inter',sans-serif;font-weight:750;letter-spacing:-.045em;font-size:26px}
-section{margin-top:42px;scroll-margin-top:110px}
-.sub{max-width:850px;line-height:1.65}
-.btn,.seg{border-radius:10px}
-.btn{transition:background .2s,border-color .2s,transform .2s}.btn:hover{transform:translateY(-1px)}
-table{font-size:12.5px}th{letter-spacing:.035em}
-th,td{padding:12px 10px}tr:hover td{background:rgba(255,255,255,.025)}
-#purityCard,#k22Card{margin-bottom:15px!important}
-#banner{border-left:3px solid var(--ac-gold)}
-#ac-shell{position:relative;z-index:30}
-.ac-sidebar{position:fixed;inset:0 auto 0 0;width:var(--ac-side);background:linear-gradient(180deg,#131a27 0%,#0d121e 100%);border-right:1px solid rgba(255,255,255,.075);display:flex;flex-direction:column;padding:28px 15px 17px;z-index:40}
-.ac-brand{display:flex;align-items:center;gap:12px;padding:0 13px 28px;border-bottom:1px solid rgba(255,255,255,.08)}
-.ac-symbol{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:14px;background:linear-gradient(130deg,#fae0a4,#aa7423);color:#22201a;box-shadow:0 8px 24px rgba(220,157,67,.18);font-size:24px;font-family:Georgia,serif}
-.ac-brand strong{font-size:19px;letter-spacing:-.035em;color:#f9f6ef}.ac-brand small{display:block;color:#8790a4;font-size:10px;margin-top:3px;letter-spacing:.07em;text-transform:uppercase}
-.ac-kicker{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#778298;font-weight:700;padding:29px 16px 10px}
-.ac-nav{display:grid;gap:5px}
-.ac-nav button{appearance:none;border:0;color:#aeb6c7;background:transparent;text-align:left;font:inherit;font-size:13px;font-weight:550;display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:12px;cursor:pointer;transition:.16s ease}
-.ac-nav button:hover{background:rgba(255,255,255,.06);color:#fff}
-.ac-nav button.active{background:linear-gradient(90deg,rgba(226,180,102,.18),rgba(226,180,102,.065));color:#f4d397;box-shadow:inset 3px 0 #e6bd78}
-.ac-icon{width:22px;text-align:center;font-size:17px}
-.ac-spacer{flex:1}
-.ac-info{margin:20px 8px 0;padding:17px;border:1px solid rgba(229,190,118,.17);background:rgba(229,190,118,.055);border-radius:16px}
-.ac-info b{display:block;font-size:12px;color:#ead7b5}.ac-info p{font-size:11px;line-height:1.6;color:#a8acb5;margin:8px 0 0}
-.ac-foot{font-size:10px;color:#697485;text-align:center;margin-top:20px}
-.ac-page-title{margin:8px 0 21px;display:flex;justify-content:space-between;align-items:end;gap:12px}
-.ac-page-title .eyebrow{font-size:11px;color:#d9ad65;font-weight:750;letter-spacing:.15em;text-transform:uppercase}
-.ac-page-title h1{font-family:Inter,system-ui;font-size:clamp(27px,3vw,39px);line-height:1.15;letter-spacing:-.055em;font-weight:780;margin:9px 0 6px;color:#f6f3ee}
-.ac-page-title p{color:#9098a9;font-size:13px;line-height:1.65;margin:0}
-.ac-timestamp{color:#9eabb9;font-size:11px;border:1px solid var(--ac-border);border-radius:100px;padding:9px 13px;white-space:nowrap}
-.ac-mobile-bar{display:none}
-.ac-overlay{display:none}
-.ac-top-actions{display:flex;align-items:center;gap:8px}
-.ac-top-actions button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:#cbd1dc;border-radius:10px;padding:9px 12px;cursor:pointer}
-.ac-top-actions button:hover{border-color:#cfa963;color:#f0d29f}
-[data-theme=ivory] .ac-page-title h1{color:#25231f}
-[data-theme=ivory] .ac-page-title p{color:#5f6064}
-[data-theme=ivory] .glass{background:rgba(255,255,255,.8);box-shadow:0 9px 26px rgba(70,55,20,.08);border-color:rgba(57,47,27,.12)}
-[data-theme=ivory] .bg{background:#f3f0e9}
-@media(max-width:1260px){:root{--ac-side:218px}.wrap{padding:20px}.ac-sidebar{padding:20px 9px}.gstrip{grid-template-columns:repeat(2,minmax(0,1fr))}.gstrip>.gchart{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:900px){:root{--ac-side:0px}.wrap{margin-left:0;padding:16px 14px 50px}.bg{left:0}.ac-sidebar{width:260px;transform:translateX(-105%);transition:transform .25s;box-shadow:25px 0 50px rgba(0,0,0,.4)}.ac-sidebar.open{transform:translateX(0)}.ac-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:35}.ac-mobile-bar{display:flex;position:sticky;top:0;z-index:32;background:#111725;border-bottom:1px solid var(--ac-border);height:58px;align-items:center;justify-content:space-between;padding:0 16px;color:#f7dbab;font-weight:750}.ac-mobile-bar button{background:transparent;border:1px solid rgba(255,255,255,.12);color:inherit;border-radius:9px;padding:7px 11px}header.top{top:70px;gap:7px}header.top:before{display:none}.ac-page-title{align-items:start}.ac-timestamp{display:none}.gstrip{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.gstrip,.kpis{grid-template-columns:1fr}.gstrip>.gchart{grid-column:auto}.ac-page-title h1{font-size:29px}.card{padding:15px}.gstrip .gv{font-size:29px!important}header.top .pill:nth-of-type(2),header.top .themes{display:none}.ac-top-actions{display:none}}
-@media(prefers-reduced-motion:reduce){.ac-sidebar,.ac-nav button,.btn{transition:none!important}html{scroll-behavior:auto}}
+<style>/* AurumCast 2.0 — reference-inspired black-and-gold interface */
+:root{--ac2-side:263px;--ac2-gold:#f4bf5b;--ac2-muted:#a6afbc;--ac2-edge:rgba(195,209,232,.16)}
+body{background:#090d13!important;color:#f0f2f5!important;font-family:Inter,system-ui,sans-serif}
+.bg{display:none}
+#main-wrap{max-width:none;margin:0 0 0 var(--ac2-side);padding:0 25px 65px}
+#main-wrap>header.top,#main-wrap>.gstrip,#main-wrap>.kpis{display:none!important}
+#main-wrap>.card,#main-wrap>section,#main-wrap>.banner{scroll-margin-top:85px}
+#main-wrap>section{margin-top:22px}
+#main-wrap section h2{font-family:Inter,system-ui;font-weight:750;letter-spacing:-.035em}
+#main-wrap .glass{background:linear-gradient(145deg,#141c28,#101723);border:1px solid var(--ac2-edge);box-shadow:0 9px 30px rgba(0,0,0,.15)}
+#main-wrap #purityCard,#main-wrap #k22Card{margin:22px 0}
+#main-wrap .card{border-radius:17px}
+#main-wrap .btn{background:#252d38;color:#e7e9ee}
+#main-wrap .btn:hover{border-color:var(--ac2-gold)}
+#main-wrap .seg button.on{background:#8c6531;color:#fff}
+#main-wrap table th,#main-wrap table td{padding:11px 10px}
+#ac-react-root{color:#ecedf1;font-family:Inter,system-ui,sans-serif}
+#ac-react-root *{box-sizing:border-box}
+#ac-react-root button,#ac-react-root input,#ac-react-root select{font:inherit}
+#ac-react-root button{cursor:pointer}
+#ac-react-root button:focus-visible,#ac-react-root input:focus-visible,#ac-react-root select:focus-visible{outline:2px solid #f2c46f;outline-offset:3px}
+.ac2-side{position:fixed;inset:0 auto 0 0;width:var(--ac2-side);z-index:50;display:flex;flex-direction:column;background:linear-gradient(160deg,#101721,#080e17);border-right:1px solid var(--ac2-edge);padding:19px 13px}
+.ac2-brand{display:flex;align-items:center;gap:11px;padding:8px 9px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ac2-brand-symbol{display:grid;place-items:center;width:45px;height:45px;border-radius:13px;background:linear-gradient(135deg,#ffe1a1 3%,#efa922 49%,#8a5312 100%);color:#2a1603;font-family:Georgia,serif;font-size:22px;font-weight:700;box-shadow:0 6px 20px rgba(254,182,58,.2)}
+.ac2-brand strong{display:block;color:#ffe0a4;font-size:21px;font-weight:800;letter-spacing:-.05em}
+.ac2-brand small{font-size:9.5px;letter-spacing:.06em;color:#9ca4b2}
+.ac2-nav-kicker{font-size:10px;letter-spacing:.19em;color:#798699;margin:27px 13px 12px;font-weight:700}
+.ac2-side nav{display:grid;gap:5px}
+.ac2-side nav button{display:flex;align-items:center;gap:13px;color:#b7bfcb;background:transparent;border:1px solid transparent;border-radius:11px;padding:13px 12px;font-size:13.5px;text-align:left;transition:.18s}
+.ac2-side nav button svg{color:#bdc4cd;flex-shrink:0}
+.ac2-side nav button.active{background:linear-gradient(98deg,rgba(226,155,52,.48),rgba(226,155,52,.12));border-color:#ce933b;color:white;box-shadow:inset 2px 0 #ffcd69}
+.ac2-side nav button.active svg{color:#ffe0a4}
+.ac2-side nav button:hover:not(.active){background:rgba(255,255,255,.06);color:white}
+.ac2-side-bottom{margin-top:auto;margin-bottom:12px;background:rgba(224,167,84,.06);border:1px solid rgba(246,199,110,.16);border-radius:13px;padding:15px}
+.ac2-side-bottom p{font-size:10px;letter-spacing:.13em;font-weight:800;color:#e6b662;margin:0 0 6px}
+.ac2-side-bottom span{font-size:11px;line-height:1.65;color:#a6acb8}
+.ac2-side-version{font-size:10px;color:#7a8392;margin-top:24px}
+.ac2-topbar{position:sticky;top:0;z-index:35;margin-left:var(--ac2-side);min-height:70px;padding:13px 26px;display:flex;justify-content:space-between;align-items:center;gap:16px;background:rgba(10,15,23,.95);border-bottom:1px solid var(--ac2-edge);backdrop-filter:blur(20px)}
+.ac2-search{position:relative;width:min(540px,58%);height:43px;display:flex;align-items:center;gap:12px;background:#151d2b;border:1px solid #3c4758;border-radius:12px;padding:0 14px;color:#8b9aac}
+.ac2-search input{color:#f1f3f7;background:transparent;border:0;outline:none;width:100%;font-size:13px}
+.ac2-search input::placeholder{color:#8490a3}
+.ac2-search-results{position:absolute;top:47px;left:0;right:0;z-index:40;background:#182232;border:1px solid #4b5463;box-shadow:0 20px 30px #0009;border-radius:12px;display:grid;padding:8px}
+.ac2-search-results button{text-align:left;color:#dedfe3;padding:9px;background:transparent;border:0}
+.ac2-search-results button:hover{background:#354357}
+.ac2-top-controls{display:flex;align-items:center;gap:11px}
+.ac2-status{color:#89cb9e;border:1px solid #355148;background:#122820;border-radius:25px;padding:8px 13px;font-size:10px;font-weight:700;letter-spacing:.07em}
+.ac2-square{display:inline-flex;align-items:center;justify-content:center;width:39px;height:39px;background:#1c2532;color:#e2e4e9;border:1px solid #364153;border-radius:11px}
+.ac2-square:hover{background:#293443;border-color:#d5a64e}
+.ac2-content{margin-left:var(--ac2-side);padding:22px 25px 5px;max-width:1900px}
+.ac2-hero{min-height:180px;border-radius:20px;position:relative;overflow:hidden;padding:30px 33px;background:radial-gradient(ellipse at 83% 28%,rgba(191,106,25,.35),transparent 39%),linear-gradient(104deg,#0e1521 17%,#171923 66%,#161018);border:1px solid rgba(237,172,79,.22);box-shadow:inset 0 1px 0 #ffffff0c;margin-bottom:17px}
+.ac2-hero:before{content:'';position:absolute;inset:0;opacity:.24;background-image:repeating-linear-gradient(90deg,transparent 0 57px,#d19d4e22 58px 59px),linear-gradient(160deg,transparent 55%,rgba(222,139,31,.25) 60%,transparent 67%);pointer-events:none}
+.ac2-hero-copy{position:relative;z-index:2;max-width:70%}
+.ac2-eyebrow{letter-spacing:.19em;color:#b99a68;font-size:10.5px;font-weight:750}
+.ac2-hero h1{margin:14px 0 10px;color:#f4f5f7;font-size:clamp(25px,2.4vw,40px);font-weight:800;letter-spacing:-.055em;line-height:1.12}
+.ac2-hero em{font-style:normal;color:#edb750}
+.ac2-hero p{color:#b3bac6;max-width:740px;font-size:13px;line-height:1.7;margin:0}
+.ac2-hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px;color:#a2aab7;margin-top:22px;font-size:11px}
+.ac2-live-dot{color:#4dd8a3;font-weight:700}
+.ac2-gold-art{position:absolute;right:3%;top:9px;width:260px;height:175px;perspective:800px;filter:drop-shadow(0 0 29px rgba(237,164,38,.25))}
+.ac2-orbit{position:absolute;inset:-28px -25px;border:1px solid rgba(234,162,47,.13);border-radius:50%;transform:rotate(-23deg) scale(.85)}
+.ac2-goldbar{position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:center;border-radius:10px;transform:rotate(-18deg) skew(7deg);background:linear-gradient(143deg,#fff7bd,#ffc439 22%,#b96b07 55%,#f6cb52 77%,#794108);border:2px solid #ffe69b;box-shadow:15px 18px 0 #57300c,19px 22px 12px #0008,inset 0 3px 12px #fff5;letter-spacing:.15em;color:#7c490b;text-shadow:0 1px #fff8}
+.ac2-goldbar.bar-front{width:145px;height:97px;left:42px;top:34px;font-size:19px}
+.ac2-goldbar small{font-size:10px;font-weight:750}.ac2-goldbar b{font-size:24px}
+.ac2-goldbar.bar-back{width:112px;height:75px;left:132px;top:78px;font-size:30px}
+.ac2-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:17px}
+.ac2-metric{min-width:0;min-height:112px;border:1px solid var(--ac2-edge);border-radius:17px;background:linear-gradient(125deg,rgba(30,36,43,.96),rgba(14,23,29,.94));padding:20px 15px;display:flex;gap:12px;align-items:center;box-shadow:inset 0 1px rgba(255,255,255,.06)}
+.ac2-metric-icon{width:42px;height:42px;border-radius:13px;flex-shrink:0;display:grid;place-items:center;background:linear-gradient(150deg,#ffe1a1,#b87817);color:#482906;font-size:23px;font-weight:800}
+.ac2-metric-info{min-width:0;display:flex;flex-direction:column;gap:7px}
+.ac2-muted{font-size:11px;color:#a8b0bd;font-weight:600}
+.ac2-metric strong{font-size:clamp(16px,1.5vw,25px);letter-spacing:-.035em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ac2-metric small{color:#a1aab7;font-size:10.5px;line-height:1.4}
+.ac2-metric .positive,.ac2-spotline .positive{color:#44d49b}
+.ac2-metric .negative,.ac2-spotline .negative{color:#f1767c}
+.ac2-main-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,.92fr);gap:16px;margin-bottom:16px}
+.ac2-panel{background:linear-gradient(145deg,#161e2b,#0e1621);border:1px solid var(--ac2-edge);border-radius:17px;padding:19px 21px;box-shadow:0 10px 30px #0002;min-width:0}
+.ac2-panel h2{display:flex;align-items:center;gap:8px;font-size:15px;letter-spacing:-.02em;font-weight:750;margin:0 0 4px}
+.ac2-panel p{color:#a8afbc;font-size:11.5px;line-height:1.65;margin:0}
+.ac2-panel-head{display:flex;align-items:start;justify-content:space-between;gap:14px}
+.ac2-ranges{display:flex;gap:3px;flex-wrap:wrap;padding:3px;background:#101824;border:1px solid #303a49;border-radius:10px}
+.ac2-ranges button{background:transparent;border:0;color:#c1c7d0;border-radius:7px;padding:7px 10px;font-size:11px}
+.ac2-ranges button.active{background:linear-gradient(120deg,#f2c76f,#a66b20);color:#241603;font-weight:750}
+.ac2-chart-panel{min-height:400px}
+.ac2-spotline{display:flex;align-items:baseline;gap:13px;font-size:26px;letter-spacing:-.04em;font-weight:700;margin:18px 0 1px}
+.ac2-spotline span{font-size:12px;letter-spacing:0}
+.ac-native-chart{width:100%;height:302px}
+.ac2-forecast{position:relative;overflow:hidden}
+.ac2-forecast:before{content:'';position:absolute;width:250px;height:200px;right:-100px;top:70px;background:radial-gradient(ellipse,rgba(37,209,125,.14),transparent 70%);pointer-events:none}
+.ac2-forecast-value{font-size:clamp(23px,2.1vw,34px);font-weight:800;margin:40px 0 6px;letter-spacing:-.055em}
+.ac2-forecast-value span{display:block;color:#a8b0ba;font-weight:500;letter-spacing:0;font-size:11px;margin:8px 0 17px}
+.ac2-range-bar{border-top:1px solid #344050;border-bottom:1px solid #344050;padding:15px 0;display:flex;flex-direction:column;gap:7px}
+.ac2-range-bar span{font-size:11px;color:#a4b0bc}
+.ac2-range-bar b{font-size:15px;color:#50dca0;white-space:normal}
+.ac2-forecast-details{display:grid;gap:5px;margin-top:18px}
+.ac2-forecast-details>span{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#242b34;border:1px solid #3c424a;border-radius:9px;padding:11px;font-size:11px;color:#adb8c7}
+.ac2-forecast-details b{color:#f3f3f5;font-size:12px;text-align:right}
+.ac2-disclaimer{font-size:10px!important;color:#8b95a5!important;line-height:1.55!important;margin-top:13px!important}
+.ac2-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.ac2-mini-grid .ac2-panel{min-height:250px;display:flex;flex-direction:column}
+.ac2-mini-grid .ac2-panel h2{font-size:15px}
+.ac2-gauge{position:relative;margin:20px auto 10px;width:170px;height:91px;overflow:hidden;border-radius:160px 160px 0 0;background:conic-gradient(from 270deg at 50% 100%,#ed5c66 0deg,#ffc451 79deg,#41c981 180deg,transparent 180deg)}
+.ac2-gauge-inner{position:absolute;left:14px;right:14px;bottom:0;height:76px;display:flex;align-items:center;justify-content:end;flex-direction:column;border-radius:150px 150px 0 0;background:#151c28;padding:0 0 3px}
+.ac2-gauge-inner strong{font-size:28px}.ac2-gauge-inner small{font-size:10px;color:#a0aabb}
+.ac2-gauge-label{display:block;text-align:center;color:#69daa3;font-size:14px;margin-bottom:12px}
+.ac2-mini-link{align-self:flex-start;margin-top:auto;background:transparent;border:0;color:#e0b96e;font-size:11px;padding:9px 0}
+.ac2-mini-link:hover{text-decoration:underline}
+.ac2-evidence{display:grid;gap:0;margin:15px 0}
+.ac2-evidence>span{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid #ffffff14;color:#9faebb;font-size:11px}
+.ac2-evidence b{color:#edf0f4;font-size:12px}
+.ac2-quick-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:23px}
+.ac2-quick-tools button{min-height:69px;background:linear-gradient(135deg,#252a2e,#1b2027);border:1px solid #485057;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#e3e6ed;font-size:11px;padding:9px}
+.ac2-quick-tools svg{color:#f2c36f;width:22px;height:22px}
+.ac2-quick-tools button:hover{border-color:#e3ae4d;background:#3a3124}
+.ac2-toolspanel{margin-bottom:17px;scroll-margin-top:85px}
+.ac2-table-wrap{overflow-x:auto;margin-top:16px}
+.ac2-table{border-collapse:collapse;width:100%;min-width:650px}
+.ac2-table th{text-align:left;font-size:11px;color:#98a4b5;background:#1c2532;padding:13px 12px;border-bottom:1px solid #3b4859}
+.ac2-table td{padding:13px 12px;border-bottom:1px solid #ffffff16;font-size:12px;font-variant-numeric:tabular-nums}
+.ac2-table tbody tr:hover td{background:#ffffff07}
+.ac2-calculator{margin-top:20px}
+.ac2-fields{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr));gap:14px}
+.ac2-fields label,.ac2-modal label{display:flex;flex-direction:column;gap:7px;color:#aeb6c4;font-size:12px}
+.ac2-fields input,.ac2-fields select,.ac2-modal input:not([type=checkbox]),.ac2-modal select{width:100%;background:#111b29;color:#f3f4f7;border:1px solid #4b5464;border-radius:10px;padding:11px}
+.ac2-receipt{grid-column:1/-1;border:1px solid #415064;border-radius:13px;padding:15px;display:grid;gap:10px}
+.ac2-receipt span{display:flex;justify-content:space-between;color:#a5afc0;font-size:12px}
+.ac2-receipt b{color:#e7e9ef}
+.ac2-receipt .total{padding-top:11px;border-top:1px solid #465064;color:#f4c66c;font-weight:750}
+.ac2-data-note{display:flex;gap:9px;align-items:center;font-size:11px;color:#9cabb8;line-height:1.5;margin-bottom:10px}
+.ac2-data-note svg{color:#65d5ab;flex-shrink:0}
+.ac2-loading{padding:48px 25px;text-align:center;border:1px solid #3b4a5c;border-radius:17px;color:#c6ccd6;background:#121b28}
+.ac2-modal-back{position:fixed;inset:0;background:#000b;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.ac2-modal{width:min(500px,100%);max-height:90vh;overflow:auto;display:grid;gap:13px;padding:24px;background:linear-gradient(140deg,#1b2735,#0e1420);border:1px solid #586071;border-radius:20px;box-shadow:0 25px 90px #000b}
+.ac2-modal header{display:flex;justify-content:space-between;align-items:flex-start}
+.ac2-modal h2{font-size:22px;margin:0 0 6px}
+.ac2-modal h3{font-size:15px;margin:0}
+.ac2-modal p{font-size:12px;line-height:1.6;color:#a3aebf;margin:0}
+.ac2-modal hr{border:0;border-top:1px solid #ffffff24;width:100%}
+.ac2-modal .ac2-toggle{flex-direction:row;align-items:center}
+.ac2-modal .ac2-actions{display:flex;gap:8px}
+.ac2-modal button:not(.ac2-gold-btn){background:#222d3c;border:1px solid #4c596a;border-radius:9px;padding:10px;color:#eceff2}
+.ac2-modal button.ac2-gold-btn{background:linear-gradient(120deg,#f1c76d,#b47727);color:#231704;border:0;border-radius:9px;padding:10px 16px;font-weight:750}
+.ac2-mobile-trigger{display:none}
+.ac2-screen{display:none}
+@media(max-width:1300px){:root{--ac2-side:218px}.ac2-side{padding:14px 8px}.ac2-side nav button{font-size:12px;padding:12px 9px}.ac2-brand strong{font-size:18px}.ac2-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ac2-hero-copy{max-width:72%}.ac2-main-grid{grid-template-columns:minmax(0,1.4fr) minmax(265px,1fr)}}
+@media(max-width:970px){:root{--ac2-side:0px}.ac2-side{transform:translateX(-105%);width:263px;transition:transform .2s}.ac2-side.open{transform:translateX(0)}.ac2-screen{display:block;position:fixed;inset:0;background:#000b;z-index:45}.ac2-mobile-trigger{position:fixed;bottom:14px;left:14px;z-index:42;display:flex;gap:7px;align-items:center;color:#f9d484;background:#162334;border:1px solid #d3ac66;border-radius:30px;padding:11px 17px;box-shadow:0 10px 32px #000b}.ac2-topbar,.ac2-content,#main-wrap{margin-left:0}.ac2-topbar{padding:11px 16px}.ac2-content{padding:16px}.ac2-mini-grid{grid-template-columns:1fr 1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:1/-1}.ac2-main-grid{grid-template-columns:1fr}.ac2-gold-art{right:-18px;opacity:.65}}
+@media(max-width:630px){.ac2-search{width:60%}.ac2-status{display:none}.ac2-hero{padding:26px 20px;min-height:200px}.ac2-hero-copy{max-width:100%}.ac2-hero h1{font-size:28px}.ac2-hero p{max-width:75%}.ac2-gold-art{opacity:.24;right:-86px}.ac2-metrics,.ac2-mini-grid,.ac2-fields{grid-template-columns:1fr}.ac2-mini-grid .ac2-panel:last-child{grid-column:auto}.ac2-panel{padding:16px}.ac2-panel-head{flex-direction:column}.ac2-chart-panel{min-height:350px}.ac-native-chart{height:260px}.ac2-spotline{font-size:22px}#main-wrap{padding:0 14px 65px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
+<div id="ac-react-root"></div>
 <div class="bg"><i></i><i></i><i></i></div>
-<div class="wrap">
+<div class="wrap" id="main-wrap">
 <header class="top glass">
   <div class="brand"><div class="logo"></div><div>AurumCast<small>COMEX → MCX gold</small></div></div>
   <nav class="links">
@@ -873,7 +958,55 @@ function setLive(s, txt) { $('liveDot').className = 'dot ' + (s === 'ok' ? 'live
 function renderAll() {
   renderStrip(); renderPurity(); renderK22(); renderBanner(); renderKpis(); renderHourly(); renderHourTable(); renderTicks(); renderForecast(); renderModels();
   renderProof(); renderDaily(); renderOsc(); renderRisk(); renderHeat(); renderDecomp(); renderInvest(); renderLedger(); renderSources();
+  if (window.AurumBridge) {
+    window.dispatchEvent(new CustomEvent('aurum:update', { detail: window.AurumBridge.snapshot() }));
+  }
 }
+/* Read-only, explicitly scoped market-data bridge for the React component tree.
+   The original GE math, browser ledger, validation, and live polling remain the source of truth. */
+window.AurumBridge = {
+  snapshot() {
+    if (!D.ready) return { ready: false, errors: { ...D.err } };
+    const now = Date.now(), sp = spotNow(), rates = GE.rates(sp, D.fxNow, S.duty, S.prem / 100);
+    const target = nextMcxOpen(now), trh = openHours(now, target);
+    const m = D.fc.r * trh / 23, sig = D.fc.sigma * Math.sqrt(Math.max(trh, .25) / 23);
+    const fcOpen = { mid: rates.mcx995 * Math.exp(m), lo68: rates.mcx995 * Math.exp(m-sig), hi68: rates.mcx995 * Math.exp(m+sig), target };
+    const close = D.fc.h.factor(parityNow());
+    const h = D.H.slice(-720);
+    const last = D.hDone.at(-24), change = last ? sp / (last.c * D.basis) - 1 : null;
+    const old = D.daily[D.lastC], prevMcx = toMcx(old.inr, old.date)/10;
+    const validation = D.sc?.res?.ens || {};
+    return {
+      ready: true, fetchedAt: D.fetchedAt, now, spot: sp, spotChange24h: change,
+      fx: D.fxNow, fxDate: D.fxDate, duty: S.duty, calibration: S.prem,
+      rates, mcxChange: rates.mcx995 / prevMcx - 1,
+      open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
+      candle: h.map(b => ({ t: b.t, o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      score: D.card.score, factors: D.card.factors.map(f => ({ name: f.k, score: f.v, weight: f.w, reason: f.why })),
+      accuracy: { theilU: validation.theilU, dm: validation.dm, coverage: validation.coverage, n: validation.n },
+      openValidation: D.mc ? { n: D.mc.n, coverage: D.mc.cov } : null,
+      ledger: (D.ledger || []).map(e => ({ target: e.target, predicted: e.ex, actual: e.actual ?? null, lo68: e.lo, hi68: e.hi })),
+      auto: S.auto, hours: S.hours, errors: { ...D.err },
+      sourceNotice: 'USD spot (gold-api.com), PAXG candles (Binance), ECB FX; MCX is calculated import parity, not an exchange tick.'
+    };
+  },
+  refresh() { fullRefresh(); },
+  setTheme(name) { if (['aurum','obsidian','rose','ivory'].includes(name)) setTheme(name); },
+  configure({ duty, hours, auto, calibration }) {
+    if (duty != null && Number.isFinite(+duty) && +duty >= 0 && +duty < 50) { S.duty = +duty; store.set('duty',S.duty); $('sDuty').value=S.duty; }
+    if (calibration === 0) { S.prem=0; store.set('prem',0); calTxt(); }
+    if (auto != null) { S.auto=!!auto; store.set('auto',S.auto); $('sAuto').checked=S.auto; if(S.auto) scheduleNext(); }
+    if (hours != null && [1000,2000,3000].includes(+hours) && S.hours!==+hours) { S.hours=+hours; store.set('hours',S.hours); $('sHours').value=String(S.hours); fullRefresh(); return; }
+    if (D.ready) renderAll();
+  },
+  clearLedger() { store.set('ledger', []); if(D.ready){ updateLedger(); renderLedger(); renderAll(); } },
+  calibrate(mcxTenGrams) {
+    const a=+mcxTenGrams;
+    if (!D.ready || !Number.isFinite(a) || a<=0) return false;
+    const raw=spotNow()*D.fxNow*10/OZ*(1+S.duty/100)*MCXP;
+    S.prem=(a/raw-1)*100; store.set('prem',S.prem); calTxt();renderAll();return true;
+  }
+};
 function renderBanner() {
   const bp = (D.basis - 1) * 100, errs = Object.keys(D.err);
   $('banner').innerHTML = `${conf('Certain')}<b>Real data only, with one honest substitution.</b> COMEX gold futures (GC) and MCX have no free feed a browser is allowed to read, so the hourly series is <b>PAXG/USDT on Binance</b> (each token is backed by one fine troy ounce of LBMA gold and trades 24/7). It is scaled to live <b>XAU spot</b> (gold-api.com), currently a ${bp >= 0 ? '+' : ''}${bp.toFixed(2)}% adjustment, and converted with the ECB USD/INR fix. MCX figures are <b>import parity for 995 gold</b> (the MCX Gold contract grade) = spot × USD/INR ÷ 31.1035 g × 0.995 × (1 + ${S.duty}% duty)${S.prem ? ` × (1 ${S.prem >= 0 ? '+' : '−'} ${Math.abs(S.prem).toFixed(2)}% your MCX calibration)` : ''}. ${S.prem ? '' : 'Enter a live MCX price in <b>Settings</b> to calibrate to your exchange quote.'}${errs.length ? ` <span class="tag warn">Partial: ${errs.join(', ')} unavailable</span>` : ''}`;
@@ -1176,84 +1309,179 @@ fullRefresh();
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-<script>window.addEventListener("load", () => { /* React-owned navigation, accessibility and presentation shell.
- * Existing DOM charts, settings, live polling, forecast engine and history remain untouched.
- * This is a progressive migration, not a port of the numerical engine.
+<script>window.addEventListener("load", () => { /* AurumCast 2.0: React-owned dashboard, charts, purity table, settings and tools.
+ * Data comes only from the validated AurumBridge snapshot of the original GE engine.
+ * Existing advanced analytics modules are retained until migrated and parity tested.
  */
-(function () {
-  'use strict';
-  if (!window.React || !window.ReactDOM) {
-    console.warn('React unavailable; existing AurumCast dashboard remains usable.');
-    return;
-  }
-  const h = React.createElement;
-  const items = [
-    { id:'overview', label:'Overview', glyph:'◈', desc:'Global and Indian gold prices' },
-    { id:'monitor', label:'Live monitor', glyph:'◷', desc:'Intraday moves and hourly candles' },
-    { id:'forecast', label:'Forecast studio', glyph:'⌁', desc:'Session outlook and probability ranges' },
-    { id:'proof', label:'Model validation', glyph:'▤', desc:'Walk-forward forecast evidence' },
-    { id:'analytics', label:'Market analytics', glyph:'▥', desc:'Technical indicators and volatility' },
-    { id:'invest', label:'Investor insights', glyph:'◇', desc:'Transparent multi-factor score' },
-    { id:'data', label:'Data & methodology', glyph:'⚙', desc:'Sources, assumptions and settings' }
-  ];
-  const useState = React.useState, useEffect = React.useEffect;
-  function shell() {
-    const [active,setActive] = useState('overview');
-    const [open,setOpen] = useState(false);
-    const [clock,setClock] = useState('');
-    useEffect(() => {
-      const update = () => setClock(new Intl.DateTimeFormat('en-IN', { dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'}).format(new Date()) + ' IST');
-      update();const tid=setInterval(update,60000);
-      const handler=() => {
-        const ids=items.map(x=>x.id).filter(x=>x!=='overview');
-        const scrolled=ids.filter(id=>{const el=document.getElementById(id);return el&&el.getBoundingClientRect().top<220;});
-        setActive(scrolled.length ? scrolled[scrolled.length-1] : 'overview');
-      };
-      window.addEventListener('scroll',handler,{passive:true});handler();
-      return()=>{clearInterval(tid);window.removeEventListener('scroll',handler)};
-    },[]);
-    function go(id) {
-      setOpen(false);setActive(id);
-      const target=id==='overview'?document.querySelector('.gstrip'):document.getElementById(id);
-      target?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
-      history.replaceState(null,'',id==='overview'?location.pathname:'#'+id);
-    }
-    function clickExisting(id) { document.getElementById(id)?.click(); }
-    const side=h('aside',{className:'ac-sidebar'+(open?' open':''),'aria-label':'Main navigation'},
-      h('div',{className:'ac-brand'},h('div',{className:'ac-symbol','aria-hidden':'true'},'Au'),
-        h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold intelligence'))),
-      h('div',{className:'ac-kicker'},'Workspace'),
-      h('nav',{className:'ac-nav'},items.map(it=>h('button',{key:it.id,type:'button',className:active===it.id?'active':'',onClick:()=>go(it.id),title:it.desc,'aria-current':active===it.id?'page':undefined},
-        h('span',{className:'ac-icon','aria-hidden':'true'},it.glyph),it.label))),
-      h('div',{className:'ac-spacer'}),
-      h('div',{className:'ac-info'},h('b',null,'Confidence over certainty'),h('p',null,'Forecast ranges are estimates. Point forecasts have not demonstrated a consistent edge over the naive baseline.')),
-      h('div',{className:'ac-foot'},'AURUMCAST · MARKET RESEARCH'));
-    return h(React.Fragment,null,
-      h('div',{className:'ac-mobile-bar'},h('button',{onClick:()=>setOpen(true),'aria-label':'Open navigation','aria-expanded':open},'☰'),h('span',null,'◈ AurumCast'),h('button',{onClick:()=>clickExisting('setBtn'),'aria-label':'Open settings'},'⚙')),
-      h('div',{className:'ac-overlay'+(open?' show':''),onClick:()=>setOpen(false),'aria-hidden':'true'}),
-      side,
-      h('div',{className:'ac-page-title'},
-        h('div',null,h('div',{className:'eyebrow'},'MARKET INTELLIGENCE PLATFORM'),
-          h('h1',null,'Gold market overview'),
-          h('p',null,'Real-time price intelligence, predictive ranges and model evidence — COMEX to MCX.')),
-        h('div',{className:'ac-top-actions'},
-          h('span',{className:'ac-timestamp'},clock),
-          h('button',{type:'button',onClick:()=>clickExisting('refreshBtn'),'aria-label':'Refresh live market data'},'↻ Refresh'),
-          h('button',{type:'button',onClick:()=>clickExisting('setBtn'),'aria-label':'Open dashboard settings'},'⚙ Settings'))));
-  }
-  const root=document.createElement('div');root.id='ac-shell';document.body.prepend(root);
-  const title=document.createElement('div');title.id='ac-react-heading';
-  const strip=document.querySelector('.gstrip');
-  if(strip)strip.parentNode.insertBefore(title,strip);
-  ReactDOM.createRoot(root).render(h(shell));
-  /* React owns the shell and heading. Keep heading within dashboard layout. */
-  const heading=document.createElement('div');heading.id='ac-title-portal';title.appendChild(heading);
-  ReactDOM.createRoot(heading).render(h('div',{className:'ac-page-title'},
-    h('div',null,h('div',{className:'eyebrow'},'MARKET INTELLIGENCE PLATFORM'),
-      h('h1',null,'Gold market overview'),
-      h('p',null,'Real-time price intelligence, predictive ranges and model evidence — COMEX to MCX.'))));
-  // Remove duplicate title in the fixed shell to avoid two visible headings.
-  const style=document.createElement('style');style.textContent='#ac-shell>.ac-page-title{display:none}';document.head.appendChild(style);
+(() => {
+ 'use strict';
+ if (!window.React || !window.ReactDOM) { console.error('React not loaded; existing dashboard stays available'); return; }
+ const R=React, h=R.createElement, useState=R.useState, useEffect=R.useEffect, useRef=R.useRef;
+ const nav=[
+  ['overview','Dashboard','layout-dashboard'],['monitor','Market Live','activity'],['forecast','Forecast & Prediction','trending-up'],
+  ['proof','Backtesting','shield-check'],['analytics','Technical Analysis','chart-no-axes-combined'],['purityCard','Gold Purity & Rates','coins'],
+  ['k22Card','22K Prediction','scale'],['invest','Investor Insights','lightbulb'],['data','Data & Sources','database']];
+ const money=(n,d=0,unit='₹')=>Number.isFinite(n)?unit+n.toLocaleString(unit==='₹'?'en-IN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+ const pct=(v)=>Number.isFinite(v)?(v>=0?'+':'')+(v*100).toFixed(2)+'%':'—';
+ const dataTime=t=>t?new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(t)+' IST':'—';
+ const btn=(label,fn,cls='')=>h('button',{type:'button',className:cls,onClick:fn},label);
+ function useMarket(){
+  const [m,set]=useState(()=>window.AurumBridge?.snapshot()||{ready:false});
+  useEffect(()=>{const on=e=>set(e.detail);window.addEventListener('aurum:update',on);set(window.AurumBridge?.snapshot()||{ready:false});return()=>window.removeEventListener('aurum:update',on)},[]);
+  return m;
+ }
+ function Icon({name}){const path={
+  'layout-dashboard':'M3 3h8v8H3z M13 3h8v5h-8z M13 10h8v11h-8z M3 13h8v8H3z','activity':'M3 12h4l3-7 4 14 3-7h4','trending-up':'M3 17l6-6 4 4 8-8 M15 7h6v6',
+  'shield-check':'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z M9 12l2 2 4-4','chart-no-axes-combined':'M3 3v18h18 M7 15l4-4 3 2 5-6','coins':'M12 8c5 0 9-2 9-4s-4-3-9-3S3 2 3 4s4 4 9 4z M3 4v7c0 2 4 4 9 4s9-2 9-4V4 M3 11v7c0 2 4 4 9 4s9-2 9-4v-7',
+  'scale':'M12 3v18 M5 21h14 M3 7h18 M5 7l-3 7h6z M19 7l-3 7h6z','lightbulb':'M9 18h6 M10 22h4 M9 15a7 7 0 1 1 6 0l-1 3h-4z',
+  'database':'M3 5c0-2 4-3 9-3s9 1 9 3-4 3-9 3-9-1-9-3z M3 5v7c0 2 4 3 9 3s9-1 9-3V5 M3 12v7c0 2 4 3 9 3s9-1 9-3v-7',
+  'settings':'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M4 12l-2-1 2-4 2 1 2-2-1-2 4-2 1 2h3l1-2 4 2-1 2 2 2 2-1 2 4-2 1v3l2 1-2 4-2-1-2 2 1 2-4 2-1-2h-3l-1 2-4-2 1-2-2-2-2 1-2-4 2-1z',
+  'refresh-cw':'M20 11a8 8 0 0 0-14-5L3 9 M3 3v6h6 M4 13a8 8 0 0 0 14 5l3-3 M21 21v-6h-6','menu':'M3 6h18 M3 12h18 M3 18h18',
+  'x':'M4 4l16 16 M20 4L4 20','search':'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16 M17 17l5 5','bell':'M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9 M10 21h4',
+  'calculator':'M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 15h2 M14 15h2 M8 19h2 M14 19h2',
+  'target':'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z'};
+ return h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.7,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},h('path',{d:path[name]||path.activity}));}
+ function Chart({market,range}){
+  const ref=useRef(null);
+  useEffect(()=>{
+   if(!market.ready||!ref.current||!window.echarts)return;
+   let chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
+   const all=market.candle||[],n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='1Y'?8760:range==='ALL'?all.length:168;
+   const bars=all.slice(-n),dates=bars.map(b=>dataTime(b.t).replace(' IST','')),candles=bars.map(b=>[b.o,b.c,b.l,b.h]);
+   const close=bars.map(b=>b.c),average=(count)=>close.map((_,i)=>i<count-1?null:close.slice(i-count+1,i+1).reduce((a,b)=>a+b,0)/count);
+   const option={animationDuration:350,backgroundColor:'transparent',
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#151e2b',borderColor:'#526078',textStyle:{color:'#f4f0e8'}},
+    legend:{top:1,left:12,textStyle:{color:'#a7afbd'},data:['Gold spot proxy','SMA 20','SMA 50']},
+    grid:[{left:60,right:18,top:38,height:'62%'},{left:60,right:18,top:'81%',height:'13%'}],
+    xAxis:[{type:'category',data:dates,axisLine:{lineStyle:{color:'#42516a'}},axisLabel:{color:'#8490a0',hideOverlap:true},splitLine:{show:false}},
+      {type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],
+    yAxis:[{scale:true,axisLabel:{color:'#8490a0',formatter:v=>'$'+Math.round(v).toLocaleString()},splitLine:{lineStyle:{color:'rgba(255,255,255,.07)'}}},
+      {scale:true,gridIndex:1,axisLabel:{show:false},splitLine:{show:false}}],
+    dataZoom:[{type:'inside',xAxisIndex:[0,1]}],
+    series:[{name:'Gold spot proxy',type:'candlestick',data:candles,itemStyle:{color:'#20c78d',color0:'#f16672',borderColor:'#20c78d',borderColor0:'#f16672'}},
+      {name:'SMA 20',type:'line',data:average(20),showSymbol:false,lineStyle:{color:'#53b8ff',width:1.6},itemStyle:{color:'#53b8ff'}},
+      {name:'SMA 50',type:'line',data:average(50),showSymbol:false,lineStyle:{color:'#f2b84b',width:1.6},itemStyle:{color:'#f2b84b'}},
+      {name:'Volume',type:'bar',data:bars.map(b=>({value:b.v,itemStyle:{color:b.c>=b.o?'rgba(32,199,141,.42)':'rgba(241,102,114,.38)'}})),xAxisIndex:1,yAxisIndex:1,barMaxWidth:9}]};
+   chart.setOption(option,true);
+   const observer=new ResizeObserver(()=>chart.resize());observer.observe(ref.current);
+   return()=>{observer.disconnect();if(!chart.isDisposed())chart.dispose()};
+  },[market,range]);
+  return h('div',{ref,className:'ac-native-chart',role:'img','aria-label':'Gold proxy candlestick price chart with SMA 20 and SMA 50 and volume'});
+ }
+ function Metric({title,value,secondary,positive,icon}){return h('article',{className:'ac2-metric'},h('span',{className:'ac2-metric-icon'},icon||'◆'),
+  h('div',{className:'ac2-metric-info'},h('div',{className:'ac2-muted'},title),h('strong',null,value),h('small',{className:positive===null?'':positive?'positive':'negative'},secondary||'—')));}
+ function RateTable({m}){
+  const rows=[['24K · 99.99%','k24_9999',true],['24K · 99.9%','k24_999',true],['MCX · 99.5% parity','mcx995',false],['22K · 91.6%','k22_916',true],['Fine gold · international','fineIntl',false]];
+  return h('div',{className:'ac2-table-wrap'},h('table',{className:'ac2-table'},h('thead',null,h('tr',null,
+   ['Grade','₹ / gram','₹ / 10 gram','Including 3% GST / gram'].map(x=>h('th',{key:x},x)))),
+   h('tbody',null,rows.map(([name,key,gst])=>h('tr',{key},h('td',null,name),h('td',null,money(m.rates[key],2)),h('td',null,money(m.rates[key]*10)),h('td',null,gst?money(m.rates[key]*1.03,2):'—'))))));
+ }
+ function Calculator({m}){
+  const [grams,setGrams]=useState(10),[purity,setPurity]=useState('k22_916'),[make,setMake]=useState(0);
+  const g=Math.max(0,+grams||0),making=Math.max(0,+make||0),raw=g*m.rates[purity],gst=raw*.03;
+  return h('div',{className:'ac2-calculator'},
+   h('div',{className:'ac2-fields'},h('label',null,'Weight (grams)',h('input',{type:'number',min:0,step:.1,value:grams,onChange:e=>setGrams(e.target.value)})),
+   h('label',null,'Purity',h('select',{value:purity,onChange:e=>setPurity(e.target.value)},[['k22_916','22K · 916'],['k24_999','24K · 999'],['k24_9999','24K · 999.9'],['mcx995','MCX 995 parity']].map(([k,v])=>h('option',{value:k,key:k},v)))),
+   h('label',null,'Making charges (₹)',h('input',{type:'number',min:0,value:make,onChange:e=>setMake(e.target.value)}))),
+   h('div',{className:'ac2-receipt'},h('span',null,'Metal',h('b',null,money(raw,2))),h('span',null,'Estimated GST on metal',h('b',null,money(gst,2))),
+   h('span',null,'Making charges (before any applicable taxes)',h('b',null,money(making,2))),
+   h('span',{className:'total'},'Illustrative subtotal',h('b',null,money(raw+gst+making,2)))),
+   h('p',{className:'ac2-disclaimer'},'Indicative metal parity only. Retail jeweller rates, making charges, applicable tax treatment and fees may differ.'));
+ }
+ function Settings({m,close}){
+  const [duty,setDuty]=useState(m.duty),[hours,setHours]=useState(m.hours),[auto,setAuto]=useState(m.auto),[quote,setQuote]=useState('');
+  return h('div',{className:'ac2-modal-back',onMouseDown:e=>{if(e.target===e.currentTarget)close()}},h('section',{className:'ac2-modal',role:'dialog','aria-modal':true,'aria-label':'Market settings'},
+    h('header',null,h('div',null,h('h2',null,'Market settings'),h('p',null,'Changes recalculate parity and forecasts using the same engine.')),btn(h(Icon,{name:'x'}),close,'ac2-square')),
+    h('label',null,'Import duty (%)',h('input',{type:'number',value:duty,min:0,max:49.99,step:.25,onChange:e=>setDuty(e.target.value)})),
+    h('label',null,'Hourly history',h('select',{value:hours,onChange:e=>setHours(+e.target.value)},[1000,2000,3000].map(n=>h('option',{key:n,value:n},n+' hours')))),
+    h('label',{className:'ac2-toggle'},h('input',{type:'checkbox',checked:!!auto,onChange:e=>setAuto(e.target.checked)}),'Automatic market refresh'),
+    h('div',{className:'ac2-actions'},btn('Save settings',()=>{window.AurumBridge.configure({duty:+duty,hours:+hours,auto});close()},'ac2-gold-btn')),
+    h('hr'),h('h3',null,'Broker quote calibration'),h('p',null,'Optional actual MCX 995 price per 10 g. Apply only if your quote is from the correct contract.'),
+    h('label',null,'Actual MCX / 10 g (₹)',h('input',{type:'number',value:quote,onChange:e=>setQuote(e.target.value)})),
+    h('div',{className:'ac2-actions'},btn('Calibrate',()=>{if(window.AurumBridge.calibrate(+quote))close()},'ac2-gold-btn'),btn('Clear calibration',()=>window.AurumBridge.configure({calibration:0}))),
+    h('hr'),btn('Clear locally stored prediction ledger',()=>{if(window.confirm('Clear predictions saved in this browser?'))window.AurumBridge.clearLedger()}),
+    h('p',{className:'ac2-disclaimer'},'Your custom preferences and prediction ledger are stored in this browser.')));}
+ function Dashboard({m,go}){
+  const [range,setRange]=useState('1M'),[showSettings,setSettings]=useState(false),[tool,setTool]=useState('prices');
+  const [target,setTarget]=useState(0);
+  const graded= m.ready?m.rates:{};
+  const sentiment=m.ready?(m.score>.05?'Accumulation-leaning':m.score<-.05?'Wait / cautious':'Neutral / mixed'):'Not available';
+  const score=m.ready?Math.round(Math.max(-1,Math.min(1,m.score))*100):0;
+  return h('div',{className:'ac2-dashboard'},
+    h('section',{className:'ac2-hero'},h('div',{className:'ac2-hero-copy'},
+      h('div',{className:'ac2-eyebrow'},'AURUMCAST · GOLD MARKET INTELLIGENCE'),
+      h('h1',null,'Global Gold ',h('em',null,'Market Intelligence')),
+      h('p',null,'Live spot context, Indian import parity, probability ranges and independently scored forecasts.'),
+      h('div',{className:'ac2-hero-actions'},h('span',{className:'ac2-live-dot'},'● ',m.ready?'Data received':'Loading market feeds'),
+        h('span',null,m.ready?dataTime(m.fetchedAt):'Waiting for validated data'))),
+     h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
+    !m.ready?h('div',{className:'ac2-loading'},'Fetching and validating live gold and FX data. No simulated prices will be shown.'):h(R.Fragment,null,
+      h('div',{className:'ac2-metrics'},
+       h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆'}),
+       h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈'}),
+       h(Metric,{title:'22K · 916 jewellery parity',value:money(m.rates.k22_916,2)+' /g',secondary:'3% GST not included',positive:null,icon:'◉'}),
+       h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗'})),
+      h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
+       h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
+        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','1Y','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
+       h('div',{className:'ac2-spotline'},money(m.spot,2,'$'),h('span',{className:m.spotChange24h>=0?'positive':'negative'},pct(m.spotChange24h))),
+       h(Chart,{market:m,range})),
+       h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,h(Icon,{name:'target'}),' Price forecast'),h('p',null,'Next MCX open and next session close'))),
+        h('div',{className:'ac2-forecast-value'},money(m.open.mid,0),h('span',null,'₹ / g · MCX parity')),
+        h('div',{className:'ac2-range-bar'},h('span',null,'68% interval'),h('b',null,money(m.open.lo68,0)+' – '+money(m.open.hi68,0))),
+        h('p',null,'Next open · ',dataTime(m.open.target)),
+        h('div',{className:'ac2-forecast-details'},h('span',null,'Next close / 10g',h('b',null,money(m.close.mid))),
+        h('span',null,'68% interval / 10g',h('b',null,money(m.close.lo68)+' – '+money(m.close.hi68)))),
+        h('p',{className:'ac2-disclaimer'},'Statistical ranges, not guaranteed probabilities or exchange quotes.'))),
+      h('div',{className:'ac2-mini-grid'},
+       h('section',{className:'ac2-panel ac2-sentiment'},h('h2',null,'Market positioning'),h('p',null,'Rules-based composite, not market-wide sentiment'),
+        h('div',{className:'ac2-gauge'},h('div',{className:'ac2-gauge-inner'},h('strong',null,score>0?'+'+score:score),h('small',null,'score / ±100'))),h('b',{className:'ac2-gauge-label'},sentiment),
+        btn('Explore investor factors',()=>go('invest'),'ac2-mini-link')),
+       h('section',{className:'ac2-panel'},h('h2',null,'Forecast evidence'),h('p',null,'Walk-forward model diagnostics'),
+        h('div',{className:'ac2-evidence'},h('span',null,'Theil U vs naive',h('b',null,Number.isFinite(m.accuracy.theilU)?m.accuracy.theilU.toFixed(3):'—')),
+         h('span',null,'Diebold–Mariano',h('b',null,Number.isFinite(m.accuracy.dm)?m.accuracy.dm.toFixed(2):'—')),
+         h('span',null,'MCX open band coverage',h('b',null,m.openValidation?(m.openValidation.coverage*100).toFixed(1)+'% of '+m.openValidation.n:'Unavailable'))),
+        btn('View backtesting',()=>go('proof'),'ac2-mini-link')),
+       h('section',{className:'ac2-panel'},h('h2',null,'Quick tools'),h('p',null,'Live parity calculations with current duty and FX'),
+        h('div',{className:'ac2-quick-tools'},btn(h(R.Fragment,null,h(Icon,{name:'calculator'}),'Gold calculator'),()=>{setTool('calculator');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
+        btn(h(R.Fragment,null,h(Icon,{name:'coins'}),'Purity rates'),()=>{setTool('prices');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
+        btn(h(R.Fragment,null,h(Icon,{name:'target'}),'Forecast explorer'),()=>go('forecast')),
+        btn(h(R.Fragment,null,h(Icon,{name:'settings'}),'Settings'),()=>setSettings(true))))),
+      h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-tools'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold rates & calculators'),h('p',null,'Gold purity conversion with live international reference and Indian landed parity')),
+       h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
+       tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
+       h('p',{className:'ac2-disclaimer'},'MCX values are import-parity estimates, not an official MCX market feed. GST is shown separately; making charges vary.'))),
+    h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
+    showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
+ }
+ function App(){
+  const m=useMarket(),[selected,setSelected]=useState('overview'),[drawer,setDrawer]=useState(false),[settings,setSettings]=useState(false),[query,setQuery]=useState('');
+  const navTo=id=>{
+    setDrawer(false);setSelected(id);
+    const e=id==='overview'?document.querySelector('#ac-dashboard'):document.getElementById(id);
+    e?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  };
+  useEffect(()=>{const fn=()=>{const sections=nav.slice(1).map(v=>v[0]);const active=sections.filter(id=>document.getElementById(id)?.getBoundingClientRect().top<170);setSelected(active.at(-1)||'overview')};window.addEventListener('scroll',fn,{passive:true});return()=>window.removeEventListener('scroll',fn)},[]);
+  return h(R.Fragment,null,
+    h('button',{className:'ac2-mobile-trigger',onClick:()=>setDrawer(true),'aria-label':'Open navigation'},h(Icon,{name:'menu'}),' AurumCast'),
+    drawer&&h('div',{className:'ac2-screen',onClick:()=>setDrawer(false)}),
+    h('aside',{className:'ac2-side'+(drawer?' open':''),role:'navigation','aria-label':'Application navigation'},
+      h('div',{className:'ac2-brand'},h('div',{className:'ac2-brand-symbol'},'Au'),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold market intelligence'))),
+      h('div',{className:'ac2-nav-kicker'},'WORKSPACE'),
+      h('nav',null,nav.map(([id,label,glyph])=>h('button',{key:id,className:selected===id?'active':'',onClick:()=>navTo(id),'aria-current':selected===id?'page':undefined},h(Icon,{name:glyph}),label))),
+      h('div',{className:'ac2-side-bottom'},h('p',null,'VERIFIED INPUTS'),h('span',null,'No synthetic or illustrative financial prices are served.'),
+       h('div',{className:'ac2-side-version'},'AurumCast · React dashboard'))),
+    h('div',{className:'ac2-topbar'},h('div',{className:'ac2-search'},h(Icon,{name:'search'}),
+      h('input',{value:query,onChange:e=>setQuery(e.target.value),placeholder:'Search dashboard sections…','aria-label':'Search sections',onKeyDown:e=>{if(e.key==='Enter'){const found=nav.find(n=>n[1].toLowerCase().includes(query.toLowerCase()));if(found)navTo(found[0]);setQuery('')}}}),
+      query&&h('div',{className:'ac2-search-results'},nav.filter(n=>n[1].toLowerCase().includes(query.toLowerCase())).map(n=>btn(n[1],()=>{navTo(n[0]);setQuery('')})))),
+      h('div',{className:'ac2-top-controls'},h('span',{className:'ac2-status'},'● ',m.ready?'MARKET DATA READY':'UPDATING'),
+        btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refresh(),'ac2-square'),
+        btn(h(Icon,{name:'settings'}),()=>setSettings(true),'ac2-square'))),
+    h('div',{className:'ac2-content'},h(Dashboard,{m,go:navTo})),
+    settings&&m.ready&&h(Settings,{m,close:()=>setSettings(false)}));
+ }
+ const mount=document.getElementById('ac-react-root');if(!mount)return;
+ R.createRoot(mount).render(h(App));
 })();
  });</script>
 </body>
