@@ -78,13 +78,14 @@
    h('p',{className:'ac2-disclaimer'},'Indicative metal parity only. Retail jeweller rates, making charges, applicable tax treatment and fees may differ.'));
  }
  function Settings({m,close}){
-  const [duty,setDuty]=useState(m.duty),[hours,setHours]=useState(m.hours),[auto,setAuto]=useState(m.auto),[quote,setQuote]=useState('');
+  const [duty,setDuty]=useState(m.duty),[hours,setHours]=useState(m.hours),[auto,setAuto]=useState(m.auto),[quote,setQuote]=useState(''),[theme,setTheme]=useState(m.theme||'aurum');
   return h('div',{className:'ac2-modal-back',onMouseDown:e=>{if(e.target===e.currentTarget)close()}},h('section',{className:'ac2-modal',role:'dialog','aria-modal':true,'aria-label':'Market settings'},
     h('header',null,h('div',null,h('h2',null,'Market settings'),h('p',null,'Changes recalculate parity and forecasts using the same engine.')),btn(h(Icon,{name:'x'}),close,'ac2-square')),
     h('label',null,'Import duty (%)',h('input',{type:'number',value:duty,min:0,max:49.99,step:.25,onChange:e=>setDuty(e.target.value)})),
     h('label',null,'Hourly history',h('select',{value:hours,onChange:e=>setHours(+e.target.value)},[1000,2000,3000].map(n=>h('option',{key:n,value:n},n+' hours')))),
     h('label',{className:'ac2-toggle'},h('input',{type:'checkbox',checked:!!auto,onChange:e=>setAuto(e.target.checked)}),'Automatic market refresh'),
-    h('div',{className:'ac2-actions'},btn('Save settings',()=>{window.AurumBridge.configure({duty:+duty,hours:+hours,auto});close()},'ac2-gold-btn')),
+    h('label',null,'Visual theme',h('select',{value:theme,onChange:e=>setTheme(e.target.value)},[['aurum','Aurum Night'],['obsidian','Obsidian'],['rose','Rose Quartz'],['ivory','Ivory Glass']].map(([value,title])=>h('option',{key:value,value},title)))),
+    h('div',{className:'ac2-actions'},btn('Save settings',()=>{window.AurumBridge.configure({duty:+duty,hours:+hours,auto});window.AurumBridge.setTheme(theme);close()},'ac2-gold-btn')),
     h('hr'),h('h3',null,'Broker quote calibration'),h('p',null,'Optional actual MCX 995 price per 10 g. Apply only if your quote is from the correct contract.'),
     h('label',null,'Actual MCX / 10 g (₹)',h('input',{type:'number',value:quote,onChange:e=>setQuote(e.target.value)})),
     h('div',{className:'ac2-actions'},btn('Calibrate',()=>{if(window.AurumBridge.calibrate(+quote))close()},'ac2-gold-btn'),btn('Clear calibration',()=>window.AurumBridge.configure({calibration:0}))),
@@ -167,7 +168,7 @@
       h('div',{className:'ac2-hero-actions'},h('span',{className:'ac2-live-dot'},'● ',m.ready?'Data received':'Loading market feeds'),
         h('span',null,m.ready?dataTime(m.fetchedAt):'Waiting for validated data'))),
      h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
-    !m.ready?h('div',{className:'ac2-loading'},'Fetching and validating live gold and FX data. No simulated prices will be shown.'):h(R.Fragment,null,
+    !m.ready?h('div',{className:'ac2-loading'},h('p',null,Object.keys(m.errors||{}).length?'Required market data could not be loaded. The dashboard will not show fabricated prices.':'Fetching and validating live gold and FX data. No simulated prices will be shown.'),Object.keys(m.errors||{}).length&&h('div',null,Object.entries(m.errors).map(([k,v])=>h('p',{key:k},k+': '+v)),btn('Retry market data',()=>window.AurumBridge?.refresh(),'ac2-gold-btn'))):h(R.Fragment,null,
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆'}),
        h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈'}),
