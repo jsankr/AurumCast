@@ -85,9 +85,22 @@ function acceptSilver(data) {
   store.set('silverTicks',D.silverTicks);
 }
 async function refreshSilver() {
-  try { acceptSilver(await getJSON(SRC.silver, 12000)); }
-  catch (err) { D.silverError = String(err?.message || err); }
-  if (window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update',{detail:window.AurumBridge.snapshot()}));
+  // Independent from the expensive Binance gold/backtesting imports.
+  const [metal,fx] = await Promise.allSettled([
+    getJSON(SRC.silver,12000),
+    D.fxNow ? Promise.resolve(null) : getJSON(SRC.fx2,15000).catch(()=>getJSON(SRC.fx1,15000))
+  ]);
+  if (fx.status === 'fulfilled' && fx.value && !D.fxNow) {
+    try {
+      const fxRows=GE.parseFx(fx.value),last=fxRows.at(-1);
+      if(last&&Number.isFinite(+last[1])&&+last[1]>0){D.fxNow=+last[1];D.fxDate=last[0];}
+    } catch(err){D.silverFxError=String(err?.message||err);}
+  }
+  try {
+    if(metal.status!=='fulfilled') throw metal.reason;
+    acceptSilver(metal.value);
+  } catch(err) { D.silverError=String(err?.message||err); }
+  if(window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update',{detail:window.AurumBridge.snapshot()}));
 }
 function silverSnapshot(){
   const v=D.silver;
@@ -112,14 +125,11 @@ async function klinesBack(interval, total, extra = '') {
 }
 async function loadAll() {
   setLive('load', 'Fetching…');
-  const [h, d, fx, spot, er, m30, silver] = await Promise.allSettled([
+  const [h, d, fx, spot, er, m30] = await Promise.allSettled([
     klinesBack('1h', S.hours), klinesBack('1d', 3000, '&timeZone=5:30'),
-    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 4000), getJSON(SRC.silver),
+    getJSON(SRC.fx2).catch(() => getJSON(SRC.fx1)), getJSON(SRC.spot), getJSON(SRC.er), klinesBack('30m', 4000),
   ]);
   D.err = {};
-  if (silver.status === 'fulfilled') {
-    try { acceptSilver(silver.value); } catch (error) { D.silverError = error.message; }
-  } else D.silverError = silver.reason?.message || 'Silver source unavailable';
   if (m30.status === 'fulfilled') D.mRaw = m30.value; else { D.mRaw = null; D.err['30-min'] = m30.reason.message; }
   if (h.status === 'fulfilled') D.hRaw = h.value; else D.err.hourly = h.reason.message;
   if (d.status === 'fulfilled') D.dRaw = d.value; else D.err.daily = d.reason.message;
@@ -376,7 +386,7 @@ window.AurumBridge = {
       sourceNotice: 'XAU and XAG spot (gold-api.com), PAXG history (Binance), ECB FX. Silver INR is spot conversion; gold MCX is computed import parity. Neither is an MCX exchange quote.'
     };
   },
-  refresh() { fullRefresh(); },
+  refresh() { void refreshSilver(); fullRefresh(); },
   refreshSilver() { return refreshSilver(); },
   setTheme(name) { if (['aurum','obsidian','rose','ivory'].includes(name)) setTheme(name); },
   configure({ duty, hours, auto, calibration }) {
@@ -691,5 +701,6 @@ document.querySelectorAll('section').forEach(s => navObs.observe(s));
 // ---------- boot ----------
 if (typeof echarts === 'undefined') { $('banner').innerHTML = '<b>Chart library could not load</b> (cdn.jsdelivr.net). Check your connection and reload.'; return; }
 setTheme(S.theme);
+void refreshSilver();
 fullRefresh();
 })();
