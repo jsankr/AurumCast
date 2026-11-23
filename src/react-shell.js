@@ -75,8 +75,18 @@
   },[market,range,instrument]);
   return h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
  }
- function Metric({title,value,secondary,positive,icon}){return h('article',{className:'ac2-metric'},h('span',{className:'ac2-metric-icon'},icon||'◆'),
-  h('div',{className:'ac2-metric-info'},h('div',{className:'ac2-muted'},title),h('strong',null,value),h('small',{className:positive===null?'':positive?'positive':'negative'},secondary||'—')));}
+ function Metric({title,value,secondary,positive,icon,spark}) {
+  const usable=(spark||[]).filter(Number.isFinite).slice(-48);
+  let line=null;
+  if(usable.length>=2){
+    const lo=Math.min(...usable),hi=Math.max(...usable),span=Math.max(hi-lo,1e-8);
+    const pts=usable.map((v,i)=>(3+i*92/(usable.length-1)).toFixed(1)+','+(31-(v-lo)/span*25).toFixed(1)).join(' ');
+    line=h('svg',{className:'ac3-market-spark',viewBox:'0 0 100 38',preserveAspectRatio:'none','aria-hidden':'true'},h('polyline',{points:pts,fill:'none',stroke:positive===false?'#ee7b89':'#48dca6',strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'}));
+  }
+  return h('article',{className:'ac2-metric'},h('span',{className:'ac2-metric-icon'},icon||'◆'),
+    h('div',{className:'ac2-metric-info'},h('div',{className:'ac2-muted'},title),h('strong',null,value),
+      h('small',{className:positive===null?'':positive?'positive':'negative'},secondary||'—')),line);
+}
  function RateTable({m}){
   const rows=[['24K · 99.99%','k24_9999',true],['24K · 99.9%','k24_999',true],['MCX · 99.5% parity','mcx995',false],['22K · 91.6%','k22_916',true],['Fine gold · international','fineIntl',false]];
   return h('div',{className:'ac2-table-wrap'},h('table',{className:'ac2-table'},h('thead',null,h('tr',null,
@@ -188,10 +198,10 @@
      h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
     !m.ready?h('div',{className:'ac2-loading'},h('p',null,Object.keys(m.errors||{}).length?'Required market data could not be loaded. The dashboard will not show fabricated prices.':'Fetching and validating live gold and FX data. No simulated prices will be shown.'),Object.keys(m.errors||{}).length&&h('div',null,Object.entries(m.errors).map(([k,v])=>h('p',{key:k},k+': '+v)),btn('Retry market data',()=>window.AurumBridge?.refresh(),'ac2-gold-btn'))):h(R.Fragment,null,
       h('div',{className:'ac2-metrics'},
-       h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆'}),
-       h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈'}),
+       h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆',spark:(m.candle||[]).map(b=>b.c)}),
+       h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈',spark:(m.candle||[]).map(b=>b.c*b.fx)}),
        h(Metric,{title:'Silver · MCX',value:'Unavailable',secondary:'No verified silver feed',positive:null,icon:'◈'}),
-       h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗'})),
+       h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗',spark:(m.fxHistory||[]).map(b=>b.rate)})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
         h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
@@ -266,11 +276,22 @@
     setDrawer(false);
     if(id==='settings'){setSettings(true);return;}
     if(id==='alerts'){setAlerts(true);return;}
-    if(id==='tools'){document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'});return;}
     if(id==='reports'){window.open('https://github.com/jsankr/AurumCast/tree/main/reports','_blank','noopener,noreferrer');return;}
+    if(id==='tools'){
+      document.documentElement.classList.remove('ac3-legacy-view');
+      setSelected('overview');
+      requestAnimationFrame(()=>document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth',block:'start'}));
+      return;
+    }
+    const legacy=id!=='overview';
+    document.documentElement.classList.toggle('ac3-legacy-view',legacy);
+    document.documentElement.setAttribute('data-ac-section',id);
     setSelected(id);
-    const element=id==='overview'?document.getElementById('ac-dashboard'):document.getElementById(id);
-    element?.scrollIntoView({behavior:'smooth',block:'start'});
+    requestAnimationFrame(()=>{
+      const element=legacy?document.getElementById(id):document.getElementById('ac-dashboard');
+      element?.scrollIntoView({behavior:'smooth',block:'start'});
+      if(legacy)window.dispatchEvent(new Event('resize'));
+    });
   };
   useEffect(()=>{const handler=e=>{if(e.key==='Escape'){setDrawer(false);setSettings(false);setAlerts(false);setProfile(false)}};
     document.addEventListener('keydown',handler);return()=>document.removeEventListener('keydown',handler)},[]);
@@ -281,7 +302,7 @@
       h('div',{className:'ac2-brand'},h('div',{className:'ac3-gold-logo'},'◆'),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold Market Intelligence & Forecasting'))),
       h('nav',null,nav.map(([id,label,glyph])=>h('button',{key:id,className:selected===id?'active':'',onClick:()=>navTo(id),'aria-current':selected===id?'page':undefined},h(Icon,{name:glyph}),label))),
       h('div',{className:'ac3-sidebar-landscape','aria-hidden':'true'},'⌁'),
-      h('div',{className:'ac2-side-version'},'● AurumCast · Market Research')),
+      h('div',{className:'ac2-side-version'},'● AurumCast v3 · Premium Dashboard')),
     h('div',{className:'ac2-topbar'},
       h('div',{className:'ac2-search'},h(Icon,{name:'search'}),
        h('input',{value:query,placeholder:'Search markets, analysis, tools…',onChange:e=>setQuery(e.target.value),
@@ -299,5 +320,16 @@
     alerts&&h(Alerts,{m,close:()=>setAlerts(false)}));
  }
  const mount=document.getElementById('ac-react-root');if(!mount)return;
- R.createRoot(mount).render(h(App));
+ // The legacy layout is a data-rendering and advanced-module fallback.
+ // Hide its homepage ONLY after React has successfully rendered the new sidebar.
+ const root=R.createRoot(mount);
+ const observer=new MutationObserver(()=>{
+   if(mount.querySelector('.ac2-side')&&mount.querySelector('#ac-dashboard')){
+     document.documentElement.classList.add('ac3-mounted');
+     document.documentElement.setAttribute('data-aurumcast-version','v3-reference-20261123');
+     observer.disconnect();
+   }
+ });
+ observer.observe(mount,{childList:true,subtree:true});
+ root.render(h(App));
 })();

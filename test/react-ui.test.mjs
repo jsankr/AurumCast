@@ -46,3 +46,12 @@ test('reference architecture presents four market tiles, chart tabs, forecasts a
  assert.ok(page.includes('function Alerts('));
  assert.equal(read('assets/aurum-hero.svg'),read('docs/assets/aurum-hero.svg'));
 });
+
+test('v3 React homepage replaces rather than stacks the old dashboard',()=>{
+ const ui=read('src/react-shell.js'),css=read('src/react-ui.css'),html=read('index.html');
+ assert.ok(ui.includes("document.documentElement.classList.add('ac3-mounted')"));
+ assert.ok(ui.includes("document.documentElement.classList.toggle('ac3-legacy-view',legacy)"));
+ assert.ok(css.includes('html.ac3-mounted:not(.ac3-legacy-view) #main-wrap {display:none!important}'));
+ assert.ok(html.includes('aurumcast-ui-release'));
+ assert.ok(ui.includes('ac3-market-spark'));
+});

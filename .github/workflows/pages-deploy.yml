@@ -1,0 +1,43 @@
+name: Deploy AurumCast v3 to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: aurumcast-pages-deployment
+  cancel-in-progress: false
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - uses: actions/configure-pages@v5
+      - name: Build production dashboard from source
+        run: npm run build
+      - name: Validate production bundle and data model
+        run: npm test
+      - name: Assemble site
+        run: |
+          mkdir -p _site/assets
+          cp index.html _site/index.html
+          cp assets/aurum-hero.svg _site/assets/aurum-hero.svg
+          touch _site/.nojekyll
+          grep -q 'v3-reference-20261123' _site/index.html
+          grep -q 'ac3-mounted' _site/index.html
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy validated React site
+        id: deployment
+        uses: actions/deploy-pages@v4
