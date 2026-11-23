@@ -37,21 +37,28 @@
  function Chart({market,range,instrument='gold'}){
   const ref=useRef(null);
   useEffect(()=>{
-   if(!market.ready||!ref.current||!window.echarts||instrument==='silver')return;
+   if(!ref.current||!window.echarts)return;
+   if(instrument!=='silver'&&!market.ready)return;
+   if(instrument==='silver'&&(market.silver?.history?.length||0)<2)return;
    const chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
    const n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:10000;
-   const isFx=instrument==='fx',isMcx=instrument==='mcx';
+   const isFx=instrument==='fx',isMcx=instrument==='mcx',isSilver=instrument==='silver';
    const spotBars=(market.candle||[]).slice(-n);
    const bars=spotBars.map(b=>{
      const factor=(b.fx||market.fx)*10/31.1034768*.995*(1+market.duty/100)*(1+market.calibration/100);
      return isMcx?{...b,o:b.o*factor,h:b.h*factor,l:b.l*factor,c:b.c*factor}:b;
    });
    const fxBars=(market.fxHistory||[]).map(v=>({t:Date.parse(v.date+'T00:00:00Z'),c:v.rate}));
-   const data=isFx?fxBars:bars;
+   const silverBars=(market.silver?.history||[])
+    .filter(b=>b.t>=Date.now()-(range==='1D'?86400000:range==='5D'?5*86400000:range==='1M'?30*86400000:range==='3M'?90*86400000:90*86400000))
+    .map(b=>({t:b.t,c:b.usdOz}));
+   const data=isSilver?silverBars:isFx?fxBars:bars;
    const dates=data.map(v=>new Date(v.t).toLocaleDateString('en-GB',{month:'short',day:'2-digit'}));
    const closes=data.map(v=>v.c);
    const sma=k=>closes.map((_,i)=>i<k-1?null:closes.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k);
-   const series=isFx?[{name:'USD/INR',type:'line',data:closes,symbol:'none',lineStyle:{width:2,color:'#e7bb61'},itemStyle:{color:'#e7bb61'}}]:
+   const series=(isFx||isSilver)?[{name:isSilver?'Observed silver XAG/USD':'USD/INR',type:'line',data:closes,symbol:'circle',
+     symbolSize:isSilver?5:0,connectNulls:false,lineStyle:{width:2.4,color:isSilver?'#d3dce5':'#e7bb61'},
+     areaStyle:{color:isSilver?'rgba(186,203,219,.12)':'rgba(231,187,97,.08)'},itemStyle:{color:isSilver?'#e4ebf2':'#e7bb61'}}]:
       [{name:isMcx?'MCX import parity':'Gold spot proxy',type:'candlestick',data:bars.map(b=>[b.o,b.c,b.l,b.h]),
        itemStyle:{color:'#2ace89',color0:'#ed6472',borderColor:'#2ace89',borderColor0:'#ed6472'}},
        {name:'SMA 20',type:'line',data:sma(20),showSymbol:false,lineStyle:{color:'#44aaff',width:1.7}},
@@ -60,12 +67,12 @@
    chart.setOption({
      backgroundColor:'transparent',animationDuration:250,
      tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#14202e',borderColor:'#45536a',textStyle:{color:'#f4f5f6'}},
-     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:isFx?['USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
-     grid:isFx?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
-     xAxis:isFx?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
+     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:(isFx||isSilver)?[isSilver?'Observed silver XAG/USD':'USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
+     grid:(isFx||isSilver)?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
+     xAxis:(isFx||isSilver)?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
       [{type:'category',data:dates,axisLabel:{color:'#93a0b1',hideOverlap:true},axisLine:{lineStyle:{color:'#39465a'}}},
        {type:'category',gridIndex:1,data:dates,axisLabel:{show:false},axisLine:{show:false}}],
-     yAxis:isFx?{scale:true,axisLabel:{color:'#93a0b1'},splitLine:{lineStyle:{color:'#ffffff13'}}}:
+     yAxis:(isFx||isSilver)?{scale:true,axisLabel:{color:'#93a0b1'},splitLine:{lineStyle:{color:'#ffffff13'}}}:
       [{scale:true,axisLabel:{color:'#93a0b1',formatter:v=>(isMcx?'₹':'$')+Number(v).toLocaleString(undefined,{maximumFractionDigits:0})},splitLine:{lineStyle:{color:'#ffffff13'}}},
        {scale:true,gridIndex:1,axisLabel:{show:false},splitLine:{show:false}}],
      dataZoom:[{type:'inside'}],series
@@ -73,7 +80,10 @@
    const ro=new ResizeObserver(()=>chart.resize());ro.observe(ref.current);
    return()=>{ro.disconnect();chart.dispose()};
   },[market,range,instrument]);
-  return h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
+  return instrument==='silver'&&(market.silver?.history?.length||0)<2?
+   h('div',{className:'ac3-unavailable-chart'},'Silver spot '+(market.silver?.ready?'received. Chart will show as more live observations are collected.':'waiting for verified source.')+
+      ' Only observed quotes are plotted — no synthetic historical candles.'):
+   h('div',{ref,className:'ac-native-chart ac3-chart',role:'img','aria-label':instrument+' historical market chart'});
  }
  function Metric({title,value,secondary,positive,icon,spark}) {
   const usable=(spark||[]).filter(Number.isFinite).slice(-48);
@@ -292,8 +302,8 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
         h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
        h('div',{className:'ac3-instrument-tabs'},[['gold','Gold (XAU)'],['mcx','Gold (MCX)'],['silver','Silver'],['fx','USD/INR']].map(([id,label])=>btn(label,()=>setInstrument(id),instrument===id?'active':''))),
-       h('div',{className:'ac2-spotline'},instrument==='silver'?'No verified silver quote':instrument==='mcx'?money(m.rates.mcx995*10)+' /10g':instrument==='fx'?money(m.fx,2,'₹'):money(m.spot,2,'$')),
-       instrument==='silver'?h('div',{className:'ac3-unavailable-chart'},'Silver chart requires a verified feed.'):h(Chart,{market:m,range,instrument})),
+       h('div',{className:'ac2-spotline'},instrument==='silver'?money(m.silver?.usdOz,2,'$')+' /troy oz':instrument==='mcx'?money(m.rates.mcx995*10)+' /10g':instrument==='fx'?money(m.fx,2,'₹'):money(m.spot,2,'$')),
+       h(Chart,{market:m,range,instrument})),
        h('section',{className:'ac2-panel ac2-forecast'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'◎ Price Forecast'),h('p',null,'Next MCX open and next session close'))),
         h('div',{className:'ac3-term-tabs'},['Short Term','Medium Term','Long Term'].map((label,i)=>btn(label,()=>setTerm(i),term===i?'active':''))),
         h('div',{className:'ac2-forecast-value'},money(m.horizons?.[term]?.lo68)+' – '+money(m.horizons?.[term]?.hi68),h('span',null,'₹ / 10g · MCX parity · estimated 68% band')),
