@@ -33,3 +33,16 @@ test('live quotes never use a mock-data default', () => {
  assert.ok(shell.includes('Fetching and validating live gold and FX data'));
  assert.ok(!/Math\.random\(/.test(shell));
 });
+
+test('reference architecture presents four market tiles, chart tabs, forecasts and four insights', () => {
+ const shell=read('src/react-shell.js'),css=read('src/react-ui.css'),page=read('index.html');
+ for(const token of [
+  "Silver · MCX", "Gold (MCX)", "USD/INR", "Short Term", "Medium Term", "Long Term",
+  "Market positioning", "Technical Indicators", "Prediction Accuracy", "Quick Tools",
+  "function Alerts(", "ac3-instrument-tabs", "ac3-accuracy-circle", "historicalCoverage"
+ ]) assert.ok(shell.includes(token),'Missing React component or control: '+token);
+ for(const token of ['ac2-metrics','ac2-main-grid','ac2-mini-grid','assets/aurum-hero.svg'])
+  assert.ok(css.includes(token),'Missing layout/art: '+token);
+ assert.ok(page.includes('function Alerts('));
+ assert.equal(read('assets/aurum-hero.svg'),read('docs/assets/aurum-hero.svg'));
+});
