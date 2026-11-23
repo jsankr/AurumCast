@@ -188,7 +188,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
  const entries=[
   ['Gold · international spot','◆','Awaiting live XAU price'],
   ['MCX · 995 import parity','🇮🇳','Awaiting gold and FX inputs'],
-  ['Silver · MCX','◈','No verified silver feed connected'],
+  ['Silver · XAG spot','◈','Fetching verified XAG quote'],
   ['USD / INR · ECB reference','↗','Awaiting reference FX rate']];
  const metrics=h('div',{className:'ac2-metrics'},...entries.map(([title,icon,secondary])=>
   h(Metric,{key:title,title,icon,secondary,value:'—',positive:null})));
@@ -230,7 +230,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
    btn('▣ Gold calculator',()=>go('tools')),btn('◇ Purity rates',()=>go('purityCard')),
    btn('◉ Investor insights',()=>go('invest')),btn('♧ Alert setup',onAlerts)));
  const lower=h('div',{className:'ac2-mini-grid'},sentiment,technical,accuracy,tools);
- return h(R.Fragment,null,metrics,main,lower,h('p',{className:'ac3-loading-caption',role:'status'},status));
+ return h(R.Fragment,null,metrics,main,lower,h(SilverRates,{m}),h('p',{className:'ac3-loading-caption',role:'status'},status));
 }
 
  function SilverRates({m}){
@@ -284,7 +284,9 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆',spark:(m.candle||[]).map(b=>b.c)}),
        h(Metric,{title:'MCX · 995 import parity',value:money(m.rates.mcx995*10,0)+' /10g',secondary:pct(m.mcxChange)+' vs previous close',positive:m.mcxChange>=0,icon:'◈',spark:(m.candle||[]).map(b=>b.c*b.fx)}),
-       h(Metric,{title:'Silver · MCX',value:'Unavailable',secondary:'No verified silver feed',positive:null,icon:'◈'}),
+       h(Metric,{title:'Silver · 999 spot',value:money(m.silver?.perKg,0)+' /kg',
+ secondary:m.silver?.ready?'XAG/USD · '+dataTime(m.silver.updatedAt):'Waiting for verified XAG/USD',positive:null,icon:'◈',
+ spark:(m.silver?.history||[]).map(b=>b.usdOz)}),
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗',spark:(m.fxHistory||[]).map(b=>b.rate)})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
@@ -323,6 +325,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
         btn(h(R.Fragment,null,h(Icon,{name:'coins'}),'Purity rates'),()=>{setTool('prices');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
         btn(h(R.Fragment,null,h(Icon,{name:'target'}),'Forecast explorer'),()=>go('forecast')),
         btn(h(R.Fragment,null,h(Icon,{name:'bell'}),'Alerts'),onAlerts)))),
+      h(SilverRates,{m}),
       h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-tools'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold rates & calculators'),h('p',null,'Gold purity conversion with live international reference and Indian landed parity')),
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
