@@ -1,0 +1,38 @@
+name: AurumCast visual browser smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'test/browser-smoke.mjs'
+      - '.github/workflows/browser-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Install Chromium test runner
+        run: |
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Build and start local site
+        run: |
+          npm run build
+          nohup python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/aurum-http.log 2>&1 &
+      - name: Test rendered UI and capture screenshots
+        run: node test/browser-smoke.mjs
+      - name: Save desktop and mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurumcast-v3-browser-screenshots
+          path: browser-artifacts/
+          if-no-files-found: ignore
