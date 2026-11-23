@@ -7,9 +7,12 @@
  if (!window.React || !window.ReactDOM) { document.documentElement.classList.add('ac2-fallback'); console.error('React not loaded; existing dashboard stays available'); return; }
  const R=React, h=R.createElement, useState=R.useState, useEffect=R.useEffect, useRef=R.useRef;
  const nav=[
-  ['overview','Dashboard','layout-dashboard'],['monitor','Market Live','activity'],['forecast','Forecast & Prediction','trending-up'],
-  ['proof','Backtesting','shield-check'],['analytics','Technical Analysis','chart-no-axes-combined'],['purityCard','Gold Purity & Rates','coins'],
-  ['k22Card','22K Prediction','scale'],['invest','Investor Insights','lightbulb'],['data','Data & Sources','database']];
+ ['overview','Dashboard','layout-dashboard'],['monitor','Market Live','activity'],
+ ['forecast','Forecast & Prediction','trending-up'],['analytics','Technical Analysis','chart-no-axes-combined'],
+ ['proof','Backtesting','shield-check'],['purityCard','Gold Purity & Rates','coins'],
+ ['tools','Tools & Calculators','calculator'],['invest','Investor Insights','lightbulb'],
+ ['reports','Reports','database'],['alerts','Alerts','bell'],['settings','Settings','settings']
+ ];
  const money=(n,d=0,unit='₹')=>Number.isFinite(n)?unit+n.toLocaleString(unit==='₹'?'en-IN':'en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
  const pct=(v)=>Number.isFinite(v)?(v>=0?'+':'')+(v*100).toFixed(2)+'%':'—';
  const dataTime=t=>t?new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(t)+' IST':'—';
@@ -225,7 +228,7 @@
         h('div',{className:'ac2-quick-tools'},btn(h(R.Fragment,null,h(Icon,{name:'calculator'}),'Gold calculator'),()=>{setTool('calculator');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
         btn(h(R.Fragment,null,h(Icon,{name:'coins'}),'Purity rates'),()=>{setTool('prices');document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'})}),
         btn(h(R.Fragment,null,h(Icon,{name:'target'}),'Forecast explorer'),()=>go('forecast')),
-        btn(h(R.Fragment,null,h(Icon,{name:'settings'}),'Settings'),()=>setSettings(true))))),
+        btn(h(R.Fragment,null,h(Icon,{name:'bell'}),'Alerts'),onAlerts)))),
       h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-tools'},h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold rates & calculators'),h('p',null,'Gold purity conversion with live international reference and Indian landed parity')),
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
@@ -235,31 +238,65 @@
     h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
     showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
  }
+
+ function Alerts({m,close}){
+  const [target,setTarget]=useState(()=>localStorage.getItem('aurum.alert.target')||'');
+  const [direction,setDirection]=useState(()=>localStorage.getItem('aurum.alert.direction')||'above');
+  const [enabled,setEnabled]=useState(()=>localStorage.getItem('aurum.alert.enabled')==='true');
+  const actual=m.ready?m.rates.mcx995*10:null;
+  const hit=enabled&&Number.isFinite(actual)&&+target>0&&(direction==='above'?actual>=+target:actual<=+target);
+  return h('div',{className:'ac2-modal-back',onMouseDown:e=>{if(e.target===e.currentTarget)close()}},
+   h('section',{className:'ac2-modal',role:'dialog','aria-modal':true,'aria-label':'Price alerts'},
+    h('header',null,h('h2',null,'Price Alerts'),btn('✕',close,'ac2-square')),
+    h('p',null,'In-page alert for MCX 995 calculated parity. Alerts operate only while this browser page is open.'),
+    h('label',null,'MCX parity threshold · ₹/10g',h('input',{type:'number',min:1,value:target,onChange:e=>setTarget(e.target.value)})),
+    h('label',null,'When the rate is',h('select',{value:direction,onChange:e=>setDirection(e.target.value)},
+      h('option',{value:'above'},'At or above'),h('option',{value:'below'},'At or below'))),
+    btn(enabled?'Disable monitoring':'Enable monitoring',()=>{
+      const next=!enabled;if(next&&!(+target>0))return;
+      setEnabled(next);localStorage.setItem('aurum.alert.target',target);
+      localStorage.setItem('aurum.alert.direction',direction);localStorage.setItem('aurum.alert.enabled',String(next));
+    },'ac2-gold-btn'),
+    h('p',{className:hit?'ac3-alert-hit':''},hit?'● Threshold reached · current '+money(actual):enabled?'Monitoring the current price while this page is open.':'No active alert.')));
+ }
  function App(){
-  const m=useMarket(),[selected,setSelected]=useState('overview'),[drawer,setDrawer]=useState(false),[settings,setSettings]=useState(false),[query,setQuery]=useState('');
+  const m=useMarket(),[selected,setSelected]=useState('overview'),[drawer,setDrawer]=useState(false),
+        [settings,setSettings]=useState(false),[alerts,setAlerts]=useState(false),[profile,setProfile]=useState(false),[query,setQuery]=useState('');
   const navTo=id=>{
-    setDrawer(false);setSelected(id);
-    const e=id==='overview'?document.querySelector('#ac-dashboard'):document.getElementById(id);
-    e?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    setDrawer(false);
+    if(id==='settings'){setSettings(true);return;}
+    if(id==='alerts'){setAlerts(true);return;}
+    if(id==='tools'){document.getElementById('ac2-tools')?.scrollIntoView({behavior:'smooth'});return;}
+    if(id==='reports'){window.open('https://github.com/jsankr/AurumCast/tree/main/reports','_blank','noopener,noreferrer');return;}
+    setSelected(id);
+    const element=id==='overview'?document.getElementById('ac-dashboard'):document.getElementById(id);
+    element?.scrollIntoView({behavior:'smooth',block:'start'});
   };
-  useEffect(()=>{const fn=()=>{const sections=nav.slice(1).map(v=>v[0]);const active=sections.filter(id=>document.getElementById(id)?.getBoundingClientRect().top<170);setSelected(active.at(-1)||'overview')};window.addEventListener('scroll',fn,{passive:true});return()=>window.removeEventListener('scroll',fn)},[]);
+  useEffect(()=>{const handler=e=>{if(e.key==='Escape'){setDrawer(false);setSettings(false);setAlerts(false);setProfile(false)}};
+    document.addEventListener('keydown',handler);return()=>document.removeEventListener('keydown',handler)},[]);
   return h(R.Fragment,null,
-    h('button',{className:'ac2-mobile-trigger',onClick:()=>setDrawer(true),'aria-label':'Open navigation'},h(Icon,{name:'menu'}),' AurumCast'),
+    btn(h(R.Fragment,null,h(Icon,{name:'menu'}),' AurumCast'),()=>setDrawer(true),'ac2-mobile-trigger'),
     drawer&&h('div',{className:'ac2-screen',onClick:()=>setDrawer(false)}),
     h('aside',{className:'ac2-side'+(drawer?' open':''),role:'navigation','aria-label':'Application navigation'},
-      h('div',{className:'ac2-brand'},h('div',{className:'ac2-brand-symbol'},'Au'),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold market intelligence'))),
-      h('div',{className:'ac2-nav-kicker'},'WORKSPACE'),
+      h('div',{className:'ac2-brand'},h('div',{className:'ac3-gold-logo'},'◆'),h('div',null,h('strong',null,'AurumCast'),h('small',null,'Gold Market Intelligence & Forecasting'))),
       h('nav',null,nav.map(([id,label,glyph])=>h('button',{key:id,className:selected===id?'active':'',onClick:()=>navTo(id),'aria-current':selected===id?'page':undefined},h(Icon,{name:glyph}),label))),
-      h('div',{className:'ac2-side-bottom'},h('p',null,'VERIFIED INPUTS'),h('span',null,'No synthetic or illustrative financial prices are served.'),
-       h('div',{className:'ac2-side-version'},'AurumCast · React dashboard'))),
-    h('div',{className:'ac2-topbar'},h('div',{className:'ac2-search'},h(Icon,{name:'search'}),
-      h('input',{value:query,onChange:e=>setQuery(e.target.value),placeholder:'Search dashboard sections…','aria-label':'Search sections',onKeyDown:e=>{if(e.key==='Enter'){const found=nav.find(n=>n[1].toLowerCase().includes(query.toLowerCase()));if(found)navTo(found[0]);setQuery('')}}}),
-      query&&h('div',{className:'ac2-search-results'},nav.filter(n=>n[1].toLowerCase().includes(query.toLowerCase())).map(n=>btn(n[1],()=>{navTo(n[0]);setQuery('')})))),
-      h('div',{className:'ac2-top-controls'},h('span',{className:'ac2-status'},'● ',m.ready?'MARKET DATA READY':'UPDATING'),
-        btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refresh(),'ac2-square'),
-        btn(h(Icon,{name:'settings'}),()=>setSettings(true),'ac2-square'))),
-    h('div',{className:'ac2-content'},h(Dashboard,{m,go:navTo})),
-    settings&&m.ready&&h(Settings,{m,close:()=>setSettings(false)}));
+      h('div',{className:'ac3-sidebar-landscape','aria-hidden':'true'},'⌁'),
+      h('div',{className:'ac2-side-version'},'● AurumCast · Market Research')),
+    h('div',{className:'ac2-topbar'},
+      h('div',{className:'ac2-search'},h(Icon,{name:'search'}),
+       h('input',{value:query,placeholder:'Search markets, analysis, tools…',onChange:e=>setQuery(e.target.value),
+        'aria-label':'Search markets and modules',onKeyDown:e=>{if(e.key==='Enter'){const hit=nav.find(n=>n[1].toLowerCase().includes(query.toLowerCase()));if(hit)navTo(hit[0]);setQuery('')}}}),
+       query&&h('div',{className:'ac2-search-results'},nav.filter(n=>n[1].toLowerCase().includes(query.toLowerCase())).map(n=>btn(n[1],()=>{navTo(n[0]);setQuery('')})))),
+      h('div',{className:'ac2-top-controls'},
+       h('span',{className:'ac2-status'},'● ',m.ready?'Market data ready':'Fetching feeds'),
+       btn(h(Icon,{name:'bell'}),()=>setAlerts(true),'ac2-square'),
+       btn('☼',()=>window.AurumBridge?.setTheme(m.theme==='ivory'?'aurum':'ivory'),'ac2-square ac3-theme-toggle'),
+       h('div',{className:'ac3-profile-wrap'},btn(h(R.Fragment,null,h('span',{className:'ac3-profile-avatar'},'Au'),' AurumCast'),()=>setProfile(!profile),'ac3-profile-button'),
+        profile&&h('div',{className:'ac3-profile-menu'},btn('Settings',()=>{setSettings(true);setProfile(false)}),btn('Methodology',()=>{navTo('data');setProfile(false)}))),
+       btn(h(Icon,{name:'refresh-cw'}),()=>window.AurumBridge?.refresh(),'ac2-square'))),
+    h('div',{className:'ac2-content'},h(Dashboard,{m,go:navTo,onAlerts:()=>setAlerts(true)})),
+    settings&&m.ready&&h(Settings,{m,close:()=>setSettings(false)}),
+    alerts&&h(Alerts,{m,close:()=>setAlerts(false)}));
  }
  const mount=document.getElementById('ac-react-root');if(!mount)return;
  R.createRoot(mount).render(h(App));
