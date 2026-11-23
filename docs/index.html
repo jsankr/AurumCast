@@ -1015,7 +1015,7 @@ function readTheme() {
 function setTheme(t) {
   S.theme = t; store.set('theme', t); document.documentElement.dataset.theme = t;
   document.querySelectorAll('#themes button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  readTheme(); if (D.ready) renderAll();
+  readTheme(); if (D.ready) renderAll(); else if(window.AurumBridge) window.dispatchEvent(new CustomEvent('aurum:update',{detail:window.AurumBridge.snapshot()}));
 }
 const ax = (extra = {}) => ({ axisLine: { lineStyle: { color: T.line } }, axisTick: { show: false }, axisLabel: { color: T.tx3, fontSize: 11 }, splitLine: { lineStyle: { color: T.grid } }, ...extra });
 const tip = (extra = {}) => ({ trigger: 'axis', backgroundColor: T.glass, borderColor: T.line, textStyle: { color: T.tx, fontSize: 12 }, extraCssText: 'backdrop-filter:blur(12px);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3)', axisPointer: { type: 'cross', lineStyle: { color: T.tx3 }, crossStyle: { color: T.tx3 }, label: { backgroundColor: T.mode === 'dark' ? '#2a3046' : '#52514e' } }, ...extra });
@@ -1303,7 +1303,7 @@ function renderAll() {
    The original GE math, browser ledger, validation, and live polling remain the source of truth. */
 window.AurumBridge = {
   snapshot() {
-    if (!D.ready) return { ready: false, errors: { ...D.err }, silver: silverSnapshot() };
+    if (!D.ready) return { ready: false, theme:S.theme, errors: { ...D.err }, silver: silverSnapshot() };
     const now = Date.now(), sp = spotNow(), rates = GE.rates(sp, D.fxNow, S.duty, S.prem / 100);
     const target = nextMcxOpen(now), trh = openHours(now, target);
     const m = D.fc.r * trh / 23, sig = D.fc.sigma * Math.sqrt(Math.max(trh, .25) / 23);
