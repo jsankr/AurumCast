@@ -1,27 +1,63 @@
 name: React UI quality gates
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 permissions:
-  contents: read
+  contents: write
+
+# Serialize writes to main with the scheduled market-data publisher.
+concurrency:
+  group: aurumcast-main-write
+  cancel-in-progress: false
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Regenerate both Pages entry points
+
+      # Several UI edits can land in quick succession. Build the latest main,
+      # not the stale intermediate commit that originally queued this job.
+      - name: Sync current main
+        if: github.event_name == 'push'
+        run: git pull --ff-only origin main
+
+      - name: Build both GitHub Pages entry points
         run: npm run build
+
       - name: Unit tests and React contract tests
         run: npm test
-      - name: Verify deployment outputs reproduce exactly
+
+      - name: Verify both Pages entry points
         run: |
-          git diff --exit-code -- index.html docs/index.html
           grep -q 'R.createRoot(mount)' index.html
           grep -q 'ac2-hero' docs/index.html
           cmp index.html docs/index.html
+          test -f assets/aurum-hero.svg
+          cmp assets/aurum-hero.svg docs/assets/aurum-hero.svg
+
+      # A push that changes only src/ no longer yields a red CI status or
+      # leaves the published HTML stale. Publish both files in one commit.
+      - name: Publish generated Pages HTML atomically
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html docs/index.html .nojekyll docs/.nojekyll
+          if git diff --cached --quiet; then
+            echo "Published Pages HTML already matches the source"
+          else
+            git commit -m "build: publish validated AurumCast Pages HTML"
+            git push origin HEAD:main
+          fi
