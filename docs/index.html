@@ -1707,9 +1707,9 @@ fullRefresh();
    if(instrument!=='silver'&&!market.ready)return;
    if(instrument==='silver'&&(market.silver?.history?.length||0)<2)return;
    const chart=window.echarts.getInstanceByDom(ref.current)||window.echarts.init(ref.current);
-   const n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:10000;
+   const n=range==='1D'?24:range==='5D'?120:range==='1M'?720:range==='3M'?2160:range==='6M'?4320:range==='1Y'?8760:range==='YTD'?8760:10000;
    const isFx=instrument==='fx',isMcx=instrument==='mcx',isSilver=instrument==='silver';
-   const spotBars=(market.candle||[]).slice(-n);
+   const spotBars=(market.candle||[]).slice(-n).filter(b=>range!=='YTD'||new Date(b.t).getUTCFullYear()===new Date().getUTCFullYear());
    const bars=spotBars.map(b=>{
      const factor=(b.fx||market.fx)*10/31.1034768*.995*(1+market.duty/100)*(1+market.calibration/100);
      return isMcx?{...b,o:b.o*factor,h:b.h*factor,l:b.l*factor,c:b.c*factor}:b;
@@ -1721,19 +1721,27 @@ fullRefresh();
    const data=isSilver?silverBars:isFx?fxBars:bars;
    const dates=data.map(v=>new Date(v.t).toLocaleDateString('en-GB',{month:'short',day:'2-digit'}));
    const closes=data.map(v=>v.c);
-   const sma=k=>closes.map((_,i)=>i<k-1?null:closes.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k);
+   const ema=k=>{
+    const weight=2/(k+1);let last=null;
+    return closes.map((v,i)=>{
+      if(!Number.isFinite(v))return null;
+      if(last==null){if(i<k-1)return null;last=closes.slice(i-k+1,i+1).reduce((a,b)=>a+b,0)/k;}
+      else last=weight*v+(1-weight)*last;
+      return last;
+    });
+   };
    const series=(isFx||isSilver)?[{name:isSilver?'Observed silver XAG/USD':'USD/INR',type:'line',data:closes,symbol:'circle',
      symbolSize:isSilver?5:0,connectNulls:false,lineStyle:{width:2.4,color:isSilver?'#d3dce5':'#e7bb61'},
      areaStyle:{color:isSilver?'rgba(186,203,219,.12)':'rgba(231,187,97,.08)'},itemStyle:{color:isSilver?'#e4ebf2':'#e7bb61'}}]:
       [{name:isMcx?'MCX import parity':'Gold spot proxy',type:'candlestick',data:bars.map(b=>[b.o,b.c,b.l,b.h]),
        itemStyle:{color:'#2ace89',color0:'#ed6472',borderColor:'#2ace89',borderColor0:'#ed6472'}},
-       {name:'SMA 20',type:'line',data:sma(20),showSymbol:false,lineStyle:{color:'#44aaff',width:1.7}},
-       {name:'SMA 50',type:'line',data:sma(50),showSymbol:false,lineStyle:{color:'#f3bc4e',width:1.7}},
+       {name:'EMA 20',type:'line',data:ema(20),showSymbol:false,lineStyle:{color:'#44aaff',width:1.7}},
+       {name:'EMA 50',type:'line',data:ema(50),showSymbol:false,lineStyle:{color:'#f3bc4e',width:1.7}},
        {name:'Volume',type:'bar',xAxisIndex:1,yAxisIndex:1,data:bars.map(b=>({value:b.v,itemStyle:{color:b.c>=b.o?'#238d67aa':'#ba4c5caa'}})),barMaxWidth:8}];
    chart.setOption({
      backgroundColor:'transparent',animationDuration:250,
      tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#14202e',borderColor:'#45536a',textStyle:{color:'#f4f5f6'}},
-     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:(isFx||isSilver)?[isSilver?'Observed silver XAG/USD':'USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','SMA 20','SMA 50']},
+     legend:{top:0,left:12,textStyle:{color:'#aab5c4'},data:(isFx||isSilver)?[isSilver?'Observed silver XAG/USD':'USD/INR']:[isMcx?'MCX import parity':'Gold spot proxy','EMA 20','EMA 50']},
      grid:(isFx||isSilver)?{left:58,right:28,top:43,bottom:35}:[{left:64,right:22,top:38,height:'64%'},{left:64,right:22,top:'82%',height:'12%'}],
      xAxis:(isFx||isSilver)?{type:'category',data:dates,axisLabel:{color:'#93a0b1'},axisLine:{lineStyle:{color:'#39465a'}}}:
       [{type:'category',data:dates,axisLabel:{color:'#93a0b1',hideOverlap:true},axisLine:{lineStyle:{color:'#39465a'}}},
@@ -1871,7 +1879,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
  const instrumentTabs=h('div',{className:'ac3-instrument-tabs'},...[
   ['gold','Gold (XAU)'],['mcx','Gold (MCX)'],['silver','Silver'],['fx','USD/INR']
  ].map(([key,label])=>btn(label,()=>setInstrument(key),instrument===key?'active':'')));
- const periods=h('div',{className:'ac2-ranges'},...['1D','5D','1M','3M','ALL'].map(key=>
+ const periods=h('div',{className:'ac2-ranges'},...['1D','5D','1M','3M','6M','1Y','YTD','ALL'].map(key=>
   btn(key,()=>setRange(key),range===key?'active':'')));
  const chart=h('section',{className:'ac2-panel ac2-chart-panel'},
   h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Live Market Chart')),periods),
@@ -1966,7 +1974,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
        h(Metric,{title:'USD / INR · ECB reference',value:money(m.fx,2,'₹'),secondary:'ECB fix · '+m.fxDate,positive:null,icon:'↗',spark:(m.fxHistory||[]).map(b=>b.rate)})),
       h('div',{className:'ac2-main-grid'},h('section',{className:'ac2-panel ac2-chart-panel'},
        h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Gold price & market history'),h('p',null,'XAU-equivalent PAXG / USD · 1-hour candles · live basis adjusted')),
-        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
+        h('div',{className:'ac2-ranges'},['1D','5D','1M','3M','6M','1Y','YTD','ALL'].map(r=>btn(r,()=>setRange(r),range===r?'active':'')))),
        h('div',{className:'ac3-instrument-tabs'},[['gold','Gold (XAU)'],['mcx','Gold (MCX)'],['silver','Silver'],['fx','USD/INR']].map(([id,label])=>btn(label,()=>setInstrument(id),instrument===id?'active':''))),
        h('div',{className:'ac2-spotline'},instrument==='silver'?money(m.silver?.usdOz,2,'$')+' /troy oz':instrument==='mcx'?money(m.rates.mcx995*10)+' /10g':instrument==='fx'?money(m.fx,2,'₹'):money(m.spot,2,'$')),
        h(Chart,{market:m,range,instrument})),
