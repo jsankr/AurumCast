@@ -255,3 +255,9 @@ body{background:#080d14!important}
 @media(max-width:1400px){:root{--ac2-side:255px}.ac2-hero-copy{max-width:72%}.ac2-gold-art{right:-36px}.ac2-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ac2-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ac2-mini-grid>.ac2-panel{min-height:220px}}
 @media(max-width:970px){:root{--ac2-side:0px}.ac2-main-grid{grid-template-columns:1fr}.ac2-chart-panel,.ac2-forecast{height:auto;min-height:0}.ac-native-chart.ac3-chart{height:300px}.ac2-hero{margin-top:12px}.ac2-gold-art{opacity:.6}}
 @media(max-width:630px){.ac2-hero{min-height:132px;height:auto;padding:20px 12px}.ac2-hero h1{font-size:27px}.ac2-hero p{max-width:75%;font-size:11px}.ac2-gold-art{right:-112px;opacity:.35}.ac2-metrics,.ac2-mini-grid{grid-template-columns:1fr}.ac2-top-controls .ac2-status,.ac3-profile-button{display:none}.ac2-spotline{font-size:19px}.ac2-panel-head{align-items:flex-start}.ac3-instrument-tabs button{font-size:10px;padding:7px 8px}}
+
+/* Use the actual reusable artwork in either GitHub Pages deployment location. */
+.ac2-gold-art{background:url("assets/aurum-hero.svg") center / contain no-repeat;right:0;top:-21px;width:min(39vw,550px);height:176px;filter:drop-shadow(0 8px 18px #b378323d)}
+.ac2-gold-art .ac2-orbit,.ac2-gold-art .ac2-goldbar{display:none}
+@media(max-width:970px){.ac2-gold-art{width:380px;right:-24px}}
+@media(max-width:630px){.ac2-gold-art{width:320px;right:-90px;top:-5px;opacity:.45}}
