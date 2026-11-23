@@ -90,6 +90,50 @@
     h('div',{className:'ac2-actions'},btn('Calibrate',()=>{if(window.AurumBridge.calibrate(+quote))close()},'ac2-gold-btn'),btn('Clear calibration',()=>window.AurumBridge.configure({calibration:0}))),
     h('hr'),btn('Clear locally stored prediction ledger',()=>{if(window.confirm('Clear predictions saved in this browser?'))window.AurumBridge.clearLedger()}),
     h('p',{className:'ac2-disclaimer'},'Your custom preferences and prediction ledger are stored in this browser.')));}
+ function LineChart({rows,fields,title,percent=false}){
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!rows?.length||!ref.current||!window.echarts)return;
+    const chart=window.echarts.init(ref.current);
+    const colors=['#e6b861','#60bffa','#47cc9c','#ed7c7f'];
+    chart.setOption({backgroundColor:'transparent',animationDuration:300,
+      tooltip:{trigger:'axis',backgroundColor:'#172232',borderColor:'#485566',textStyle:{color:'#f2f4f6'}},
+      legend:{top:0,left:12,textStyle:{color:'#aeb6c4'},data:fields.map(f=>f.label)},
+      grid:{top:42,left:65,right:18,bottom:48},
+      xAxis:{type:'category',data:rows.map(r=>r.date),axisLabel:{color:'#a1aab8',hideOverlap:true},axisLine:{lineStyle:{color:'#3b495a'}}},
+      yAxis:{type:'value',scale:true,axisLabel:{color:'#a1aab8',formatter:v=>percent?v.toFixed(0):'₹'+Math.round(v).toLocaleString('en-IN')},splitLine:{lineStyle:{color:'rgba(255,255,255,.07)'}}},
+      dataZoom:[{type:'inside'},{type:'slider',height:12,bottom:10,borderColor:'#364358',fillerColor:'rgba(237,185,94,.11)',textStyle:{color:'#97a0b0'}}],
+      series:fields.map((f,i)=>({name:f.label,type:'line',data:rows.map(r=>Number.isFinite(r[f.key])?r[f.key]:null),
+        connectNulls:false,showSymbol:false,lineStyle:{color:colors[i%colors.length],width:1.8},
+        itemStyle:{color:colors[i%colors.length]}}))
+    },true);
+    const obs=new ResizeObserver(()=>chart.resize());obs.observe(ref.current);
+    return()=>{obs.disconnect();chart.dispose()};
+  },[rows,fields,title,percent]);
+  return h('div',{ref,className:'ac2-linechart',role:'img','aria-label':title});
+ }
+ const historicalFields=[{key:'mcx',label:'MCX parity · ₹/10g'}];
+ const backtestFields=[{key:'predicted',label:'Predicted'},{key:'actual',label:'Actual'},{key:'lower',label:'Lower 68%'},{key:'upper',label:'Upper 68%'}];
+ const rsiFields=[{key:'rsi',label:'RSI (14)'}];
+ function NativeAnalytics({m}){
+  const [tab,setTab]=useState('backtest');
+  const rows=m.analysis?.daily||[];
+  const indicators=rows.map((r,i)=>({...r,rsi:m.analysis?.rsi?.[i]??null,macd:m.analysis?.macd?.[i]??null}));
+  return h('section',{className:'ac2-panel ac2-toolspanel',id:'ac2-native-analytics'},
+    h('div',{className:'ac2-panel-head'},h('div',null,h('h2',null,'Technical & walk-forward analytics'),
+      h('p',null,'Native React charts sourced from the original model and historical market series.')),
+      h('div',{className:'ac2-ranges'},btn('Backtesting',()=>setTab('backtest'),tab==='backtest'?'active':''),
+        btn('Technical indicators',()=>setTab('technical'),tab==='technical'?'active':''))),
+    tab==='backtest'?
+      h('div',{className:'ac2-analytics-grid'},h('div',null,h('h3',null,'Predicted vs actual MCX import parity'),
+        h(LineChart,{rows:m.analysis?.backtest||[],fields:backtestFields,title:'Walk-forward predicted vs actual MCX parity with 68 percent interval'})),
+        h('aside',{className:'ac2-analytics-context'},'Backtest uses out-of-sample ensemble predictions. Its uncertainty bands are estimates, not guarantees. Historical values use today’s duty and calibration for consistent comparison.')):
+      h('div',{className:'ac2-analytics-grid'},h('div',null,h('h3',null,'MCX parity · last 260 trading sessions'),
+        h(LineChart,{rows:indicators,fields:historicalFields,title:'Historical daily MCX import parity'})),
+        h('div',null,h('h3',null,'Relative Strength Index · 14 sessions'),
+        h(LineChart,{rows:indicators,fields:rsiFields,title:'RSI 14 daily momentum indicator',percent:true}))),
+    h('p',{className:'ac2-disclaimer'},'The underlying COMEX-equivalent price series is a spot-adjusted PAXG proxy. Exchange futures quotes require a licensed feed.'));
+ }
  function EvidenceTables({m}){
   const [tab,setTab]=useState('factors');
   const rows=tab==='factors'?(m.factors||[]):(m.ledger||[]).slice().reverse().slice(0,40);
@@ -159,6 +203,7 @@
        h('div',{className:'ac2-ranges'},btn('Purity table',()=>setTool('prices'),tool==='prices'?'active':''),btn('Calculator',()=>setTool('calculator'),tool==='calculator'?'active':''))),
        tool==='prices'?h(RateTable,{m}):h(Calculator,{m}),
        h('p',{className:'ac2-disclaimer'},'MCX values are import-parity estimates, not an official MCX market feed. GST is shown separately; making charges vary.'))),
+    h(NativeAnalytics,{m}),
     h(EvidenceTables,{m}),
     h('div',{className:'ac2-data-note'},h(Icon,{name:'shield-check'}),m.ready?m.sourceNotice:'Forecast engine and external feeds remain unchanged.'),
     showSettings&&h(Settings,{m,close:()=>setSettings(false)}));
