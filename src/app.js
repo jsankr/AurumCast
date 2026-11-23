@@ -279,7 +279,55 @@ function setLive(s, txt) { $('liveDot').className = 'dot ' + (s === 'ok' ? 'live
 function renderAll() {
   renderStrip(); renderPurity(); renderK22(); renderBanner(); renderKpis(); renderHourly(); renderHourTable(); renderTicks(); renderForecast(); renderModels();
   renderProof(); renderDaily(); renderOsc(); renderRisk(); renderHeat(); renderDecomp(); renderInvest(); renderLedger(); renderSources();
+  if (window.AurumBridge) {
+    window.dispatchEvent(new CustomEvent('aurum:update', { detail: window.AurumBridge.snapshot() }));
+  }
 }
+/* Read-only, explicitly scoped market-data bridge for the React component tree.
+   The original GE math, browser ledger, validation, and live polling remain the source of truth. */
+window.AurumBridge = {
+  snapshot() {
+    if (!D.ready) return { ready: false, errors: { ...D.err } };
+    const now = Date.now(), sp = spotNow(), rates = GE.rates(sp, D.fxNow, S.duty, S.prem / 100);
+    const target = nextMcxOpen(now), trh = openHours(now, target);
+    const m = D.fc.r * trh / 23, sig = D.fc.sigma * Math.sqrt(Math.max(trh, .25) / 23);
+    const fcOpen = { mid: rates.mcx995 * Math.exp(m), lo68: rates.mcx995 * Math.exp(m-sig), hi68: rates.mcx995 * Math.exp(m+sig), target };
+    const close = D.fc.h.factor(parityNow());
+    const h = D.H.slice(-720);
+    const last = D.hDone.at(-24), change = last ? sp / (last.c * D.basis) - 1 : null;
+    const old = D.daily[D.lastC], prevMcx = toMcx(old.inr, old.date)/10;
+    const validation = D.sc?.res?.ens || {};
+    return {
+      ready: true, fetchedAt: D.fetchedAt, now, spot: sp, spotChange24h: change,
+      fx: D.fxNow, fxDate: D.fxDate, duty: S.duty, calibration: S.prem,
+      rates, mcxChange: rates.mcx995 / prevMcx - 1,
+      open: fcOpen, close: { mid: close.mid, lo68: close.lo68, hi68: close.hi68, lo95: close.lo95, hi95: close.hi95, target: D.fc.closeMs },
+      candle: h.map(b => ({ t: b.t, o: b.o * D.basis, h: b.h * D.basis, l: b.l * D.basis, c: b.c * D.basis, v: b.v })),
+      score: D.card.score, factors: D.card.factors.map(f => ({ name: f.k, score: f.v, weight: f.w, reason: f.why })),
+      accuracy: { theilU: validation.theilU, dm: validation.dm, coverage: validation.coverage, n: validation.n },
+      openValidation: D.mc ? { n: D.mc.n, coverage: D.mc.cov } : null,
+      ledger: (D.ledger || []).map(e => ({ target: e.target, predicted: e.ex, actual: e.actual ?? null, lo68: e.lo, hi68: e.hi })),
+      auto: S.auto, hours: S.hours, errors: { ...D.err },
+      sourceNotice: 'USD spot (gold-api.com), PAXG candles (Binance), ECB FX; MCX is calculated import parity, not an exchange tick.'
+    };
+  },
+  refresh() { fullRefresh(); },
+  setTheme(name) { if (['aurum','obsidian','rose','ivory'].includes(name)) setTheme(name); },
+  configure({ duty, hours, auto, calibration }) {
+    if (duty != null && Number.isFinite(+duty) && +duty >= 0 && +duty < 50) { S.duty = +duty; store.set('duty',S.duty); $('sDuty').value=S.duty; }
+    if (calibration === 0) { S.prem=0; store.set('prem',0); calTxt(); }
+    if (auto != null) { S.auto=!!auto; store.set('auto',S.auto); $('sAuto').checked=S.auto; if(S.auto) scheduleNext(); }
+    if (hours != null && [1000,2000,3000].includes(+hours) && S.hours!==+hours) { S.hours=+hours; store.set('hours',S.hours); $('sHours').value=String(S.hours); fullRefresh(); return; }
+    if (D.ready) renderAll();
+  },
+  clearLedger() { store.set('ledger', []); if(D.ready){ updateLedger(); renderLedger(); renderAll(); } },
+  calibrate(mcxTenGrams) {
+    const a=+mcxTenGrams;
+    if (!D.ready || !Number.isFinite(a) || a<=0) return false;
+    const raw=spotNow()*D.fxNow*10/OZ*(1+S.duty/100)*MCXP;
+    S.prem=(a/raw-1)*100; store.set('prem',S.prem); calTxt();renderAll();return true;
+  }
+};
 function renderBanner() {
   const bp = (D.basis - 1) * 100, errs = Object.keys(D.err);
   $('banner').innerHTML = `${conf('Certain')}<b>Real data only, with one honest substitution.</b> COMEX gold futures (GC) and MCX have no free feed a browser is allowed to read, so the hourly series is <b>PAXG/USDT on Binance</b> (each token is backed by one fine troy ounce of LBMA gold and trades 24/7). It is scaled to live <b>XAU spot</b> (gold-api.com), currently a ${bp >= 0 ? '+' : ''}${bp.toFixed(2)}% adjustment, and converted with the ECB USD/INR fix. MCX figures are <b>import parity for 995 gold</b> (the MCX Gold contract grade) = spot × USD/INR ÷ 31.1035 g × 0.995 × (1 + ${S.duty}% duty)${S.prem ? ` × (1 ${S.prem >= 0 ? '+' : '−'} ${Math.abs(S.prem).toFixed(2)}% your MCX calibration)` : ''}. ${S.prem ? '' : 'Enter a live MCX price in <b>Settings</b> to calibrate to your exchange quote.'}${errs.length ? ` <span class="tag warn">Partial: ${errs.join(', ')} unavailable</span>` : ''}`;
