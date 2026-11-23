@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: '22'
-      - name: Unit tests and React contract tests
-        run: npm test
+          node-version: '24'
       - name: Regenerate both Pages entry points
         run: npm run build
+      - name: Unit tests and React contract tests
+        run: npm test
       - name: Verify deployment outputs reproduce exactly
         run: |
           git diff --exit-code -- index.html docs/index.html
