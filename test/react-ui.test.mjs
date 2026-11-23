@@ -38,7 +38,7 @@ test('reference architecture presents four market tiles, chart tabs, forecasts a
  const shell=read('src/react-shell.js'),css=read('src/react-ui.css'),page=read('index.html');
  for(const token of [
   "Silver · MCX", "Gold (MCX)", "USD/INR", "Short Term", "Medium Term", "Long Term",
-  "Market positioning", "Technical Indicators", "Prediction Accuracy", "Quick Tools",
+  "Market Sentiment", "Technical Indicators", "Prediction Accuracy", "Quick Tools",
   "function Alerts(", "ac3-instrument-tabs", "ac3-accuracy-circle", "historicalCoverage"
  ]) assert.ok(shell.includes(token),'Missing React component or control: '+token);
  for(const token of ['ac2-metrics','ac2-main-grid','ac2-mini-grid','assets/aurum-hero.svg'])
