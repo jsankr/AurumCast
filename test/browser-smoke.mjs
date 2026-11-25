@@ -53,6 +53,14 @@ const inspect=async (name,contextOptions,width,height)=>{
  assert.equal(await page.locator('.ac4-silver-grade').count(),3,'Silver 999, 925, and 915 rates must be shown');
  assert.equal(await page.locator('.ac4-swatch').count(),4,'Four selectable themes must be present');
  assert.equal(await page.locator('.ac3-sidebar-landscape').count(),1,'Layered mountain footer must exist');
+ await page.waitForSelector('.ac5-rate-card',{timeout:15000});
+ assert.equal(await page.locator('.ac5-rate-card').count(),4,'India market must show 24K/22K/18K and silver');
+ assert.ok((await page.locator('#india-market').innerText()).includes('₹12,458'),'Dated Chennai gold 24K quote should load');
+ assert.ok((await page.locator('#india-market').innerText()).includes('₹11,420'),'Dated Chennai 22K quote should load');
+ assert.equal(await page.locator('.ac5-table tbody tr').count(),8,'Purity table must show 8 gold grades');
+ assert.equal(await page.locator('.ac5-silver-row>div').count(),3,'Indian silver must include 999/925/915 rates');
+ assert.equal(await page.locator('.ac5-bill .ac5-total').count(),1,'India invoice must include calculated GST total');
+
 
  mkdirSync('browser-artifacts',{recursive:true});
  await page.screenshot({path:'browser-artifacts/'+name+'.png',fullPage:true});
