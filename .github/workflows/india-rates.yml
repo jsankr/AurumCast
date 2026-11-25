@@ -1,0 +1,35 @@
+name: Refresh Indian bullion benchmarks
+on:
+  schedule:
+    - cron: '35 5,10 * * 1-6'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: aurumcast-main-write
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Sync latest main
+        run: git pull --ff-only origin main
+      - name: Fetch and validate India market reference
+        run: node scripts/refresh-india-rates.mjs
+      - name: Verify quote maths and units
+        run: npm test
+      - name: Commit new observed rate snapshots only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/india-rates.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: update dated India bullion benchmark observations"
+            git push origin HEAD:main
+          fi

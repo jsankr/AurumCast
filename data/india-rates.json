@@ -1,0 +1,49 @@
+{
+  "schema": "aurumcast-india-rates-v1",
+  "updatedAt": "2026-11-25T06:30:00Z",
+  "gold": {
+    "date": "2026-11-25",
+    "grades": {
+      "24K": {
+        "value": 12458,
+        "status": "provisional",
+        "date": "2026-11-25"
+      },
+      "22K": {
+        "value": 11420,
+        "status": "provisional",
+        "date": "2026-11-25"
+      },
+      "18K": {
+        "value": 9344,
+        "status": "provisional",
+        "date": "2026-11-25"
+      }
+    },
+    "generatedAt": "2026-11-25T06:30:00Z",
+    "source": "snapdata.dev (IBJA-attributed provisional republication)",
+    "sourceUrl": "https://snapdata.dev/api/v1/gold/in/latest.json",
+    "note": "Third-party public reference, not a licensed IBJA feed."
+  },
+  "silver": {
+    "date": "2026-11-25",
+    "perKg999": 165000,
+    "status": "provisional",
+    "generatedAt": "2026-11-25T06:30:00Z",
+    "source": "snapdata.dev (IBJA-attributed provisional republication)",
+    "sourceUrl": "https://snapdata.dev/api/v1/silver/in/latest.json"
+  },
+  "city": {
+    "city": "Chennai",
+    "date": "2026-11-25",
+    "source": "Goodreturns Chennai indicative retail-metal reference",
+    "sourceUrl": "https://www.goodreturns.in/gold-rates/chennai.html",
+    "gold": {
+      "24K": 12458,
+      "22K": 11420,
+      "18K": 9345
+    },
+    "silver999PerKg": null,
+    "note": "City snapshot manually verified 25 Nov; not automatically refreshed or an exact jeweller quote."
+  }
+}
