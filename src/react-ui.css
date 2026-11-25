@@ -430,3 +430,65 @@ html[data-theme=ivory] .ac4-silver-grade{background:#f8f1e4}
  .ac4-silver-value{font-size:21px}
  .ac4-silver-strip{grid-template-columns:1fr}
 }
+
+/* India-first domestic market: never conflate observed jeweller reference and international parity. */
+.ac5-india-market{position:relative;z-index:1;margin:0 0 16px;padding:15px;border:1px solid rgba(232,178,79,.52);border-radius:16px;
+background:linear-gradient(135deg,rgba(39,35,26,.96),rgba(16,25,36,.97) 35%,rgba(13,22,32,.98));box-shadow:0 9px 34px #0005,inset 0 1px #ffda8c26;color:#f5f5f7}
+.ac5-title-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:11px}
+.ac5-kicker{font-size:10px;font-weight:750;color:#f0b74f;letter-spacing:.11em}
+.ac5-title-row h2{font-weight:800;font-size:21px;line-height:1.25;letter-spacing:-.035em;margin:4px 0}
+.ac5-title-row p{margin:0;font-size:11px;color:#b4bdc9}
+.ac5-controls{display:flex;align-items:center;gap:9px}
+.ac5-segments{display:flex;gap:3px;padding:4px;border:1px solid #4c596a;border-radius:10px;background:#0c1420}
+.ac5-segments button,.ac5-refresh{cursor:pointer;border:0;border-radius:7px;background:transparent;color:#bdc6d1;font-size:11px;padding:8px 11px;white-space:nowrap}
+.ac5-segments button.active{background:linear-gradient(135deg,#f1c16c,#ae7c2d);color:#211707;font-weight:800}
+.ac5-refresh{border:1px solid #4c596a}
+.ac5-notice{display:block;padding:7px 10px;margin:0 0 11px;border-radius:8px;color:#b8d3c4;background:#17412c2b;font-size:10px;line-height:1.55}
+.ac5-notice.stale{color:#efc18a;background:#583b142f}
+.ac5-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:11px}
+.ac5-rate-card{display:flex;flex-direction:column;gap:4px;min-width:0;padding:11px 13px;border:1px solid #9d78426b;border-radius:11px;background:linear-gradient(140deg,#30312e,#121b29 80%);box-shadow:inset 0 1px #ffffff13}
+.ac5-rate-card small{font-size:11px;color:#cbd1dc}
+.ac5-rate-card strong{font-size:clamp(19px,1.65vw,25px);font-weight:800;letter-spacing:-.04em;white-space:nowrap;color:#fff4dc}
+.ac5-rate-card span{font-size:9px;color:#8fb2aa}
+.ac5-body{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(305px,1fr);gap:10px;margin-bottom:10px}
+.ac5-panel{padding:12px 14px;min-width:0;border-radius:11px;border:1px solid #68718147;background:#121d29ad}
+.ac5-panel h3,.ac5-compare h3,.ac5-silver h3{font-size:13px;font-weight:760;margin:0 0 11px}
+.ac5-scroll{overflow-x:auto}
+.ac5-table{border-collapse:collapse;width:100%;font-size:10px;min-width:530px}
+.ac5-table th,.ac5-table td{padding:8px 6px;text-align:right;white-space:nowrap;border-bottom:1px solid #ffffff13}
+.ac5-table th{font-size:9px;color:#aab5c1;font-weight:750}
+.ac5-table td{color:#e1e5ec}
+.ac5-table td:first-child,.ac5-table th:first-child{text-align:left}
+.ac5-table tr:hover td{background:#e8bb4c0a}
+.ac5-small{font-size:10px;line-height:1.6;color:#aab5c5;margin:10px 0 0}
+.ac5-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ac5-input{display:flex;flex-direction:column;gap:4px;font-size:10px;color:#b5bdcb}
+.ac5-input input,.ac5-input select{width:100%;min-width:0;padding:9px;border:1px solid #657080;background:#0d1722;color:#eef2f7;border-radius:8px;font-size:12px}
+.ac5-check{display:flex;align-items:center;gap:7px;font-size:11px;color:#cbd3e0;margin:11px 0}
+.ac5-check input{accent-color:#d7ac55}
+.ac5-bill{display:grid;gap:5px;font-size:11px}
+.ac5-bill>div{display:flex;justify-content:space-between;gap:12px;color:#bfc6d0}
+.ac5-bill b{font-variant-numeric:tabular-nums;font-weight:720;color:#f5f5f7}
+.ac5-bill .ac5-total{border-top:1px solid #91713c;padding:9px 0 0;margin-top:5px;font-size:14px;color:#f8d990;font-weight:770}
+.ac5-compare{border:1px solid #64718057;border-radius:11px;padding:11px 14px;margin-bottom:10px;background:#0c1620a6}
+.ac5-compare-grid{display:flex;flex-wrap:wrap;gap:8px}
+.ac5-compare-grid>span{padding:8px 10px;border-radius:7px;background:#ffffff08;color:#c6ccd6;font-size:10px}
+.ac5-compare-grid b{margin-left:5px;color:#f0d2a0;font-size:11px}
+.ac5-silver{padding:11px 14px;border:1px solid #9ca8b144;border-radius:11px;background:#a9bfce09;margin-bottom:10px}
+.ac5-silver-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ac5-silver-row>div{display:grid;gap:3px;border:1px solid #c5d3dc29;border-radius:8px;padding:8px 10px}
+.ac5-silver-row span{font-size:10px;color:#b1bbc9}
+.ac5-silver-row strong{font-size:19px;font-weight:780;color:#f0f4f8}
+.ac5-silver-row small{font-size:10px;color:#adb8c6}
+.ac5-foot{display:flex;gap:16px;flex-wrap:wrap;font-size:10px;color:#a1adbe;align-items:center}
+.ac5-foot a{color:#dfb86c;text-decoration:underline;text-underline-offset:2px}
+html[data-theme=ivory] .ac5-india-market{background:#f6f0e5;color:#272b34}
+html[data-theme=ivory] .ac5-title-row p,html[data-theme=ivory] .ac5-small,html[data-theme=ivory] .ac5-notice{color:#596577}
+html[data-theme=ivory] .ac5-rate-card,html[data-theme=ivory] .ac5-panel,html[data-theme=ivory] .ac5-compare,html[data-theme=ivory] .ac5-silver{background:#fff9ee;border-color:#bba98a;color:#292f3a}
+html[data-theme=ivory] .ac5-rate-card strong,html[data-theme=ivory] .ac5-table td,html[data-theme=ivory] .ac5-bill b,html[data-theme=ivory] .ac5-silver-row strong{color:#29303b}
+html[data-theme=ivory] .ac5-table th{color:#6a6f7c}
+html[data-theme=ivory] .ac5-input input,html[data-theme=ivory] .ac5-input select{background:white;color:#29303b}
+html[data-theme=ivory] .ac5-compare-grid>span{background:#f3e8d3;color:#343a46}
+html[data-theme=ivory] .ac5-compare-grid b{color:#70502d}
+@media(max-width:1200px){.ac5-body{grid-template-columns:1fr}.ac5-rate-card strong{font-size:20px}.ac5-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.ac5-india-market{padding:10px}.ac5-title-row{align-items:flex-start;flex-direction:column}.ac5-controls{width:100%;justify-content:space-between}.ac5-cards{gap:7px}.ac5-rate-card{padding:9px}.ac5-rate-card strong{font-size:18px}.ac5-rate-card span{font-size:9px}.ac5-form{grid-template-columns:1fr 1fr}.ac5-silver-row{grid-template-columns:1fr}.ac5-compare-grid{display:grid;grid-template-columns:1fr 1fr}.ac5-title-row h2{font-size:19px}}
