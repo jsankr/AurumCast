@@ -1,29 +1,32 @@
 {
   "schema": "aurumcast-india-rates-v1",
-  "updatedAt": "2026-11-25T06:30:00Z",
+  "updatedAt": "2026-11-25T20:08:59.140Z",
   "gold": {
     "date": "2026-11-25",
     "grades": {
-      "24K": {
-        "value": 12458,
+      "18K": {
+        "value": 9246,
         "status": "provisional",
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "changePct": -2.5814
       },
       "22K": {
-        "value": 11420,
+        "value": 11300,
         "status": "provisional",
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "changePct": -2.5862
       },
-      "18K": {
-        "value": 9344,
+      "24K": {
+        "value": 12328,
         "status": "provisional",
-        "date": "2026-11-25"
+        "date": "2026-11-25",
+        "changePct": -2.5917
       }
     },
-    "generatedAt": "2026-11-25T06:30:00Z",
+    "generatedAt": "2026-11-25T15:30:00Z",
     "source": "snapdata.dev (IBJA-attributed provisional republication)",
     "sourceUrl": "https://snapdata.dev/api/v1/gold/in/latest.json",
-    "note": "Third-party public reference, not a licensed IBJA feed."
+    "note": "Third-party IBJA-attributed daily snapshot; not a licensed official IBJA real-time API."
   },
   "silver": {
     "date": "2026-11-25",
