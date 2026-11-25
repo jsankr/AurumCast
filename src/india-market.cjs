@@ -58,3 +58,4 @@ const AurumIndia = (() => {
  return {normalizeGold,normalizeSilver,goldGrades,silverGrades,ageDays,bill,disparity};
 })();
 if(typeof module!=='undefined')module.exports=AurumIndia;
+if(typeof window!=='undefined')window.AurumIndia=AurumIndia;
