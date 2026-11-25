@@ -298,6 +298,7 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
       h('div',{className:'ac2-hero-actions'},h('span',{className:'ac2-live-dot'},'● ',m.ready?'Data received':'Loading market feeds'),
         h('span',null,m.ready?dataTime(m.fetchedAt):'Waiting for validated data'))),
      h('div',{className:'ac2-gold-art','aria-hidden':true},h('div',{className:'ac2-orbit'}),h('div',{className:'ac2-goldbar bar-back'},'AU'),h('div',{className:'ac2-goldbar bar-front'},h('small',null,'FINE GOLD'),h('b',null,'999.9')))),
+    h(window.AurumIndiaWidget||(()=>null),{m}),
     !m.ready?h(PendingDashboard,{m,go,onAlerts,range,setRange,instrument,setInstrument,term,setTerm}):h(R.Fragment,null,
       h('div',{className:'ac2-metrics'},
        h(Metric,{title:'Gold · international spot',value:money(m.spot,2,'$')+' /oz',secondary:pct(m.spotChange24h)+' vs prior 24h',positive:m.spotChange24h>=0,icon:'◆',spark:(m.candle||[]).map(b=>b.c)}),
@@ -392,6 +393,10 @@ function PendingDashboard({m,go,onAlerts,range,setRange,instrument,setInstrument
     if(id==='settings'){setSettings(true);return;}
     if(id==='alerts'){setAlerts(true);return;}
     if(id==='reports'){window.open('https://github.com/jsankr/AurumCast/tree/main/reports','_blank','noopener,noreferrer');return;}
+    if(id==='purityCard'){
+      document.documentElement.classList.remove('ac3-legacy-view');setSelected('overview');
+      requestAnimationFrame(()=>document.getElementById('india-market')?.scrollIntoView({behavior:'smooth'}));return;
+    }
     if(id==='tools'){
       document.documentElement.classList.remove('ac3-legacy-view');
       setSelected('overview');

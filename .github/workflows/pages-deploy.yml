@@ -35,6 +35,7 @@ jobs:
           cp assets/mountain-landscape.svg _site/assets/mountain-landscape.svg
           cp data/india-rates.json _site/data/india-rates.json
           test -s _site/data/india-rates.json
+          grep -q 'india-market' _site/index.html
           touch _site/.nojekyll
           grep -q 'v3-reference-20261123' _site/index.html
           grep -q 'ac3-mounted' _site/index.html
